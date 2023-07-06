@@ -1,7 +1,7 @@
-import { createContext, useCallback, useContext, useMemo, useState } from "react"
-import { ThemeProvider } from "@emotion/react";
-import { DarkTheme, LightTheme } from "./../themes";
-import { Box } from "@mui/material";
+import { createContext, useCallback, useContext, useMemo, useState } from 'react'
+import { ThemeProvider } from '@emotion/react'
+import { DarkTheme, LightTheme } from './../themes'
+import { Box } from '@mui/material'
 
 interface IThemeContextData {
     themeName: 'light' | 'dark'
@@ -26,7 +26,7 @@ export const AppThemeProvider: React.FC<IAppThemeProviderProps> = ({ children })
     }, [])
 
     const theme = useMemo(() => {
-        if(themeName === 'light') return LightTheme
+        if (themeName === 'light') return LightTheme
 
         return DarkTheme
     }, [themeName])
