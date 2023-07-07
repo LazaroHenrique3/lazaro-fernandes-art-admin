@@ -6,6 +6,7 @@ interface IListToolsProps {
     onChangeSearchText?: (newText: string) => void
     newButtonText?: string
     showNewButton?: boolean
+    
     onClickNewButton?: () => void
 }
 
