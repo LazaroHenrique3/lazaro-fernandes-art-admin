@@ -12,7 +12,7 @@ import {
 
 import { Box } from '@mui/material'
 
-import { useDrawerContext } from '../../contexts'
+import { useAppThemeContext, useDrawerContext } from '../../contexts'
 import { useMatch, useNavigate, useResolvedPath } from 'react-router-dom'
 
 interface IListItemLinkProps {
@@ -57,7 +57,10 @@ export const SideNav: React.FC<IDrawerProps> = ({ children }) => {
     //Retorna true ou false de acordo com o tamanho da tela
     const smDown = useMediaQuery(theme.breakpoints.down('sm'))
 
+
     const { isDrawerOpen, toggleDrawerOpen, drawerOptions } = useDrawerContext()
+
+    const { toggleTheme } = useAppThemeContext()
 
     return (
         <>
@@ -75,8 +78,21 @@ export const SideNav: React.FC<IDrawerProps> = ({ children }) => {
                     <Box flex={1}>
                         <List component="nav">
                             {drawerOptions.map(drawerOption => (
-                                <ListItemLink to={drawerOption.path} key={drawerOption.path} icon={drawerOption.icon} label={drawerOption.label} onClick={smDown ? toggleDrawerOpen : undefined}/>
+                                <ListItemLink to={drawerOption.path} key={drawerOption.path} icon={drawerOption.icon} label={drawerOption.label} onClick={smDown ? toggleDrawerOpen : undefined} />
                             ))}
+                        </List>
+                    </Box>
+
+                    <Box>
+                        <List component="nav">
+                            <ListItemButton  onClick={toggleTheme}>
+                                <ListItemIcon>
+                                    <Icon>
+                                        dark_mode
+                                    </Icon>
+                                </ListItemIcon>
+                                <ListItemText primary='Alternar tema' />
+                            </ListItemButton>
                         </List>
                     </Box>
 
