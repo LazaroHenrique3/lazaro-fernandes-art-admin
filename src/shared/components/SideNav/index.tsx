@@ -53,6 +53,8 @@ interface IDrawerProps {
 export const SideNav: React.FC<IDrawerProps> = ({ children }) => {
     //Consegue acessao o theme que estamos usando
     const theme = useTheme()
+
+    //Retorna true ou false de acordo com o tamanho da tela
     const smDown = useMediaQuery(theme.breakpoints.down('sm'))
 
     const { isDrawerOpen, toggleDrawerOpen, drawerOptions } = useDrawerContext()
