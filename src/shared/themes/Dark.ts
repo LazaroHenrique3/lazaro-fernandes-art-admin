@@ -23,6 +23,9 @@ export const DarkTheme = createTheme({
     typography: {
         allVariants: {
             color: 'white'
+        },
+        button: {
+            fontWeight: 700,
         }
     }
 })

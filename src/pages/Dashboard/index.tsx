@@ -1,10 +1,10 @@
-import { ListTools } from '../../shared/components'
+import { DetailTools } from '../../shared/components'
 import { BasePageLayout } from '../../shared/layouts'
 
 export const Dashboard = () => {
 
     return (
-        <BasePageLayout title='Página inicial' toolBar={(<ListTools showSearchInput/>)}>
+        <BasePageLayout title='Página inicial' toolBar={(<DetailTools/>)}>
             Testando...
         </BasePageLayout>
     )

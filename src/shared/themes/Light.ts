@@ -19,6 +19,10 @@ export const LightTheme = createTheme({
             paper: '#f7f6f3'
         }
     },
-
+    typography: {
+        button: {
+            fontWeight: 700,
+        }
+    }
 })
 
