@@ -13,6 +13,38 @@ import {
 import { Box } from '@mui/material'
 
 import { useDrawerContext } from '../../contexts'
+import { useMatch, useNavigate, useResolvedPath } from 'react-router-dom'
+
+interface IListItemLinkProps {
+    to: string,
+    label: string,
+    icon: string,
+    onClick: (() => void) | undefined
+}
+
+const ListItemLink: React.FC<IListItemLinkProps> = ({ to, label, icon, onClick }) => {
+    const navigate = useNavigate()
+
+    //Descobrindo se a rota foi seleciona ou não através da url
+    const resolvePath = useResolvedPath(to)
+    const match = useMatch({ path: resolvePath.pathname, end: false })
+
+    const handleClick = () => {
+        onClick?.()
+        navigate(to)
+    }
+
+    return (
+        <ListItemButton selected={!!match} onClick={handleClick}>
+            <ListItemIcon>
+                <Icon>
+                    {icon}
+                </Icon>
+            </ListItemIcon>
+            <ListItemText primary={label} />
+        </ListItemButton>
+    )
+}
 
 interface IDrawerProps {
     children: React.ReactNode
@@ -21,9 +53,9 @@ interface IDrawerProps {
 export const SideNav: React.FC<IDrawerProps> = ({ children }) => {
     //Consegue acessao o theme que estamos usando
     const theme = useTheme()
-    const smDown =  useMediaQuery(theme.breakpoints.down('sm'))
+    const smDown = useMediaQuery(theme.breakpoints.down('sm'))
 
-    const { isDrawerOpen, toggleDrawerOpen } = useDrawerContext()
+    const { isDrawerOpen, toggleDrawerOpen, drawerOptions } = useDrawerContext()
 
     return (
         <>
@@ -39,24 +71,17 @@ export const SideNav: React.FC<IDrawerProps> = ({ children }) => {
                     <Divider />
 
                     <Box flex={1}>
-                        <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }} component="nav">
-                            <ListItemButton>
-                                <ListItemIcon>
-                                    <Icon>
-                                        home
-                                    </Icon>
-                                </ListItemIcon>
-                                <ListItemText primary="Página Inicial" />
-                            </ListItemButton>
-
-
+                        <List component="nav">
+                            {drawerOptions.map(drawerOption => (
+                                <ListItemLink to={drawerOption.path} key={drawerOption.path} icon={drawerOption.icon} label={drawerOption.label} onClick={smDown ? toggleDrawerOpen : undefined}/>
+                            ))}
                         </List>
                     </Box>
 
                 </Box>
             </Drawer>
 
-            <Box height='100vh' marginLeft={smDown ? 0 : theme.spacing(28) }>
+            <Box height='100vh' marginLeft={smDown ? 0 : theme.spacing(28)}>
                 {children}
             </Box>
         </>
