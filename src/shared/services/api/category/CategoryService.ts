@@ -16,6 +16,16 @@ type ICategoryTotalCount = {
     totalCount: number
 }
 
+interface ErrorResponse {
+    response: {
+        data?: {
+            errors?: {
+                default?: string
+            }
+        }
+    }
+}
+
 const getAll = async (page = 1, filter = ''): Promise<ICategoryTotalCount | Error> => {
 
     try {
@@ -34,16 +44,16 @@ const getAll = async (page = 1, filter = ''): Promise<ICategoryTotalCount | Erro
 
     } catch (error) {
         console.error(error)
-        return new Error((error as { message: string }).message || 'Erro ao listar registros.')
+        return new Error((error as ErrorResponse).response?.data?.errors?.default || 'Erro ao listar registros.')
     }
 }
 
 const getById = async (id: number): Promise<IDetailCategory | Error> => {
-    
+
     try {
         const { data } = await api.get(`/category/${id}`)
 
-        if(data){
+        if (data) {
             return data
         }
 
@@ -51,17 +61,17 @@ const getById = async (id: number): Promise<IDetailCategory | Error> => {
 
     } catch (error) {
         console.error(error)
-        return new Error((error as { message: string }).message || 'Erro ao consultar registro.')
+        return new Error((error as ErrorResponse).response?.data?.errors?.default || 'Erro ao consultar registro.')
     }
 
 }
 
 const create = async (createData: Omit<IDetailCategory, 'id'>): Promise<number | Error> => {
-   
+
     try {
         const { data } = await api.post('/category', createData)
 
-        if(data){
+        if (data) {
             return data
         }
 
@@ -69,19 +79,19 @@ const create = async (createData: Omit<IDetailCategory, 'id'>): Promise<number |
 
     } catch (error) {
         console.error(error)
-        return new Error((error as { message: string }).message || 'Erro ao criar registro.')
-   
+        return new Error((error as ErrorResponse).response?.data?.errors?.default || 'Erro ao criar registro.')
+
     }
 }
 
 const updateById = async (id: number, updateData: IDetailCategory): Promise<void | Error> => {
-  
+
     try {
         await api.put(`/category/${id}`, updateData)
     } catch (error) {
         console.error(error)
-        return new Error((error as { message: string }).message || 'Erro ao atualizar registro.')
-    
+        return new Error((error as ErrorResponse).response?.data?.errors?.default || 'Erro ao atualizar registro.')
+
     }
 }
 
@@ -91,9 +101,9 @@ const deleteById = async (id: number): Promise<void | Error> => {
         await api.delete(`/category/${id}`)
     } catch (error) {
         console.error(error)
-        return new Error((error as { message: string }).message || 'Erro ao deletar registro.')
+        return new Error((error as ErrorResponse).response?.data?.errors?.default || 'Erro ao deletar registro.')
     }
-    
+
 }
 
 export const CategoryService = {
