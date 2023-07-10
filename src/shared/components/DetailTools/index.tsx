@@ -41,7 +41,7 @@ export const DetailTools: React.FC<IDetailTools> = ({
 
     //Retorna true ou false de acordo com o tamanho da tela
     const smDown = useMediaQuery(theme.breakpoints.down('sm'))
-    const mdDown = useMediaQuery(theme.breakpoints.down('md'))
+    //const mdDown = useMediaQuery(theme.breakpoints.down('md'))
 
     return (
         <Box marginX={1} padding={1} paddingX={2} display='flex' alignItems='center' gap={1} height={theme.spacing(5)} component={Paper}>
