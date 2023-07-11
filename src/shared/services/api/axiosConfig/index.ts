@@ -8,7 +8,7 @@ const api = axios.create({
 })
 
 //Enquanto não implemento a autenticação
-const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsInR5cGVVc2VyIjoiYWRtaW4iLCJwZXJtaXNzaW9ucyI6WzEsMiwzLDQsNV0sImlhdCI6MTY4ODk5NTE2OSwiZXhwIjoxNjg5MDgxNTY5fQ.V9yC5-j5bKdVIfegJPGnj6MqHmBeQZeG_NdwABKkIlg'
+const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsInR5cGVVc2VyIjoiYWRtaW4iLCJwZXJtaXNzaW9ucyI6WzEsMiwzLDQsNV0sImlhdCI6MTY4OTA4MTc0NiwiZXhwIjoxNjg5MTY4MTQ2fQ.hCt7ebXblzwHc-gRt1O5hLVeBY30QvSBVwGnFoa9uCI'
 
 api.interceptors.request.use((config) => {
     config.headers.Authorization = `Bearer ${token}`

@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 import { useDrawerContext } from '../shared/contexts'
 import {
     Dashboard,
+    CategoryDetails,
     CategoryList
 } from '../pages'
 
@@ -30,7 +31,7 @@ export const AppRoutes = () => {
             <Route path='/admin-home' element={<Dashboard />} />
 
             <Route path='/category' element={<CategoryList />} />
-            <Route path='/category/details/:id' element={<Dashboard/>} />
+            <Route path='/category/details/:id' element={<CategoryDetails/>} />
 
             <Route path='*' element={<Navigate to="/admin-home" />} />
         </Routes>
