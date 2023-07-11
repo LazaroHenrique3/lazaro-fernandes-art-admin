@@ -20,7 +20,7 @@ export const AppRoutes = () => {
             {
                 label: 'Categorias',
                 icon:  'local_offer_icon',
-                path: '/categories'
+                path: '/category'
             }
         ])
     }, [])
@@ -29,8 +29,8 @@ export const AppRoutes = () => {
         <Routes>
             <Route path='/admin-home' element={<Dashboard />} />
 
-            <Route path='/categories' element={<CategoryList />} />
-            {/* <Route path='/categories/details/:id' element={<Dashboard/>} /> */}
+            <Route path='/category' element={<CategoryList />} />
+            <Route path='/category/details/:id' element={<Dashboard/>} />
 
             <Route path='*' element={<Navigate to="/admin-home" />} />
         </Routes>

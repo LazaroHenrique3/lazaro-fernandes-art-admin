@@ -1,12 +1,12 @@
 import { Environment } from '../../../enviroment'
 import { api } from '../axiosConfig'
 
-interface IListCategory {
+export interface IListCategory {
     id: number
     name: string
 }
 
-interface IDetailCategory {
+export interface IDetailCategory {
     id: number
     name: string
 }

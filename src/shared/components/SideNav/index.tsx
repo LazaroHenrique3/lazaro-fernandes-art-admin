@@ -88,7 +88,7 @@ export const SideNav: React.FC<IDrawerProps> = ({ children }) => {
                             <ListItemButton  onClick={toggleTheme}>
                                 <ListItemIcon>
                                     <Icon>
-                                        dark_mode
+                                        brightness_4_icon
                                     </Icon>
                                 </ListItemIcon>
                                 <ListItemText primary='Alternar tema' />
