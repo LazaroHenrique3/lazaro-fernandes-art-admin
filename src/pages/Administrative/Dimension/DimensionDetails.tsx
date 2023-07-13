@@ -4,10 +4,10 @@ import { Box, Grid, LinearProgress, Paper, Typography } from '@mui/material'
 
 import * as yup from 'yup'
 
-import { BasePageLayout } from '../../shared/layouts'
-import { DetailTools } from '../../shared/components'
-import { DimensionService } from '../../shared/services/api/dimension/DimensionService'
-import { VTextField, VForm, useVForm, IVFormErrors } from '../../shared/forms'
+import { BasePageLayout } from '../../../shared/layouts'
+import { DetailTools } from '../../../shared/components'
+import { DimensionService } from '../../../shared/services/api/dimension/DimensionService'
+import { VTextField, VForm, useVForm, IVFormErrors } from '../../../shared/forms'
 
 
 interface IFormData {

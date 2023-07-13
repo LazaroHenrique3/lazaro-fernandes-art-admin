@@ -4,10 +4,10 @@ import { Box, Grid, LinearProgress, Paper, Typography } from '@mui/material'
 
 import * as yup from 'yup'
 
-import { BasePageLayout } from '../../shared/layouts'
-import { DetailTools } from '../../shared/components'
-import { TechniqueService } from '../../shared/services/api/technique/TechniqueService'
-import { VTextField, VForm, useVForm, IVFormErrors } from '../../shared/forms'
+import { BasePageLayout } from '../../../shared/layouts'
+import { DetailTools } from '../../../shared/components'
+import { CategoryService } from '../../../shared/services/api/category/CategoryService'
+import { VTextField, VForm, useVForm, IVFormErrors } from '../../../shared/forms'
 
 
 interface IFormData {
@@ -19,7 +19,7 @@ const formatValidationSchema: yup.Schema<IFormData> = yup.object().shape({
     name: yup.string().transform(value => (value ? value.trim() : '')).min(3).max(100).required(),
 })
 
-export const TechniqueDetails: React.FC = () => {
+export const CategoryDetails: React.FC = () => {
     const { id = 'new' } = useParams<'id'>()
     const navigate = useNavigate()
 
@@ -34,13 +34,13 @@ export const TechniqueDetails: React.FC = () => {
 
             if (id !== 'new') {
                 setIsLoading(true)
-                const result = await TechniqueService.getById(Number(id))
+                const result = await CategoryService.getById(Number(id))
 
                 setIsLoading(false)
 
                 if (result instanceof Error) {
                     alert(result.message)
-                    navigate('/technique')
+                    navigate('/category')
                     return
                 }
 
@@ -66,16 +66,16 @@ export const TechniqueDetails: React.FC = () => {
             setIsLoading(true)
 
             if (id === 'new') {
-                const result = await TechniqueService.create(validateData)
+                const result = await CategoryService.create(validateData)
                 setIsLoading(false)
 
                 if (result instanceof Error) {
                     alert(result.message)
                 } else {
-                    navigate(`/technique/details/${result}`)
+                    navigate(`/category/details/${result}`)
                 }
             } else {
-                const result = await TechniqueService.updateById(Number(id), { id: Number(id), ...validateData })
+                const result = await CategoryService.updateById(Number(id), { id: Number(id), ...validateData })
                 setIsLoading(false)
 
                 if (result instanceof Error) {
@@ -102,7 +102,7 @@ export const TechniqueDetails: React.FC = () => {
     const handleDelete = async (id: number, name: string) => {
 
         if (confirm(`Realmente deseja apagar "${name}"?`)) {
-            const result = await TechniqueService.deleteById(id)
+            const result = await CategoryService.deleteById(id)
 
             if (result instanceof Error) {
                 alert(result.message)
@@ -110,13 +110,13 @@ export const TechniqueDetails: React.FC = () => {
             }
 
             alert('Registro apagado com sucesso!')
-            navigate('/technique')
+            navigate('/category')
         }
     }
 
     return (
         <BasePageLayout
-            title={(id === 'new') ? 'Nova técnica' : `'${name}'`}
+            title={(id === 'new') ? 'Nova categoria' : `'${name}'`}
             toolBar={
                 <DetailTools
                     showSaveButton
@@ -126,8 +126,8 @@ export const TechniqueDetails: React.FC = () => {
 
                     onClickSaveButton={() => formRef.current?.submitForm()}
                     onClickDeleteButton={() => handleDelete(Number(id), name)}
-                    onClickBackButton={() => navigate('/technique')}
-                    onClickNewButton={() => navigate('/technique/details/new')}
+                    onClickBackButton={() => navigate('/category')}
+                    onClickNewButton={() => navigate('/category/details/new')}
                 />
             }>
 

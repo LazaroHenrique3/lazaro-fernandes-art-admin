@@ -2,13 +2,13 @@ import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Icon, IconButton, LinearProgress, Pagination, Paper, Table, TableBody,  TableContainer, TableFooter, TableHead, TableRow } from '@mui/material'
 
-import { DimensionService, IListDimension } from '../../shared/services/api/dimension/DimensionService'
-import { BasePageLayout } from '../../shared/layouts'
-import { ListTools } from '../../shared/components'
-import { useDebounce } from '../../shared/hooks'
-import { Environment } from '../../shared/enviroment'
+import { DimensionService, IListDimension } from '../../../shared/services/api/dimension/DimensionService'
+import { BasePageLayout } from '../../../shared/layouts'
+import { ListTools } from '../../../shared/components'
+import { useDebounce } from '../../../shared/hooks'
+import { Environment } from '../../../shared/enviroment'
 
-import { StyledTableCell, StyledTableRow } from '../../shared/components/StyledComponents/TableComponents'
+import { StyledTableCell, StyledTableRow } from '../../../shared/components/StyledComponents/TableComponents'
 
 export const DimensionList: React.FC = () => {
     const [searchParams, setSearchParams] = useSearchParams()

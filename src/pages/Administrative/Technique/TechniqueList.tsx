@@ -1,19 +1,19 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { Icon, IconButton, LinearProgress, Pagination, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow } from '@mui/material'
+import { Icon, IconButton, LinearProgress, Pagination, Paper, Table, TableBody, TableContainer, TableFooter, TableHead, TableRow } from '@mui/material'
 
-import { CategoryService, IListCategory } from '../../shared/services/api/category/CategoryService'
-import { BasePageLayout } from '../../shared/layouts'
-import { ListTools } from '../../shared/components'
-import { useDebounce } from '../../shared/hooks'
-import { Environment } from '../../shared/enviroment'
+import { TechniqueService, IListTechnique } from '../../../shared/services/api/technique/TechniqueService'
+import { BasePageLayout } from '../../../shared/layouts'
+import { ListTools } from '../../../shared/components'
+import { useDebounce } from '../../../shared/hooks'
+import { Environment } from '../../../shared/enviroment'
 
-import { StyledTableCell, StyledTableRow } from '../../shared/components/StyledComponents/TableComponents'
+import { StyledTableCell, StyledTableRow } from '../../../shared/components/StyledComponents/TableComponents'
 
-export const CategoryList: React.FC = () => {
+export const TechniqueList: React.FC = () => {
     const [searchParams, setSearchParams] = useSearchParams()
 
-    const [rows, setRows] = useState<IListCategory[]>([])
+    const [rows, setRows] = useState<IListTechnique[]>([])
     const [totalCount, setTotalCount] = useState(0)
     const [isLoading, setIsLoading] = useState(true)
 
@@ -41,7 +41,7 @@ export const CategoryList: React.FC = () => {
 
         const fetchData = () => {
             debounce(async () => {
-                const result = await CategoryService.getAll(page, search)
+                const result = await TechniqueService.getAll(page, search)
                 setIsLoading(false)
 
                 if (result instanceof Error) {
@@ -62,7 +62,7 @@ export const CategoryList: React.FC = () => {
     const handleDelete = async (id: number, name: string) => {
 
         if (confirm(`Realmente deseja apagar "${name}"?`)) {
-            const result = await CategoryService.deleteById(id)
+            const result = await TechniqueService.deleteById(id)
 
             if (result instanceof Error) {
                 alert(result.message)
@@ -78,13 +78,13 @@ export const CategoryList: React.FC = () => {
 
     return (
         <BasePageLayout
-            title="Categorias"
+            title="Técnicas"
             toolBar={
                 <ListTools
                     showSearchInput
                     newButtonText='Nova'
                     searchText={search}
-                    onClickNewButton={() => navigate('/category/details/new')}
+                    onClickNewButton={() => navigate('/technique/details/new')}
                     onChangeSearchText={text => setSearchParams({ search: text, page: '1' }, { replace: true })}
                 />
             }>
@@ -105,7 +105,7 @@ export const CategoryList: React.FC = () => {
                                         <Icon>delete</Icon>
                                     </IconButton>
 
-                                    <IconButton color='primary' onClick={() => navigate(`/category/details/${row.id}`)}>
+                                    <IconButton color='primary' onClick={() => navigate(`/technique/details/${row.id}`)}>
                                         <Icon>edit</Icon>
                                     </IconButton>
                                 </StyledTableCell>

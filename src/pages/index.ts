@@ -1,10 +1,10 @@
-export * from './Category/CategoryList'
-export * from './Category/CategoryDetails'
+export * from './Administrative/Category/CategoryList'
+export * from './Administrative/Category/CategoryDetails'
 
-export * from './Technique/TechniqueList'
-export * from './Technique/TechniqueDetails'
+export * from './Administrative/Technique/TechniqueList'
+export * from './Administrative/Technique/TechniqueDetails'
 
-export * from './Dimension/DimensionList'
-export * from './Dimension/DimensionDetails'
+export * from './Administrative/Dimension/DimensionList'
+export * from './Administrative/Dimension/DimensionDetails'
 
-export * from './Dashboard'
+export * from './Administrative/Dashboard'
