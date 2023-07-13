@@ -1,24 +1,31 @@
 import { useNavigate, useParams } from 'react-router-dom'
-import { useEffect, useState } from 'react'
-import { Button, LinearProgress } from '@mui/material'
+import { useEffect, useRef, useState } from 'react'
+import { Box, Grid, LinearProgress, Paper, Typography } from '@mui/material'
+import { Form } from '@unform/web'
+import { FormHandles } from '@unform/core'
 
-import { useForm } from 'react-hook-form'
-import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 
 import { BasePageLayout } from '../../shared/layouts'
 import { DetailTools } from '../../shared/components'
-import { CategoryService, IListCategory } from '../../shared/services/api/category/CategoryService'
-import { VTextField } from '../../shared/form'
+import { CategoryService } from '../../shared/services/api/category/CategoryService'
+import { VTextField } from '../../shared/forms'
+
+
+interface IFormData {
+    name: string
+}
 
 //Definindo o schema para validação
-const categorySchema = yup.object().shape({
-    name: yup.string().transform(value => (value ? value.trim() : '')).required().min(3).max(100)
+const categorySchema = yup.object<IFormData>().shape({
+    name: yup.string().transform(value => (value ? value.trim() : '')).required().min(3).max(100),
 })
 
 export const CategoryDetails: React.FC = () => {
     const { id = 'new' } = useParams<'id'>()
     const navigate = useNavigate()
+
+    const formRef = useRef<FormHandles>(null)
 
     const [isLoading, setIsLoading] = useState(false)
     const [name, setName] = useState('')
@@ -38,6 +45,7 @@ export const CategoryDetails: React.FC = () => {
                 }
 
                 setName(result.name)
+                formRef.current?.setData(result)
             }
 
             return
@@ -47,9 +55,29 @@ export const CategoryDetails: React.FC = () => {
 
     }, [id])
 
-    const handleSave = (data: Omit<IListCategory, 'id'>) => {
-        console.log('Save')
-        console.log(data)
+    const handleSave = async (data: IFormData) => {
+        setIsLoading(true)
+
+        if (id === 'new') {
+            const result = await CategoryService.create(data)
+            setIsLoading(false)
+
+            if (result instanceof Error) {
+                alert(result.message)
+            } else {
+                navigate(`/category/details/${result}`)
+            }
+        } else {
+            const result = await CategoryService.updateById(Number(id), { id: Number(id), ...data })
+            setIsLoading(false)
+
+            if (result instanceof Error) {
+                alert(result.message)
+            }
+
+            setName(data.name)
+        }
+
     }
 
     const handleDelete = async (id: number, name: string) => {
@@ -67,19 +95,6 @@ export const CategoryDetails: React.FC = () => {
         }
     }
 
-    //Colocando o Hook form em ação
-    const {
-        register,
-        setValue,
-        reset,
-        handleSubmit: onSubmit,
-        formState: { errors },
-    } = useForm({
-        defaultValues: { name },
-        resolver: yupResolver(categorySchema)
-    })
-
-
     return (
         <BasePageLayout
             title={(id === 'new') ? 'Nova categoria' : `Alterar '${name}'`}
@@ -90,24 +105,37 @@ export const CategoryDetails: React.FC = () => {
                     showNewButton={id !== 'new'}
                     showDeleteButton={id !== 'new'}
 
-                    //onClickSaveButton={handleSave}
+                    onClickSaveButton={() => formRef.current?.submitForm()}
                     onClickDeleteButton={() => handleDelete(Number(id), name)}
                     onClickBackButton={() => navigate('/category')}
                     onClickNewButton={() => navigate('/category/details/new')}
                 />
             }>
 
-            {isLoading && (
-                <LinearProgress variant='indeterminate' />
-            )}
+            <Form ref={formRef} onSubmit={handleSave}>
+                <Box margin={1} display='flex' flexDirection='column' component={Paper} variant='outlined'>
 
-            <p>CategoryDetails {id}</p>
+                    <Grid container direction='column' padding={2} spacing={2}>
+                        {isLoading && (
+                            <Grid item>
+                                <LinearProgress variant='indeterminate' />
+                            </Grid>
+                        )}
 
-            <form onSubmit={onSubmit(handleSave)}>
-                <VTextField name='name' label='Nome' type='string' size='small' errors={errors} register={register}/>
+                        <Grid item>
+                            <Typography variant='h6'>Geral</Typography>
+                        </Grid>
 
-                <Button type='submit'>Submit</Button>
-            </form>
+                        <Grid container item direction='row' spacing={2}>
+                            <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
+                                <VTextField fullWidth label='Nome' name='name' disabled={isLoading} />
+                            </Grid>
+                        </Grid>
+
+                    </Grid>
+
+                </Box>
+            </Form>
 
         </BasePageLayout>
     )
