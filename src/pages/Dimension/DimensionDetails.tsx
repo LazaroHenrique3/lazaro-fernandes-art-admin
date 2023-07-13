@@ -6,27 +6,27 @@ import * as yup from 'yup'
 
 import { BasePageLayout } from '../../shared/layouts'
 import { DetailTools } from '../../shared/components'
-import { TechniqueService } from '../../shared/services/api/technique/TechniqueService'
+import { DimensionService } from '../../shared/services/api/dimension/DimensionService'
 import { VTextField, VForm, useVForm, IVFormErrors } from '../../shared/forms'
 
 
 interface IFormData {
-    name: string
+    dimension: string
 }
 
 //Definindo o schema para validação
 const formatValidationSchema: yup.Schema<IFormData> = yup.object().shape({
-    name: yup.string().transform(value => (value ? value.trim() : '')).min(3).max(100).required(),
+    dimension: yup.string().transform(value => (value ? value.trim() : '')).min(3).max(100).required(),
 })
 
-export const TechniqueDetails: React.FC = () => {
+export const DimensionDetails: React.FC = () => {
     const { id = 'new' } = useParams<'id'>()
     const navigate = useNavigate()
 
     const { formRef } = useVForm()
 
     const [isLoading, setIsLoading] = useState(false)
-    const [name, setName] = useState('')
+    const [dimension, setDimension] = useState('')
 
     useEffect(() => {
 
@@ -34,21 +34,21 @@ export const TechniqueDetails: React.FC = () => {
 
             if (id !== 'new') {
                 setIsLoading(true)
-                const result = await TechniqueService.getById(Number(id))
+                const result = await DimensionService.getById(Number(id))
 
                 setIsLoading(false)
 
                 if (result instanceof Error) {
                     alert(result.message)
-                    navigate('/technique')
+                    navigate('/dimension')
                     return
                 }
 
-                setName(result.name)
+                setDimension(result.dimension)
                 formRef.current?.setData(result)
             } else {
                 formRef.current?.setData({
-                    name: ''
+                    dimension: ''
                 })
             }
 
@@ -66,30 +66,30 @@ export const TechniqueDetails: React.FC = () => {
             setIsLoading(true)
 
             if (id === 'new') {
-                const result = await TechniqueService.create(validateData)
+                const result = await DimensionService.create(validateData)
                 setIsLoading(false)
 
                 if (result instanceof Error) {
                     alert(result.message)
                 } else {
-                    navigate(`/technique/details/${result}`)
+                    navigate(`/dimension/details/${result}`)
                 }
             } else {
-                const result = await TechniqueService.updateById(Number(id), { id: Number(id), ...validateData })
+                const result = await DimensionService.updateById(Number(id), { id: Number(id), ...validateData })
                 setIsLoading(false)
 
                 if (result instanceof Error) {
                     alert(result.message)
                 }
 
-                setName(data.name)
+                setDimension(data.dimension)
             }
         } catch (errors) {
 
             const errorsYup: yup.ValidationError = errors as yup.ValidationError
 
             const validationErrors: IVFormErrors = {}
-            
+
             errorsYup.inner.forEach(error => {
                 if (!error.path) return
 
@@ -99,10 +99,10 @@ export const TechniqueDetails: React.FC = () => {
         }
     }
 
-    const handleDelete = async (id: number, name: string) => {
+    const handleDelete = async (id: number, dimension: string) => {
 
-        if (confirm(`Realmente deseja apagar "${name}"?`)) {
-            const result = await TechniqueService.deleteById(id)
+        if (confirm(`Realmente deseja apagar "${dimension}"?`)) {
+            const result = await DimensionService.deleteById(id)
 
             if (result instanceof Error) {
                 alert(result.message)
@@ -110,13 +110,13 @@ export const TechniqueDetails: React.FC = () => {
             }
 
             alert('Registro apagado com sucesso!')
-            navigate('/technique')
+            navigate('/dimension')
         }
     }
 
     return (
         <BasePageLayout
-            title={(id === 'new') ? 'Nova técnica' : `'${name}'`}
+            title={(id === 'new') ? 'Nova técnica' : `'${dimension}'`}
             toolBar={
                 <DetailTools
                     showSaveButton
@@ -125,9 +125,9 @@ export const TechniqueDetails: React.FC = () => {
                     showDeleteButton={id !== 'new'}
 
                     onClickSaveButton={() => formRef.current?.submitForm()}
-                    onClickDeleteButton={() => handleDelete(Number(id), name)}
-                    onClickBackButton={() => navigate('/technique')}
-                    onClickNewButton={() => navigate('/technique/details/new')}
+                    onClickDeleteButton={() => handleDelete(Number(id), dimension)}
+                    onClickBackButton={() => navigate('/dimension')}
+                    onClickNewButton={() => navigate('/dimension/details/new')}
                 />
             }>
 
@@ -147,7 +147,7 @@ export const TechniqueDetails: React.FC = () => {
 
                         <Grid container item direction='row' spacing={2}>
                             <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
-                                <VTextField fullWidth label='Nome' name='name' disabled={isLoading} />
+                                <VTextField fullWidth label='Nome' name='dimension' disabled={isLoading} />
                             </Grid>
                         </Grid>
 

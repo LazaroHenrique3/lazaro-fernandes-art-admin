@@ -1,12 +1,14 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { Icon, IconButton, LinearProgress, Pagination, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow } from '@mui/material'
+import { Icon, IconButton, LinearProgress, Pagination, Paper, Table, TableBody, TableContainer, TableFooter, TableHead, TableRow } from '@mui/material'
 
 import { TechniqueService, IListTechnique } from '../../shared/services/api/technique/TechniqueService'
 import { BasePageLayout } from '../../shared/layouts'
 import { ListTools } from '../../shared/components'
 import { useDebounce } from '../../shared/hooks'
 import { Environment } from '../../shared/enviroment'
+
+import { StyledTableCell, StyledTableRow } from '../../shared/components/StyledComponents/TableComponents'
 
 export const TechniqueList: React.FC = () => {
     const [searchParams, setSearchParams] = useSearchParams()
@@ -91,14 +93,14 @@ export const TechniqueList: React.FC = () => {
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <TableCell width={100} size='small' sx={{ fontWeight: 600 }}>Ações</TableCell>
-                            <TableCell size='small' sx={{ fontWeight: 600 }}>Nome</TableCell>
+                            <StyledTableCell width={100} size='small' sx={{ fontWeight: 600 }}>Ações</StyledTableCell>
+                            <StyledTableCell size='small' sx={{ fontWeight: 600 }}>Nome</StyledTableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {rows.map((row) => (
-                            <TableRow key={row.id}>
-                                <TableCell size='small'>
+                            <StyledTableRow key={row.id}>
+                                <StyledTableCell size='small'>
                                     <IconButton color='error' onClick={() => handleDelete(row.id, row.name)}>
                                         <Icon>delete</Icon>
                                     </IconButton>
@@ -106,9 +108,9 @@ export const TechniqueList: React.FC = () => {
                                     <IconButton color='primary' onClick={() => navigate(`/technique/details/${row.id}`)}>
                                         <Icon>edit</Icon>
                                     </IconButton>
-                                </TableCell>
-                                <TableCell size='small'>{row.name}</TableCell>
-                            </TableRow>
+                                </StyledTableCell>
+                                <StyledTableCell size='small'>{row.name}</StyledTableCell>
+                            </StyledTableRow>
                         ))}
                     </TableBody>
                     {totalCount === 0 && !isLoading && (
@@ -117,21 +119,21 @@ export const TechniqueList: React.FC = () => {
                     <TableFooter>
                         {isLoading && (
                             <TableRow>
-                                <TableCell size='small' colSpan={3}>
+                                <StyledTableCell size='small' colSpan={3}>
                                     <LinearProgress variant='indeterminate' />
-                                </TableCell>
+                                </StyledTableCell>
                             </TableRow>
                         )}
 
                         {(totalCount > 0 && totalCount > Environment.LINE_LIMIT) && (
                             <TableRow>
-                                <TableCell size='small' colSpan={3}>
+                                <StyledTableCell size='small' colSpan={3}>
                                     <Pagination
                                         page={page}
                                         count={Math.ceil(totalCount / Environment.LINE_LIMIT)}
                                         onChange={(e, newPage) => setSearchParams({ search, page: newPage.toString() }, { replace: true })}
                                     />
-                                </TableCell>
+                                </StyledTableCell>
                             </TableRow>
                         )}
                     </TableFooter>

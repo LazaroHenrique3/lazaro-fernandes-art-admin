@@ -8,7 +8,9 @@ import {
     CategoryDetails,
     CategoryList,
     TechniqueDetails,
-    TechniqueList
+    TechniqueList,
+    DimensionDetails,
+    DimensionList
 } from '../pages'
 
 export const AppRoutes = () => {
@@ -30,6 +32,11 @@ export const AppRoutes = () => {
                 label: 'Técnicas',
                 icon:  'brush',
                 path: '/technique'
+            },
+            {
+                label: 'Dimensões',
+                icon:  'straighten_icon',
+                path: '/dimension'
             }
         ])
     }, [])
@@ -43,6 +50,9 @@ export const AppRoutes = () => {
             
             <Route path='/technique' element={<TechniqueList />} />
             <Route path='/technique/details/:id' element={<TechniqueDetails/>} />
+
+            <Route path='/dimension' element={<DimensionList />} />
+            <Route path='/dimension/details/:id' element={<DimensionDetails/>} />
 
             <Route path='*' element={<Navigate to="/admin-home" />} />
         </Routes>

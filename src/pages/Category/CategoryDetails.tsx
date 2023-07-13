@@ -41,6 +41,7 @@ export const CategoryDetails: React.FC = () => {
                 if (result instanceof Error) {
                     alert(result.message)
                     navigate('/category')
+                    return
                 }
 
                 setName(result.name)

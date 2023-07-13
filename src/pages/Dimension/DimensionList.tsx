@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { Icon, IconButton, LinearProgress, Pagination, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow } from '@mui/material'
+import { Icon, IconButton, LinearProgress, Pagination, Paper, Table, TableBody,  TableContainer, TableFooter, TableHead, TableRow } from '@mui/material'
 
-import { CategoryService, IListCategory } from '../../shared/services/api/category/CategoryService'
+import { DimensionService, IListDimension } from '../../shared/services/api/dimension/DimensionService'
 import { BasePageLayout } from '../../shared/layouts'
 import { ListTools } from '../../shared/components'
 import { useDebounce } from '../../shared/hooks'
@@ -10,10 +10,10 @@ import { Environment } from '../../shared/enviroment'
 
 import { StyledTableCell, StyledTableRow } from '../../shared/components/StyledComponents/TableComponents'
 
-export const CategoryList: React.FC = () => {
+export const DimensionList: React.FC = () => {
     const [searchParams, setSearchParams] = useSearchParams()
 
-    const [rows, setRows] = useState<IListCategory[]>([])
+    const [rows, setRows] = useState<IListDimension[]>([])
     const [totalCount, setTotalCount] = useState(0)
     const [isLoading, setIsLoading] = useState(true)
 
@@ -41,7 +41,7 @@ export const CategoryList: React.FC = () => {
 
         const fetchData = () => {
             debounce(async () => {
-                const result = await CategoryService.getAll(page, search)
+                const result = await DimensionService.getAll(page, search)
                 setIsLoading(false)
 
                 if (result instanceof Error) {
@@ -62,7 +62,7 @@ export const CategoryList: React.FC = () => {
     const handleDelete = async (id: number, name: string) => {
 
         if (confirm(`Realmente deseja apagar "${name}"?`)) {
-            const result = await CategoryService.deleteById(id)
+            const result = await DimensionService.deleteById(id)
 
             if (result instanceof Error) {
                 alert(result.message)
@@ -78,13 +78,13 @@ export const CategoryList: React.FC = () => {
 
     return (
         <BasePageLayout
-            title="Categorias"
+            title="Técnicas"
             toolBar={
                 <ListTools
                     showSearchInput
                     newButtonText='Nova'
                     searchText={search}
-                    onClickNewButton={() => navigate('/category/details/new')}
+                    onClickNewButton={() => navigate('/dimension/details/new')}
                     onChangeSearchText={text => setSearchParams({ search: text, page: '1' }, { replace: true })}
                 />
             }>
@@ -99,17 +99,17 @@ export const CategoryList: React.FC = () => {
                     </TableHead>
                     <TableBody>
                         {rows.map((row) => (
-                            <StyledTableRow key={row.id}>
+                            <StyledTableRow key={row.id} >
                                 <StyledTableCell size='small'>
-                                    <IconButton color='error' onClick={() => handleDelete(row.id, row.name)}>
+                                    <IconButton color='error' onClick={() => handleDelete(row.id, row.dimension)}>
                                         <Icon>delete</Icon>
                                     </IconButton>
 
-                                    <IconButton color='primary' onClick={() => navigate(`/category/details/${row.id}`)}>
+                                    <IconButton color='primary' onClick={() => navigate(`/dimension/details/${row.id}`)}>
                                         <Icon>edit</Icon>
                                     </IconButton>
                                 </StyledTableCell>
-                                <StyledTableCell size='small'>{row.name}</StyledTableCell>
+                                <StyledTableCell size='small'>{row.dimension}</StyledTableCell>
                             </StyledTableRow>
                         ))}
                     </TableBody>
