@@ -1,15 +1,13 @@
 import { useNavigate, useParams } from 'react-router-dom'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Box, Grid, LinearProgress, Paper, Typography } from '@mui/material'
-import { Form } from '@unform/web'
-import { FormHandles } from '@unform/core'
 
 import * as yup from 'yup'
 
 import { BasePageLayout } from '../../shared/layouts'
 import { DetailTools } from '../../shared/components'
 import { CategoryService } from '../../shared/services/api/category/CategoryService'
-import { VTextField } from '../../shared/forms'
+import { VTextField, VForm, useVForm, IVFormErrors } from '../../shared/forms'
 
 
 interface IFormData {
@@ -17,15 +15,15 @@ interface IFormData {
 }
 
 //Definindo o schema para validação
-const categorySchema = yup.object<IFormData>().shape({
-    name: yup.string().transform(value => (value ? value.trim() : '')).required().min(3).max(100),
+const formatValidationSchema: yup.Schema<IFormData> = yup.object().shape({
+    name: yup.string().transform(value => (value ? value.trim() : '')).min(3).max(100).required(),
 })
 
 export const CategoryDetails: React.FC = () => {
     const { id = 'new' } = useParams<'id'>()
     const navigate = useNavigate()
 
-    const formRef = useRef<FormHandles>(null)
+    const { formRef } = useVForm()
 
     const [isLoading, setIsLoading] = useState(false)
     const [name, setName] = useState('')
@@ -39,6 +37,7 @@ export const CategoryDetails: React.FC = () => {
                 const result = await CategoryService.getById(Number(id))
 
                 setIsLoading(false)
+
                 if (result instanceof Error) {
                     alert(result.message)
                     navigate('/category')
@@ -46,6 +45,10 @@ export const CategoryDetails: React.FC = () => {
 
                 setName(result.name)
                 formRef.current?.setData(result)
+            } else {
+                formRef.current?.setData({
+                    name: ''
+                })
             }
 
             return
@@ -56,28 +59,43 @@ export const CategoryDetails: React.FC = () => {
     }, [id])
 
     const handleSave = async (data: IFormData) => {
-        setIsLoading(true)
+        try {
+            const validateData = await formatValidationSchema.validate(data, { abortEarly: false })
 
-        if (id === 'new') {
-            const result = await CategoryService.create(data)
-            setIsLoading(false)
+            setIsLoading(true)
 
-            if (result instanceof Error) {
-                alert(result.message)
+            if (id === 'new') {
+                const result = await CategoryService.create(validateData)
+                setIsLoading(false)
+
+                if (result instanceof Error) {
+                    alert(result.message)
+                } else {
+                    navigate(`/category/details/${result}`)
+                }
             } else {
-                navigate(`/category/details/${result}`)
-            }
-        } else {
-            const result = await CategoryService.updateById(Number(id), { id: Number(id), ...data })
-            setIsLoading(false)
+                const result = await CategoryService.updateById(Number(id), { id: Number(id), ...validateData })
+                setIsLoading(false)
 
-            if (result instanceof Error) {
-                alert(result.message)
-            }
+                if (result instanceof Error) {
+                    alert(result.message)
+                }
 
-            setName(data.name)
+                setName(data.name)
+            }
+        } catch (errors) {
+
+            const errorsYup: yup.ValidationError = errors as yup.ValidationError
+
+            const validationErrors: IVFormErrors = {}
+            
+            errorsYup.inner.forEach(error => {
+                if (!error.path) return
+
+                validationErrors[error.path] = error.message
+                formRef.current?.setErrors(validationErrors)
+            })
         }
-
     }
 
     const handleDelete = async (id: number, name: string) => {
@@ -97,7 +115,7 @@ export const CategoryDetails: React.FC = () => {
 
     return (
         <BasePageLayout
-            title={(id === 'new') ? 'Nova categoria' : `Alterar '${name}'`}
+            title={(id === 'new') ? 'Nova categoria' : `'${name}'`}
             toolBar={
                 <DetailTools
                     showSaveButton
@@ -112,7 +130,7 @@ export const CategoryDetails: React.FC = () => {
                 />
             }>
 
-            <Form ref={formRef} onSubmit={handleSave}>
+            <VForm ref={formRef} onSubmit={handleSave}>
                 <Box margin={1} display='flex' flexDirection='column' component={Paper} variant='outlined'>
 
                     <Grid container direction='column' padding={2} spacing={2}>
@@ -135,7 +153,7 @@ export const CategoryDetails: React.FC = () => {
                     </Grid>
 
                 </Box>
-            </Form>
+            </VForm>
 
         </BasePageLayout>
     )
