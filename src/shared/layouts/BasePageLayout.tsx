@@ -8,7 +8,7 @@ import { useDrawerContext } from '../contexts'
 interface IBasePageLayoutProps {
     children: React.ReactNode,
     title: string,
-    toolBar: ReactNode | undefined
+    toolBar?: ReactNode | undefined
 }
 
 export const BasePageLayout: React.FC<IBasePageLayoutProps> = ({ children, title, toolBar }) => {

@@ -78,7 +78,7 @@ export const DimensionList: React.FC = () => {
 
     return (
         <BasePageLayout
-            title="Técnicas"
+            title="Dimensões"
             toolBar={
                 <ListTools
                     showSearchInput
