@@ -7,12 +7,14 @@ import {
     ListItemIcon,
     ListItemText,
     useTheme,
-    useMediaQuery
+    useMediaQuery,
+    Typography,
+    Button
 } from '@mui/material'
 
 import { Box } from '@mui/material'
 
-import { useAppThemeContext, useDrawerContext } from '../../contexts'
+import { useAppThemeContext, useDrawerContext, useAuthContext } from '../../contexts'
 import { useMatch, useNavigate, useResolvedPath } from 'react-router-dom'
 
 interface IListItemLinkProps {
@@ -57,20 +59,27 @@ export const SideNav: React.FC<IDrawerProps> = ({ children }) => {
     //Retorna true ou false de acordo com o tamanho da tela
     const smDown = useMediaQuery(theme.breakpoints.down('sm'))
 
+    //Nome do usuário logado
+    const { name } = useAuthContext()
 
     const { isDrawerOpen, toggleDrawerOpen, drawerOptions } = useDrawerContext()
 
     const { toggleTheme } = useAppThemeContext()
+    const { logout } = useAuthContext()
 
     return (
         <>
             <Drawer open={isDrawerOpen} variant={smDown ? 'temporary' : 'permanent'} onClose={toggleDrawerOpen}>
                 <Box width={theme.spacing(28)} height='100%' display='flex' flexDirection='column'>
 
-                    <Box width='100%' height={theme.spacing(20)} display='flex' alignItems='center' justifyContent='center'>
+                    <Box width='100%' height={theme.spacing(20)} marginY={1} display='flex' gap={1} alignItems='center' justifyContent='center' flexDirection='column'>
                         <Avatar
                             sx={{ height: theme.spacing(12), width: theme.spacing(12) }}
                             src='https://avatars.githubusercontent.com/u/78514404?v=4' />
+
+                        <Button variant='outlined' startIcon={<Icon>account_circle_icon</Icon>}>
+                            {name}
+                        </Button>
                     </Box>
 
                     <Divider />
@@ -85,13 +94,22 @@ export const SideNav: React.FC<IDrawerProps> = ({ children }) => {
 
                     <Box>
                         <List component="nav">
-                            <ListItemButton  onClick={toggleTheme}>
+                            <ListItemButton onClick={toggleTheme}>
                                 <ListItemIcon>
                                     <Icon>
                                         brightness_4_icon
                                     </Icon>
                                 </ListItemIcon>
                                 <ListItemText primary='Alternar tema' />
+                            </ListItemButton>
+
+                            <ListItemButton onClick={logout}>
+                                <ListItemIcon>
+                                    <Icon>
+                                        logout
+                                    </Icon>
+                                </ListItemIcon>
+                                <ListItemText primary='Sair' />
                             </ListItemButton>
                         </List>
                     </Box>

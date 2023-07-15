@@ -1,20 +1,19 @@
 import { BrowserRouter } from 'react-router-dom'
 import { AppRoutes } from './routes'
-import { AppThemeProvider, DrawerProvider } from './shared/contexts'
-import { SideNav } from './shared/components'
+import { AppThemeProvider, DrawerProvider, AuthProvider } from './shared/contexts'
 
 
 function App() {
     return (
-        <DrawerProvider>
+        <AuthProvider>
             <AppThemeProvider>
-                <BrowserRouter>
-                    <SideNav>
+                <DrawerProvider>
+                    <BrowserRouter>
                         <AppRoutes />
-                    </SideNav>
-                </BrowserRouter>
+                    </BrowserRouter>
+                </DrawerProvider>
             </AppThemeProvider>
-        </DrawerProvider>
+        </AuthProvider>
     )
 }
 

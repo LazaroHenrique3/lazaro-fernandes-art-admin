@@ -1,6 +1,8 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { useEffect } from 'react'
 
+import { PrivateAdmin } from '.././shared/components'
+
 import '../shared/services/yup/TranslationsYup'
 import { useDrawerContext } from '../shared/contexts'
 import {
@@ -10,7 +12,8 @@ import {
     TechniqueDetails,
     TechniqueList,
     DimensionDetails,
-    DimensionList
+    DimensionList,
+    LoginAdmin
 } from '../pages'
 
 export const AppRoutes = () => {
@@ -25,17 +28,17 @@ export const AppRoutes = () => {
             },
             {
                 label: 'Categorias',
-                icon:  'local_offer_icon',
+                icon: 'local_offer_icon',
                 path: '/category'
             },
             {
                 label: 'Técnicas',
-                icon:  'brush',
+                icon: 'brush',
                 path: '/technique'
             },
             {
                 label: 'Dimensões',
-                icon:  'straighten_icon',
+                icon: 'straighten_icon',
                 path: '/dimension'
             }
         ])
@@ -43,16 +46,18 @@ export const AppRoutes = () => {
 
     return (
         <Routes>
-            <Route path='/admin-home' element={<Dashboard />} />
+            <Route path='/admin/login' element={<LoginAdmin />} />
 
-            <Route path='/category' element={<CategoryList />} />
-            <Route path='/category/details/:id' element={<CategoryDetails/>} />
-            
-            <Route path='/technique' element={<TechniqueList />} />
-            <Route path='/technique/details/:id' element={<TechniqueDetails/>} />
+            <Route path='/admin-home' element={<PrivateAdmin><Dashboard /></PrivateAdmin>} />
 
-            <Route path='/dimension' element={<DimensionList />} />
-            <Route path='/dimension/details/:id' element={<DimensionDetails/>} />
+            <Route path='/category' element={<PrivateAdmin><CategoryList /></PrivateAdmin>} />
+            <Route path='/category/details/:id' element={<PrivateAdmin><CategoryDetails /></PrivateAdmin>} />
+
+            <Route path='/technique' element={<PrivateAdmin><TechniqueList /></PrivateAdmin>} />
+            <Route path='/technique/details/:id' element={<PrivateAdmin><TechniqueDetails /></PrivateAdmin>} />
+
+            <Route path='/dimension' element={<PrivateAdmin><DimensionList /></PrivateAdmin>} />
+            <Route path='/dimension/details/:id' element={<PrivateAdmin><DimensionDetails /></PrivateAdmin>} />
 
             <Route path='*' element={<Navigate to="/admin-home" />} />
         </Routes>
