@@ -84,7 +84,7 @@ export const DimensionList: React.FC = () => {
                     showSearchInput
                     newButtonText='Nova'
                     searchText={search}
-                    onClickNewButton={() => navigate('/dimension/details/new')}
+                    onClickNewButton={() => navigate('/admin/dimension/details/new')}
                     onChangeSearchText={text => setSearchParams({ search: text, page: '1' }, { replace: true })}
                 />
             }>
@@ -105,7 +105,7 @@ export const DimensionList: React.FC = () => {
                                         <Icon>delete</Icon>
                                     </IconButton>
 
-                                    <IconButton color='primary' onClick={() => navigate(`/dimension/details/${row.id}`)}>
+                                    <IconButton color='primary' onClick={() => navigate(`/admin/dimension/details/${row.id}`)}>
                                         <Icon>edit</Icon>
                                     </IconButton>
                                 </StyledTableCell>

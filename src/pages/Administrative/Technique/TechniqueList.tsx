@@ -84,7 +84,7 @@ export const TechniqueList: React.FC = () => {
                     showSearchInput
                     newButtonText='Nova'
                     searchText={search}
-                    onClickNewButton={() => navigate('/technique/details/new')}
+                    onClickNewButton={() => navigate('/admin/technique/details/new')}
                     onChangeSearchText={text => setSearchParams({ search: text, page: '1' }, { replace: true })}
                 />
             }>

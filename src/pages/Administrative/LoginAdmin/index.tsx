@@ -39,7 +39,7 @@ export const LoginAdmin = () => {
             if(typeof result === 'string'){
                 alert(result)
             } else {
-                navigate('admin-home')
+                navigate('/admin/admin-home')
             }
 
         } catch (errors) {

@@ -40,7 +40,7 @@ export const DimensionDetails: React.FC = () => {
 
                 if (result instanceof Error) {
                     alert(result.message)
-                    navigate('/dimension')
+                    navigate('/admin/dimension')
                     return
                 }
 
@@ -72,7 +72,7 @@ export const DimensionDetails: React.FC = () => {
                 if (result instanceof Error) {
                     alert(result.message)
                 } else {
-                    navigate(`/dimension/details/${result}`)
+                    navigate(`/admin//dimension/details/${result}`)
                 }
             } else {
                 const result = await DimensionService.updateById(Number(id), { id: Number(id), ...validateData })
@@ -110,7 +110,7 @@ export const DimensionDetails: React.FC = () => {
             }
 
             alert('Registro apagado com sucesso!')
-            navigate('/dimension')
+            navigate('/admin/dimension')
         }
     }
 
@@ -126,8 +126,8 @@ export const DimensionDetails: React.FC = () => {
 
                     onClickSaveButton={() => formRef.current?.submitForm()}
                     onClickDeleteButton={() => handleDelete(Number(id), dimension)}
-                    onClickBackButton={() => navigate('/dimension')}
-                    onClickNewButton={() => navigate('/dimension/details/new')}
+                    onClickBackButton={() => navigate('/admin/dimension')}
+                    onClickNewButton={() => navigate('/admin/dimension/details/new')}
                 />
             }>
 

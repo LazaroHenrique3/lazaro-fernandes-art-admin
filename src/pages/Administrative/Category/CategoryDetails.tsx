@@ -40,7 +40,7 @@ export const CategoryDetails: React.FC = () => {
 
                 if (result instanceof Error) {
                     alert(result.message)
-                    navigate('/category')
+                    navigate('/admin/category')
                     return
                 }
 
@@ -72,7 +72,7 @@ export const CategoryDetails: React.FC = () => {
                 if (result instanceof Error) {
                     alert(result.message)
                 } else {
-                    navigate(`/category/details/${result}`)
+                    navigate(`/admin/category/details/${result}`)
                 }
             } else {
                 const result = await CategoryService.updateById(Number(id), { id: Number(id), ...validateData })
@@ -110,7 +110,7 @@ export const CategoryDetails: React.FC = () => {
             }
 
             alert('Registro apagado com sucesso!')
-            navigate('/category')
+            navigate('/admin/category')
         }
     }
 
@@ -126,8 +126,8 @@ export const CategoryDetails: React.FC = () => {
 
                     onClickSaveButton={() => formRef.current?.submitForm()}
                     onClickDeleteButton={() => handleDelete(Number(id), name)}
-                    onClickBackButton={() => navigate('/category')}
-                    onClickNewButton={() => navigate('/category/details/new')}
+                    onClickBackButton={() => navigate('/admin/category')}
+                    onClickNewButton={() => navigate('/admin/category/details/new')}
                 />
             }>
 

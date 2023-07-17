@@ -9,3 +9,5 @@ export * from './Administrative/Dimension/DimensionList'
 export * from './Administrative/Dimension/DimensionDetails'
 
 export * from './Administrative/Dashboard'
+
+export * from './PageNotFound'

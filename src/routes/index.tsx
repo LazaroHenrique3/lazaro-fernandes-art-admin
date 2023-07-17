@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route} from 'react-router-dom'
 import { useEffect } from 'react'
 
 import { PrivateAdmin } from '.././shared/components'
@@ -13,7 +13,8 @@ import {
     TechniqueList,
     DimensionDetails,
     DimensionList,
-    LoginAdmin
+    LoginAdmin,
+    PageNotFound
 } from '../pages'
 
 export const AppRoutes = () => {
@@ -24,22 +25,22 @@ export const AppRoutes = () => {
             {
                 label: 'Página inicial',
                 icon: 'home',
-                path: '/admin-home'
+                path: '/admin/admin-home'
             },
             {
                 label: 'Categorias',
                 icon: 'local_offer_icon',
-                path: '/category'
+                path: '/admin/category'
             },
             {
                 label: 'Técnicas',
                 icon: 'brush',
-                path: '/technique'
+                path: '/admin/technique'
             },
             {
                 label: 'Dimensões',
                 icon: 'straighten_icon',
-                path: '/dimension'
+                path: '/admin/dimension'
             }
         ])
     }, [])
@@ -48,18 +49,18 @@ export const AppRoutes = () => {
         <Routes>
             <Route path='/admin/login' element={<LoginAdmin />} />
 
-            <Route path='/admin-home' element={<PrivateAdmin><Dashboard /></PrivateAdmin>} />
+            <Route path='/admin/admin-home' element={<PrivateAdmin><Dashboard /></PrivateAdmin>} />
 
-            <Route path='/category' element={<PrivateAdmin><CategoryList /></PrivateAdmin>} />
-            <Route path='/category/details/:id' element={<PrivateAdmin><CategoryDetails /></PrivateAdmin>} />
+            <Route path='/admin/category' element={<PrivateAdmin><CategoryList /></PrivateAdmin>} />
+            <Route path='/admin/category/details/:id' element={<PrivateAdmin><CategoryDetails /></PrivateAdmin>} />
 
-            <Route path='/technique' element={<PrivateAdmin><TechniqueList /></PrivateAdmin>} />
-            <Route path='/technique/details/:id' element={<PrivateAdmin><TechniqueDetails /></PrivateAdmin>} />
+            <Route path='/admin/technique' element={<PrivateAdmin><TechniqueList /></PrivateAdmin>} />
+            <Route path='/admin/technique/details/:id' element={<PrivateAdmin><TechniqueDetails /></PrivateAdmin>} />
 
-            <Route path='/dimension' element={<PrivateAdmin><DimensionList /></PrivateAdmin>} />
-            <Route path='/dimension/details/:id' element={<PrivateAdmin><DimensionDetails /></PrivateAdmin>} />
+            <Route path='/admin/dimension' element={<PrivateAdmin><DimensionList /></PrivateAdmin>} />
+            <Route path='/admin/dimension/details/:id' element={<PrivateAdmin><DimensionDetails /></PrivateAdmin>} />
 
-            <Route path='*' element={<Navigate to="/admin-home" />} />
+            <Route path='*' element={<PageNotFound/>} />
         </Routes>
     )
 }

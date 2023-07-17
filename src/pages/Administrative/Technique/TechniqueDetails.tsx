@@ -40,7 +40,7 @@ export const TechniqueDetails: React.FC = () => {
 
                 if (result instanceof Error) {
                     alert(result.message)
-                    navigate('/technique')
+                    navigate('/admin/technique')
                     return
                 }
 
@@ -72,7 +72,7 @@ export const TechniqueDetails: React.FC = () => {
                 if (result instanceof Error) {
                     alert(result.message)
                 } else {
-                    navigate(`/technique/details/${result}`)
+                    navigate(`/admin/technique/details/${result}`)
                 }
             } else {
                 const result = await TechniqueService.updateById(Number(id), { id: Number(id), ...validateData })
@@ -110,7 +110,7 @@ export const TechniqueDetails: React.FC = () => {
             }
 
             alert('Registro apagado com sucesso!')
-            navigate('/technique')
+            navigate('/admin/technique')
         }
     }
 
@@ -126,8 +126,8 @@ export const TechniqueDetails: React.FC = () => {
 
                     onClickSaveButton={() => formRef.current?.submitForm()}
                     onClickDeleteButton={() => handleDelete(Number(id), name)}
-                    onClickBackButton={() => navigate('/technique')}
-                    onClickNewButton={() => navigate('/technique/details/new')}
+                    onClickBackButton={() => navigate('/admin/technique')}
+                    onClickNewButton={() => navigate('/admin/technique/details/new')}
                 />
             }>
 
