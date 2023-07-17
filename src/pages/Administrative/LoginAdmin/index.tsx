@@ -3,6 +3,9 @@ import { useNavigate } from 'react-router-dom'
 import { Box, Card, CardContent, LinearProgress, CardActions, Button, Typography } from '@mui/material'
 import { CircularProgress } from '@mui/material'
 
+import { toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+
 import * as yup from 'yup'
 
 import { useAuthContext } from '../../../shared/contexts'
@@ -37,7 +40,7 @@ export const LoginAdmin = () => {
             setIsLoading(false)
 
             if(typeof result === 'string'){
-                alert(result)
+                toast.error(result)
             } else {
                 navigate('/admin/admin-home')
             }

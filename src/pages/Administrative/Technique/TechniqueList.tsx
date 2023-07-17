@@ -2,6 +2,9 @@ import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Icon, IconButton, LinearProgress, Pagination, Paper, Table, TableBody, TableContainer, TableFooter, TableHead, TableRow } from '@mui/material'
 
+import { toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+
 import { TechniqueService, IListTechnique } from '../../../shared/services/api/technique/TechniqueService'
 import { BasePageLayout } from '../../../shared/layouts'
 import { ListTools } from '../../../shared/components'
@@ -45,7 +48,7 @@ export const TechniqueList: React.FC = () => {
                 setIsLoading(false)
 
                 if (result instanceof Error) {
-                    alert(result.message)
+                    toast.error(result.message)
                     return
                 }
 
@@ -65,14 +68,15 @@ export const TechniqueList: React.FC = () => {
             const result = await TechniqueService.deleteById(id)
 
             if (result instanceof Error) {
-                alert(result.message)
+                toast.error(result.message)
                 return
             }
 
             setRows(oldRows => [
                 ...oldRows.filter(oldRow => oldRow.id !== id)
             ])
-            alert('Registro apagado com sucesso!')
+
+            toast.success('Registro apagado com sucesso!')
         }
     }
 
@@ -105,7 +109,7 @@ export const TechniqueList: React.FC = () => {
                                         <Icon>delete</Icon>
                                     </IconButton>
 
-                                    <IconButton color='primary' onClick={() => navigate(`/technique/details/${row.id}`)}>
+                                    <IconButton color='primary' onClick={() => navigate(`/admin/technique/details/${row.id}`)}>
                                         <Icon>edit</Icon>
                                     </IconButton>
                                 </StyledTableCell>

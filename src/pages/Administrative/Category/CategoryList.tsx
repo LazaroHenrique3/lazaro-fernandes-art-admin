@@ -2,6 +2,9 @@ import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Icon, IconButton, LinearProgress, Pagination, Paper, Table, TableBody, TableContainer, TableFooter, TableHead, TableRow } from '@mui/material'
 
+import { toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+
 import { CategoryService, IListCategory } from '../../../shared/services/api/category/CategoryService'
 import { BasePageLayout } from '../../../shared/layouts'
 import { ListTools } from '../../../shared/components'
@@ -45,7 +48,7 @@ export const CategoryList: React.FC = () => {
                 setIsLoading(false)
 
                 if (result instanceof Error) {
-                    alert(result.message)
+                    toast.error(result.message)
                     return
                 }
 
@@ -65,14 +68,14 @@ export const CategoryList: React.FC = () => {
             const result = await CategoryService.deleteById(id)
 
             if (result instanceof Error) {
-                alert(result.message)
+                toast.error(result.message)
                 return
             }
 
             setRows(oldRows => [
                 ...oldRows.filter(oldRow => oldRow.id !== id)
             ])
-            alert('Registro apagado com sucesso!')
+            toast.success('Registro apagado com sucesso!')
         }
     }
 

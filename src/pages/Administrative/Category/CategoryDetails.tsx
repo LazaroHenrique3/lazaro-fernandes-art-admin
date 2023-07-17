@@ -9,6 +9,8 @@ import { DetailTools } from '../../../shared/components'
 import { CategoryService } from '../../../shared/services/api/category/CategoryService'
 import { VTextField, VForm, useVForm, IVFormErrors } from '../../../shared/forms'
 
+import { toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 interface IFormData {
     name: string
@@ -39,7 +41,7 @@ export const CategoryDetails: React.FC = () => {
                 setIsLoading(false)
 
                 if (result instanceof Error) {
-                    alert(result.message)
+                    toast.error(result.message)
                     navigate('/admin/category')
                     return
                 }
@@ -70,8 +72,9 @@ export const CategoryDetails: React.FC = () => {
                 setIsLoading(false)
 
                 if (result instanceof Error) {
-                    alert(result.message)
+                    toast.error(result.message)
                 } else {
+                    toast.success('Registro salvo com sucesso!')
                     navigate(`/admin/category/details/${result}`)
                 }
             } else {
@@ -79,9 +82,11 @@ export const CategoryDetails: React.FC = () => {
                 setIsLoading(false)
 
                 if (result instanceof Error) {
-                    alert(result.message)
+                    toast.error(result.message)
+                    return
                 }
 
+                toast.success('Registro salvo com sucesso!')
                 setName(data.name)
             }
         } catch (errors) {
@@ -105,11 +110,11 @@ export const CategoryDetails: React.FC = () => {
             const result = await CategoryService.deleteById(id)
 
             if (result instanceof Error) {
-                alert(result.message)
+                toast.error(result.message)
                 return
             }
 
-            alert('Registro apagado com sucesso!')
+            toast.success('Registro apagado com sucesso!')
             navigate('/admin/category')
         }
     }

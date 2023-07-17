@@ -2,6 +2,9 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { Box, Grid, LinearProgress, Paper, Typography } from '@mui/material'
 
+import { toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+
 import * as yup from 'yup'
 
 import { BasePageLayout } from '../../../shared/layouts'
@@ -39,7 +42,7 @@ export const DimensionDetails: React.FC = () => {
                 setIsLoading(false)
 
                 if (result instanceof Error) {
-                    alert(result.message)
+                    toast.error(result.message)
                     navigate('/admin/dimension')
                     return
                 }
@@ -70,18 +73,21 @@ export const DimensionDetails: React.FC = () => {
                 setIsLoading(false)
 
                 if (result instanceof Error) {
-                    alert(result.message)
+                    toast.error(result.message)
                 } else {
-                    navigate(`/admin//dimension/details/${result}`)
+                    toast.success('Registro salvo com sucesso!')
+                    navigate(`/admin/dimension/details/${result}`)
                 }
             } else {
                 const result = await DimensionService.updateById(Number(id), { id: Number(id), ...validateData })
                 setIsLoading(false)
 
                 if (result instanceof Error) {
-                    alert(result.message)
+                    toast.error(result.message)
+                    return
                 }
 
+                toast.success('Registro salvo com sucesso!')
                 setDimension(data.dimension)
             }
         } catch (errors) {
@@ -105,11 +111,11 @@ export const DimensionDetails: React.FC = () => {
             const result = await DimensionService.deleteById(id)
 
             if (result instanceof Error) {
-                alert(result.message)
+                toast.error(result.message)
                 return
             }
 
-            alert('Registro apagado com sucesso!')
+            toast.success('Registro apagado com sucesso!')
             navigate('/admin/dimension')
         }
     }

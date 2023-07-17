@@ -7,11 +7,11 @@ interface ILoginProps {
 }
 
 export const PrivateAdmin: React.FC<ILoginProps> = ({ children }) => {
-    const { isAuthenticated } = useAuthContext()
+    const { isAuthenticated, typeUser } = useAuthContext()
 
     const navigate = useNavigate()
 
-    if (isAuthenticated) return (
+    if (isAuthenticated && typeUser === 'admin') return (
         <SideNav>{children}</SideNav>
     ) 
     

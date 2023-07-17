@@ -2,6 +2,9 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { Box, Grid, LinearProgress, Paper, Typography } from '@mui/material'
 
+import { toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+
 import * as yup from 'yup'
 
 import { BasePageLayout } from '../../../shared/layouts'
@@ -39,7 +42,7 @@ export const TechniqueDetails: React.FC = () => {
                 setIsLoading(false)
 
                 if (result instanceof Error) {
-                    alert(result.message)
+                    toast.error(result.message)
                     navigate('/admin/technique')
                     return
                 }
@@ -70,8 +73,9 @@ export const TechniqueDetails: React.FC = () => {
                 setIsLoading(false)
 
                 if (result instanceof Error) {
-                    alert(result.message)
+                    toast.error(result.message)
                 } else {
+                    toast.success('Registro salvo com sucesso!')
                     navigate(`/admin/technique/details/${result}`)
                 }
             } else {
@@ -79,9 +83,11 @@ export const TechniqueDetails: React.FC = () => {
                 setIsLoading(false)
 
                 if (result instanceof Error) {
-                    alert(result.message)
+                    toast.error(result.message)
+                    return
                 }
 
+                toast.success('Registro salvo com sucesso!')
                 setName(data.name)
             }
         } catch (errors) {
@@ -105,11 +111,11 @@ export const TechniqueDetails: React.FC = () => {
             const result = await TechniqueService.deleteById(id)
 
             if (result instanceof Error) {
-                alert(result.message)
+                toast.error(result.message)
                 return
             }
 
-            alert('Registro apagado com sucesso!')
+            toast.success('Registro apagado com sucesso!')
             navigate('/admin/technique')
         }
     }

@@ -2,6 +2,9 @@ import { BrowserRouter } from 'react-router-dom'
 import { AppRoutes } from './routes'
 import { AppThemeProvider, DrawerProvider, AuthProvider } from './shared/contexts'
 
+//Importando o Toasts
+import { ToastContainer, toast  } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 function App() {
     return (
@@ -10,6 +13,7 @@ function App() {
                 <DrawerProvider>
                     <BrowserRouter>
                         <AppRoutes />
+                        <ToastContainer autoClose={5000} position={toast.POSITION.BOTTOM_LEFT} />
                     </BrowserRouter>
                 </DrawerProvider>
             </AppThemeProvider>
