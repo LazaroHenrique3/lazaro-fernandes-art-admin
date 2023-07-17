@@ -1,10 +1,12 @@
 import { createContext, useCallback, useMemo, useState, useEffect, useContext } from 'react'
 
 import { AuthService } from '../services/api/auth/AuthService'
+import { api } from '../services/api/axiosConfig'
 
 interface IAuthContextData {
     name?: string
     isAuthenticated: boolean
+    isLoading: boolean
     typeUser?: string
     userPermissions?: number[]
     logout: () => void
@@ -28,6 +30,8 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
     const [typeUser, setTypeUser] = useState<string>()
     const [userPermissions, setuserPermissions] = useState<number[]>()
 
+    const [loading, setLoading] = useState(true)
+
     useEffect(() => {
         const accessToken = localStorage.getItem(LOCAL_STORAGE_KEY__ACCESS_TOKEN)
         const name = localStorage.getItem(LOCAL_STORAGE_KEY__USER_NAME)
@@ -35,6 +39,8 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
         const userPermissions = localStorage.getItem(LOCAL_STORAGE_KEY__USER_PERMISSIONS)
 
         if (accessToken && name && typeUser && userPermissions) {
+            api.defaults.headers.Authorization = `Bearer ${accessToken}`
+
             setAccessToken(JSON.parse(accessToken))
             setName(JSON.parse(name))
             setTypeUser(JSON.parse(typeUser))
@@ -46,6 +52,7 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
             setuserPermissions(undefined)
         }
 
+        setLoading(false)
     }, [])
 
     const handleLogin = useCallback(async (email: string, password: string) => {
@@ -59,6 +66,7 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
             localStorage.setItem(LOCAL_STORAGE_KEY__TYPE_USER, JSON.stringify(result.typeUser))
             localStorage.setItem(LOCAL_STORAGE_KEY__USER_PERMISSIONS, JSON.stringify(result.permissions))
 
+            api.defaults.headers.Authorization = `Bearer ${result.accessToken}`
 
             setAccessToken(result.accessToken)
             setName(result.name)
@@ -73,13 +81,16 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
         localStorage.removeItem(LOCAL_STORAGE_KEY__USER_NAME)
         localStorage.removeItem(LOCAL_STORAGE_KEY__TYPE_USER)
         localStorage.removeItem(LOCAL_STORAGE_KEY__USER_PERMISSIONS)
+
+        api.defaults.headers.Authorization = null
         setAccessToken(undefined)
     }, [])
 
     const isAuthenticated = useMemo(() => !!accessToken, [accessToken])
+    const isLoading = useMemo(() => loading, [loading])
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated, typeUser, userPermissions, name, login: handleLogin, logout: handleLogout }}>
+        <AuthContext.Provider value={{ isAuthenticated, isLoading, typeUser, userPermissions, name, login: handleLogin, logout: handleLogout }}>
             {children}
         </AuthContext.Provider>
     )

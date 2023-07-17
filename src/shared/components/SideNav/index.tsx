@@ -52,7 +52,7 @@ interface IDrawerProps {
 }
 
 export const SideNav: React.FC<IDrawerProps> = ({ children }) => {
-    //Consegue acessao o theme que estamos usando
+    //Consegue acessar o theme que estamos usando
     const theme = useTheme()
 
     //Retorna true ou false de acordo com o tamanho da tela
