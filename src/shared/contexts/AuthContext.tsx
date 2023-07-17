@@ -40,8 +40,8 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
 
         if (accessToken && name && typeUser && userPermissions) {
             api.defaults.headers.Authorization = `Bearer ${accessToken}`
-
-            setAccessToken(JSON.parse(accessToken))
+            
+            setAccessToken(accessToken)
             setName(JSON.parse(name))
             setTypeUser(JSON.parse(typeUser))
             setuserPermissions(JSON.parse(userPermissions))
@@ -61,13 +61,13 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
         if (result instanceof Error) {
             return result.message
         } else {
-            localStorage.setItem(LOCAL_STORAGE_KEY__ACCESS_TOKEN, JSON.stringify(result.accessToken))
+            localStorage.setItem(LOCAL_STORAGE_KEY__ACCESS_TOKEN, result.accessToken)
             localStorage.setItem(LOCAL_STORAGE_KEY__USER_NAME, JSON.stringify(result.name))
             localStorage.setItem(LOCAL_STORAGE_KEY__TYPE_USER, JSON.stringify(result.typeUser))
             localStorage.setItem(LOCAL_STORAGE_KEY__USER_PERMISSIONS, JSON.stringify(result.permissions))
 
             api.defaults.headers.Authorization = `Bearer ${result.accessToken}`
-
+            
             setAccessToken(result.accessToken)
             setName(result.name)
             setTypeUser(result.typeUser)

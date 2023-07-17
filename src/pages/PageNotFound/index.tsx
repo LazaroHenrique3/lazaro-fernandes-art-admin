@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { Box, Typography, Button } from '@mui/material'
+import { Box, Typography, Button, Paper } from '@mui/material'
 
 import travolta from '../../images/travolta.gif'
 
@@ -8,7 +8,7 @@ export const PageNotFound: React.FC = () => {
 
     return (
         <Box width='100%' height='100vh' display='flex' alignItems='center' justifyContent='center'>
-            <Box display='flex' alignItems='center' justifyContent='center' flexWrap='wrap' gap={2}>
+            <Box component={Paper} sx={{padding: 2, margin: 2}} display='flex' alignItems='center' justifyContent='center' flexWrap='wrap' gap={2}>
 
                 <Box component="img"
                     sx={{
