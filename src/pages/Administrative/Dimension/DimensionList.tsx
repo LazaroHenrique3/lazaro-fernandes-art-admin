@@ -80,6 +80,28 @@ export const DimensionList: React.FC = () => {
         }
     }
 
+    //Função de gerarPDF
+    const handlePDF = async () => {
+        const result = await DimensionService.generatePdf(search)
+
+        if (result instanceof Error) {
+            toast.error(result.message)
+            return
+        }
+
+        // Manipula o buffer do PDF recebido
+        const pdfBlob = new Blob([result], { type: 'application/pdf' })
+
+        //Cria uma URL temporária para o blob do PDF
+        const pdfUrl = URL.createObjectURL(pdfBlob)
+
+        // Abre o PDF em outra janela
+        window.open(pdfUrl, '_blank')
+
+        //Limpa a URL temporária após abrir o PDF para liberar recursos
+        URL.revokeObjectURL(pdfUrl)
+    }
+
     return (
         <BasePageLayout
             title="Dimensões"
@@ -89,6 +111,7 @@ export const DimensionList: React.FC = () => {
                     newButtonText='Nova'
                     searchText={search}
                     onClickNewButton={() => navigate('/admin/dimension/details/new')}
+                    onClickPDFButton={() => handlePDF()}
                     onChangeSearchText={text => setSearchParams({ search: text, page: '1' }, { replace: true })}
                 />
             }>

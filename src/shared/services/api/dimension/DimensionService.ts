@@ -1,3 +1,4 @@
+import { AxiosResponse } from 'axios'
 import { Environment } from '../../../enviroment'
 import { api } from '../axiosConfig'
 
@@ -106,10 +107,27 @@ const deleteById = async (id: number): Promise<void | Error> => {
 
 }
 
+const generatePdf = async (filter = ''): Promise<Uint8Array | Error> => {
+
+    try {
+        const relativeUrl = `/dimension/report/generate?filter=${filter}`
+
+        const response: AxiosResponse<Uint8Array> = await api.get(relativeUrl, {
+            responseType: 'arraybuffer', // Configura o tipo de resposta como "arraybuffer"
+        })
+        
+        return new Uint8Array(response.data)
+    } catch (error) {
+        console.error(error)
+        return new Error((error as ErrorResponse).response?.data?.errors?.default || 'Erro ao gerar PDF.')
+    }
+}
+
 export const DimensionService = {
     getAll,
     getById,
     create,
     updateById,
-    deleteById
+    deleteById,
+    generatePdf
 }
