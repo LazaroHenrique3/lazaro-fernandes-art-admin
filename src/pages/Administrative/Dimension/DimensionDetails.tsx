@@ -19,7 +19,8 @@ interface IFormData {
 
 //Definindo o schema para validação
 const formatValidationSchema: yup.Schema<IFormData> = yup.object().shape({
-    dimension: yup.string().transform(value => (value ? value.trim() : '')).min(3).max(100).required(),
+    dimension: yup.string().required().min(3).max(20)
+        .matches(/^\d+ x \d+$/, 'Formato inválido. Use o formato: "20 x 30"')
 })
 
 export const DimensionDetails: React.FC = () => {

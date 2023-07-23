@@ -2,18 +2,46 @@ import { AxiosResponse } from 'axios'
 import { Environment } from '../../../enviroment'
 import { api } from '../axiosConfig'
 
-export interface IListDimension {
+export interface IListProduct {
     id: number
-    dimension: string
+    status: 'Ativo' | 'Vendido' | 'Inativo'
+    status_of_sale: 'Venda' | 'Galeria'
+    title: string
+    type: 'Original' | 'Print'
+    orientation: 'Retrato' | 'Paisagem'
+    quantity?: number
+    production_date: Date | string
+    description?: string
+    weight?: number
+    price?: number
+    main_image: any
+    products: string[] | number[]
+    product_images: any[]
+    technique_id: number
+    category_id: number
 }
 
-export interface IDetailDimension {
+export interface IDetailProduct {
     id: number
-    dimension: string
+    status: 'Ativo' | 'Vendido' | 'Inativo'
+    status_of_sale: 'Venda' | 'Galeria'
+    title: string
+    type: 'Original' | 'Print'
+    orientation: 'Retrato' | 'Paisagem'
+    quantity?: number
+    production_date: Date | string
+    description?: string
+    weight?: number
+    price?: number
+    main_image: any
+    products: string[] | number[]
+    product_images: any[]
+    technique_id: number
+    category_id: number
 }
 
-type IDimensionTotalCount = {
-    data: IListDimension[],
+type IProductTotalCount = {
+    data: IListProduct[],
     totalCount: number
 }
 
@@ -27,15 +55,13 @@ interface ErrorResponse {
     }
 }
 
-const getAll = async (page = 1, filter = '', id?: number[]): Promise<IDimensionTotalCount | Error> => {
+const getAll = async (page = 1, filter = '', id?: number): Promise<IProductTotalCount | Error> => {
     let relativeUrl = ''
 
-    if (id !== undefined && id.length !== 0) {
-        const idParams = `${id.join(',')}`
-
-        relativeUrl = `/dimension?id=${idParams}&page=${page}&limit=${Environment.LINE_LIMIT}&filter=${filter}`
+    if (id) {
+        relativeUrl = `/product?id=${id}&page=${page}&limit=${Environment.LINE_LIMIT}&filter=${filter}`
     } else {
-        relativeUrl = `/dimension?page=${page}&limit=${Environment.LINE_LIMIT}&filter=${filter}`
+        relativeUrl = `/product?page=${page}&limit=${Environment.LINE_LIMIT}&filter=${filter}`
     }
 
     try {
@@ -56,10 +82,10 @@ const getAll = async (page = 1, filter = '', id?: number[]): Promise<IDimensionT
     }
 }
 
-const getById = async (id: number): Promise<IDetailDimension | Error> => {
+const getById = async (id: number): Promise<IDetailProduct | Error> => {
 
     try {
-        const { data } = await api.get(`/dimension/${id}`)
+        const { data } = await api.get(`/product/${id}`)
 
         if (data) {
             return data
@@ -74,10 +100,10 @@ const getById = async (id: number): Promise<IDetailDimension | Error> => {
 
 }
 
-const create = async (createData: Omit<IDetailDimension, 'id'>): Promise<number | Error> => {
+const create = async (createData: Omit<IDetailProduct, 'id'>): Promise<number | Error> => {
 
     try {
-        const { data } = await api.post('/dimension', createData)
+        const { data } = await api.post('/product', createData)
 
         if (data) {
             return data
@@ -92,10 +118,10 @@ const create = async (createData: Omit<IDetailDimension, 'id'>): Promise<number 
     }
 }
 
-const updateById = async (id: number, updateData: IDetailDimension): Promise<void | Error> => {
+const updateById = async (id: number, updateData: IDetailProduct): Promise<void | Error> => {
 
     try {
-        await api.put(`/dimension/${id}`, updateData)
+        await api.put(`/product/${id}`, updateData)
     } catch (error) {
         console.error(error)
         return new Error((error as ErrorResponse).response?.data?.errors?.default || 'Erro ao atualizar registro.')
@@ -106,7 +132,7 @@ const updateById = async (id: number, updateData: IDetailDimension): Promise<voi
 const deleteById = async (id: number): Promise<void | Error> => {
 
     try {
-        await api.delete(`/dimension/${id}`)
+        await api.delete(`/product/${id}`)
     } catch (error) {
         console.error(error)
         return new Error((error as ErrorResponse).response?.data?.errors?.default || 'Erro ao deletar registro.')
@@ -117,12 +143,12 @@ const deleteById = async (id: number): Promise<void | Error> => {
 const generatePdf = async (filter = ''): Promise<Uint8Array | Error> => {
 
     try {
-        const relativeUrl = `/dimension/report/generate?filter=${filter}`
+        const relativeUrl = `/product/report/generate?filter=${filter}`
 
         const response: AxiosResponse<Uint8Array> = await api.get(relativeUrl, {
             responseType: 'arraybuffer', // Configura o tipo de resposta como "arraybuffer"
         })
-        
+
         return new Uint8Array(response.data)
     } catch (error) {
         console.error(error)
@@ -130,7 +156,7 @@ const generatePdf = async (filter = ''): Promise<Uint8Array | Error> => {
     }
 }
 
-export const DimensionService = {
+export const ProductService = {
     getAll,
     getById,
     create,

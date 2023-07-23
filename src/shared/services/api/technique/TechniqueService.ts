@@ -27,11 +27,16 @@ interface ErrorResponse {
     }
 }
 
-const getAll = async (page = 1, filter = ''): Promise<ITechniqueTotalCount | Error> => {
+const getAll = async (page = 1, filter = '', id?: number): Promise<ITechniqueTotalCount | Error> => {
+    let relativeUrl = ''
+
+    if (id) {
+        relativeUrl = `/technique?id=${id}&page=${page}&limit=${Environment.LINE_LIMIT}&filter=${filter}`
+    } else {
+        relativeUrl = `/technique?page=${page}&limit=${Environment.LINE_LIMIT}&filter=${filter}`
+    }
 
     try {
-        const relativeUrl = `/technique?page=${page}&limit=${Environment.LINE_LIMIT}&filter=${filter}`
-
         const { data, headers } = await api.get(relativeUrl)
 
         if (data) {
@@ -115,7 +120,7 @@ const generatePdf = async (filter = ''): Promise<Uint8Array | Error> => {
         const response: AxiosResponse<Uint8Array> = await api.get(relativeUrl, {
             responseType: 'arraybuffer', // Configura o tipo de resposta como "arraybuffer"
         })
-        
+
         return new Uint8Array(response.data)
     } catch (error) {
         console.error(error)

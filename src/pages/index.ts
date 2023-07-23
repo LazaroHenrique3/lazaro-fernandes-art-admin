@@ -1,4 +1,8 @@
 export * from './Administrative/LoginAdmin'
+
+export * from './Administrative/Product/ProductList'
+export * from './Administrative/Product/ProductDetails'
+
 export * from './Administrative/Category/CategoryList'
 export * from './Administrative/Category/CategoryDetails'
 
