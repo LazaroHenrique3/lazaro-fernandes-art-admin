@@ -19,6 +19,8 @@ export interface IListProduct {
     product_images: any[]
     technique_id: number
     category_id: number
+    technique_name: string
+    category_name: string
 }
 
 export interface IDetailProduct {
@@ -34,10 +36,11 @@ export interface IDetailProduct {
     weight?: number
     price?: number
     main_image: any
-    products: string[] | number[]
     product_images: any[]
     technique_id: number
     category_id: number
+    technique_name: string
+    category_name: string
 }
 
 type IProductTotalCount = {
@@ -68,6 +71,7 @@ const getAll = async (page = 1, filter = '', id?: number): Promise<IProductTotal
         const { data, headers } = await api.get(relativeUrl)
 
         if (data) {
+            console.log(data)
             return {
                 data,
                 totalCount: Number(headers['x-total-count'] || Environment.LINE_LIMIT)

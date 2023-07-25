@@ -12,6 +12,7 @@ import {
     VSelect,
     VInputFile,
     VForm,
+    VDateInput,
     useVForm,
     IVFormErrors,
 } from '../../../shared/forms'
@@ -19,6 +20,7 @@ import {
 import { VAutoCompleteCategory } from './components/VAutoCompleteCategory'
 import { VAutoCompleteTechnique } from './components/VAutoCompleteTechnique'
 import { VAutoCompleteDimension } from './components/VAutoCompleteDimension'
+import { VAutoCompleteDimensionMultiple } from './components/VAutoCompleteDimensionMultiple'
 
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -27,7 +29,7 @@ interface IFormData {
     status: 'Ativo' | 'Vendido' | 'Inativo'
     status_of_sale: 'Venda' | 'Galeria'
     title: string
-    type: 'Original' | 'Print'
+    type: 'Original' | 'Print' | 'Galeria'
     orientation: 'Retrato' | 'Paisagem'
     quantity?: number
     production_date: Date | string
@@ -35,20 +37,18 @@ interface IFormData {
     weight?: number
     price?: number
     main_image: any
-    dimensions: string[] | number[]
-    product_images: any[]
+    dimensions: number[]
     technique_id: number
     category_id: number
 }
 
-//Definindo o schema para validação
-const formatValidationSchema: yup.Schema<IFormData> = yup.object().shape({
+//Definindo o schema para validação default
+const formatValidationSchemaOne: yup.Schema<IFormData> = yup.object().shape({
     status: yup.string().oneOf(['Ativo', 'Vendido', 'Inativo']).required(),
-    status_of_sale: yup.string().oneOf(['Venda', 'Galeria']).required(),
+    status_of_sale: yup.string().oneOf(['Venda', 'Galeria', 'Galeria']).required(),
     title: yup.string().required().min(1).max(100),
     type: yup.string().oneOf(['Original', 'Print']).required(),
     orientation: yup.string().oneOf(['Retrato', 'Paisagem']).required(),
-    quantity: yup.number().moreThan(0).optional(),
     production_date: yup.date()
         .transform((currentValue, originalValue) => {
             if (originalValue && typeof originalValue === 'string') {
@@ -59,34 +59,226 @@ const formatValidationSchema: yup.Schema<IFormData> = yup.object().shape({
             }
             return currentValue
         })
-        .test('before-2018', 'Não são aceitos produtos antes de 2018!', value => {
+        .test('dateTest', value => {
             const limitDate = new Date(2018, 0, 1)
 
-            if (value) {
-                const productDate = new Date(value)
-                return productDate >= limitDate
+            if (!value) {
+                throw new yup.ValidationError('Este campo é obrigatório!', value, 'production_date')
             }
 
-            return false
-        })
-        .test('before-today', 'A data não pode ser maior que hoje!', value => {
+            //Verificando se a data é anterior a 2018
+            const productDate = new Date(value)
+            if (!(productDate >= limitDate)) {
+                throw new yup.ValidationError('Não são aceitos produtos antes de 2018!', value, 'production_date')
+            }
+
+            //Verificando se a data é maior que hoje
             const currentDate = new Date()
-
-            if (value) {
-                const productDate = new Date(value)
-
-                return productDate <= currentDate
+            if (!(productDate <= currentDate)) {
+                throw new yup.ValidationError('A data não pode ser maior que a data atual!', value, 'production_date')
             }
 
-            return false
+            return true
         })
         .required(),
     description: yup.string().optional(),
-    weight: yup.number().moreThan(0).optional(),
-    price: yup.number().moreThan(0).optional(),
-    main_image: yup.mixed().required().default([]),
-    product_images: yup.array().required().default([]),
-    dimensions: yup.array().of(yup.string().defined()).required(),
+    main_image: yup.mixed()
+        .test('isImage', (value) => {
+            const mainImage: FileList = value as FileList
+
+            //Verificando se foi passado imagem
+            if (mainImage.length === 0) {
+                throw new yup.ValidationError('A imagem é obrigatória!', value, 'main_image')
+            }
+
+            //Verificando o formato das imagens
+            const supportedFormats = ['image/jpeg', 'image/png', 'image/jpg']
+            if (!supportedFormats.includes(mainImage[0].type)) {
+                throw new yup.ValidationError('Formato de imagem inválido!', value, 'main_image')
+            }
+
+            // Verifica se o tamanho da imagem é maior que 2MB (em bytes)
+            const maxSize = 2 * 1024 * 1024 // 2MB
+            if (Number(mainImage[0].size) > maxSize) {
+                throw new yup.ValidationError('Tamanho de imagem excede 2MB!', value, 'main_image')
+            }
+
+            return true
+        })
+        .required(),
+    product_images: yup.mixed()
+        .test('isImage', (value) => {
+            const product_images: FileList = value as FileList
+
+            //Verificando se foi passado imagem e se é mais que  o permitido
+            if (product_images.length === 0) {
+                console.log('ProductImages - As imagens são obrigatórias!: ',)
+                throw new yup.ValidationError('As imagens são obrigatórias!', value, 'product_images')
+            } else if (product_images.length > 4) {
+                console.log('ProductImages - É permitido o upload de até 4 imagens!: ',)
+                throw new yup.ValidationError('É permitido o upload de até 4 imagens!', value, 'product_images')
+            }
+
+            //Verificando o formato das imagens
+            const supportedFormats = ['image/jpeg', 'image/png', 'image/jpg']
+            for (let i = 0; i < product_images.length; i++) {
+                const image = product_images[i]
+                if (!supportedFormats.includes(image.type)) {
+                    console.log('ProductImages - Formato de imagem inválido!: ',)
+                    throw new yup.ValidationError('Formato de imagem inválido!', value, 'product_images')
+                }
+            }
+
+            // Verifica se o tamanho da imagem é maior que 2MB (em bytes)
+            const maxSize = 2 * 1024 * 1024 // 2MB
+            for (let i = 0; i < product_images.length; i++) {
+                const image = product_images[i]
+                if (Number(image.size) > maxSize) {
+                    console.log('ProductImages - Tamanho de imagem excede 2MB!: ',)
+                    throw new yup.ValidationError('Tamanho de imagem excede 2MB!', value, 'product_images')
+                }
+            }
+
+            return true
+        })
+        .required(),
+    dimensions: yup.array().of(yup.number().defined())
+        .required()
+        .test('testDimensions', (value) => {
+            if (value?.length === 0 || value === undefined) {
+                throw new yup.ValidationError('Este campo é obrigatório!', value, 'dimensions')
+            }
+
+            for (let i = 0; i < value?.length; i++) {
+                if (typeof value[i] !== 'number') {
+                    throw new yup.ValidationError('Tipo de dado inválido!', value, 'dimensions')
+                }
+            }
+
+            return true
+        }),
+    technique_id: yup.number().moreThan(0).required(),
+    category_id: yup.number().moreThan(0).required(),
+    quantity: yup.number().moreThan(0).required(),
+    price: yup.number().moreThan(0).required(),
+    weight: yup.number().moreThan(0).required(),
+})
+
+//Definindo o schema para validação quando for do tipo galeria
+const formatValidationSchemaTwo: yup.Schema<IFormData> = yup.object().shape({
+    status: yup.string().oneOf(['Ativo', 'Vendido', 'Inativo']).required(),
+    status_of_sale: yup.string().oneOf(['Venda', 'Galeria']).required(),
+    title: yup.string().required().min(1).max(100),
+    type: yup.string().oneOf(['Original', 'Print', 'Galeria']).required(),
+    orientation: yup.string().oneOf(['Retrato', 'Paisagem']).required(),
+    production_date: yup.date()
+        .transform((currentValue, originalValue) => {
+            if (originalValue && typeof originalValue === 'string') {
+                const date = new Date(originalValue).toISOString().split('T')[0]
+
+                const [year, month, day] = date.split('-')
+                return new Date(parseInt(year), parseInt(month) - 1, parseInt(day))
+            }
+            return currentValue
+        })
+        .test('dateTest', value => {
+            const limitDate = new Date(2018, 0, 1)
+
+            if (!value) {
+                throw new yup.ValidationError('Este campo é obrigatório!', value, 'production_date')
+            }
+
+            //Verificando se a data é anterior a 2018
+            const productDate = new Date(value)
+            if (!(productDate >= limitDate)) {
+                throw new yup.ValidationError('Não são aceitos produtos antes de 2018!', value, 'production_date')
+            }
+
+            //Verificando se a data é maior que hoje
+            const currentDate = new Date()
+            if (!(productDate <= currentDate)) {
+                throw new yup.ValidationError('A data não pode ser maior que a data atual!', value, 'production_date')
+            }
+
+            return true
+        })
+        .required(),
+    description: yup.string().optional(),
+    main_image: yup.mixed()
+        .test('isImage', (value) => {
+            const mainImage: FileList = value as FileList
+
+            //Verificando se foi passado imagem
+            if (mainImage.length === 0) {
+                throw new yup.ValidationError('A imagem é obrigatória!', value, 'main_image')
+            }
+
+            //Verificando o formato das imagens
+            const supportedFormats = ['image/jpeg', 'image/png', 'image/jpg']
+            if (!supportedFormats.includes(mainImage[0].type)) {
+                throw new yup.ValidationError('Formato de imagem inválido!', value, 'main_image')
+            }
+
+            // Verifica se o tamanho da imagem é maior que 2MB (em bytes)
+            const maxSize = 2 * 1024 * 1024 // 2MB
+            if (Number(mainImage[0].size) > maxSize) {
+                throw new yup.ValidationError('Tamanho de imagem excede 2MB!', value, 'main_image')
+            }
+
+            return true
+        })
+        .required(),
+    product_images: yup.mixed()
+        .test('isImage', (value) => {
+            const product_images: FileList = value as FileList
+
+            //Verificando se foi passado imagem e se é mais que  o permitido
+            if (product_images.length === 0) {
+                console.log('ProductImages - As imagens são obrigatórias!: ',)
+                throw new yup.ValidationError('As imagens são obrigatórias!', value, 'product_images')
+            } else if (product_images.length > 4) {
+                console.log('ProductImages - É permitido o upload de até 4 imagens!: ',)
+                throw new yup.ValidationError('É permitido o upload de até 4 imagens!', value, 'product_images')
+            }
+
+            //Verificando o formato das imagens
+            const supportedFormats = ['image/jpeg', 'image/png', 'image/jpg']
+            for (let i = 0; i < product_images.length; i++) {
+                const image = product_images[i]
+                if (!supportedFormats.includes(image.type)) {
+                    console.log('ProductImages - Formato de imagem inválido!: ',)
+                    throw new yup.ValidationError('Formato de imagem inválido!', value, 'product_images')
+                }
+            }
+
+            // Verifica se o tamanho da imagem é maior que 2MB (em bytes)
+            const maxSize = 2 * 1024 * 1024 // 2MB
+            for (let i = 0; i < product_images.length; i++) {
+                const image = product_images[i]
+                if (Number(image.size) > maxSize) {
+                    console.log('ProductImages - Tamanho de imagem excede 2MB!: ',)
+                    throw new yup.ValidationError('Tamanho de imagem excede 2MB!', value, 'product_images')
+                }
+            }
+
+            return true
+        })
+        .required(),
+    dimensions: yup.array().of(yup.number().defined())
+        .required()
+        .test('testDimensions', (value) => {
+            if (value?.length === 0 || value === undefined) {
+                throw new yup.ValidationError('Este campo é obrigatório!', value, 'dimensions')
+            }
+
+            for (let i = 0; i < value?.length; i++) {
+                if (typeof value[i] !== 'number') {
+                    throw new yup.ValidationError('Tipo de dado inválido!', value, 'dimensions')
+                }
+            }
+
+            return true
+        }),
     technique_id: yup.number().moreThan(0).required(),
     category_id: yup.number().moreThan(0).required(),
 })
@@ -99,6 +291,10 @@ export const ProductDetails: React.FC = () => {
 
     const [isLoading, setIsLoading] = useState(false)
     const [name, setName] = useState('')
+
+    const [isSale, setIsSale] = useState<boolean>(true)
+    const [isPrint, setIsPrint] = useState<boolean>(false)
+    const [isGalery, setIsGalery] = useState<boolean>(false)
 
     /* useEffect(() => {
 
@@ -134,46 +330,52 @@ export const ProductDetails: React.FC = () => {
 
     const handleSave = async (data: IFormData) => {
         console.log(data)
-        /*  try {
-             const validateData = await formatValidationSchema.validate(data, { abortEarly: false })
- 
-             setIsLoading(true)
- 
-             if (id === 'new') {
-                 const result = await ProductService.create(validateData)
-                 setIsLoading(false)
- 
-                 if (result instanceof Error) {
-                     toast.error(result.message)
-                 } else {
-                     toast.success('Registro salvo com sucesso!')
-                     navigate(`/admin/product/details/${result}`)
-                 }
-             } else {
-                 const result = await ProductService.updateById(Number(id), { id: Number(id), ...validateData })
-                 setIsLoading(false)
- 
-                 if (result instanceof Error) {
-                     toast.error(result.message)
-                     return
-                 }
- 
-                 toast.success('Registro salvo com sucesso!')
-                 setName(data.name)
-             }
-         } catch (errors) {
- 
-             const errorsYup: yup.ValidationError = errors as yup.ValidationError
- 
-             const validationErrors: IVFormErrors = {}
-             
-             errorsYup.inner.forEach(error => {
-                 if (!error.path) return
- 
-                 validationErrors[error.path] = error.message
-                 formRef.current?.setErrors(validationErrors)
-             })
-         } */
+        try {
+
+            let validateData
+            if (isSale) {
+                validateData = await formatValidationSchemaOne.validate(data, { abortEarly: false })
+            } else {
+                validateData = await formatValidationSchemaTwo.validate(data, { abortEarly: false })
+            }
+
+            setIsLoading(true)
+
+            /* if (id === 'new') {
+                const result = await ProductService.create(validateData)
+                setIsLoading(false)
+
+                if (result instanceof Error) {
+                    toast.error(result.message)
+                } else {
+                    toast.success('Registro salvo com sucesso!')
+                    navigate(`/admin/product/details/${result}`)
+                }
+            } else {
+                const result = await ProductService.updateById(Number(id), { id: Number(id), ...validateData })
+                setIsLoading(false)
+
+                if (result instanceof Error) {
+                    toast.error(result.message)
+                    return
+                }
+
+                toast.success('Registro salvo com sucesso!')
+                setName(data.name)
+            } */
+        } catch (errors) {
+
+            const errorsYup: yup.ValidationError = errors as yup.ValidationError
+
+            const validationErrors: IVFormErrors = {}
+            console.log('ErrorYUP: ', errorsYup.inner)
+            errorsYup.inner.forEach(error => {
+                if (!error.path) return
+
+                validationErrors[error.path] = error.message
+                formRef.current?.setErrors(validationErrors)
+            })
+        }
     }
 
     const handleDelete = async (id: number, name: string) => {
@@ -191,13 +393,14 @@ export const ProductDetails: React.FC = () => {
         }
     }
 
+    console.log('isPrint', isPrint)
     return (
         <BasePageLayout
-            title={(id === 'new') ? 'Nova categoria' : `'${name}'`}
+            title={(id === 'new') ? 'Novo produto' : `'${name}'`}
             toolBar={
                 <DetailTools
                     showSaveButton
-                    newButtonText='Nova'
+                    newButtonText='Novo'
                     showNewButton={id !== 'new'}
                     showDeleteButton={id !== 'new'}
 
@@ -207,6 +410,7 @@ export const ProductDetails: React.FC = () => {
                     onClickNewButton={() => navigate('/admin/product/details/new')}
                 />
             }>
+
 
             <VForm ref={formRef} onSubmit={handleSave}>
                 <Box margin={1} display='flex' flexDirection='column' component={Paper} variant='outlined'>
@@ -224,7 +428,11 @@ export const ProductDetails: React.FC = () => {
 
                         <Grid container item direction='row' spacing={2}>
                             <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
-                                <VInputFile label='Principal' name='main_image' isExternalLoading={isLoading}/>
+                                <VInputFile label='Principal' name='main_image' isExternalLoading={isLoading} />
+                            </Grid>
+
+                            <Grid item xs={12} sm={12} md={12} lg={6} xl={6}>
+                                <VInputFile label='Imagens do Produto' name='product_images' multiple isExternalLoading={isLoading} />
                             </Grid>
                         </Grid>
 
@@ -239,6 +447,7 @@ export const ProductDetails: React.FC = () => {
 
                             <Grid item xs={12} sm={12} md={6} lg={4} xl={4}>
                                 <VSelect
+                                    changeExternalState={(status) => setIsSale(status === 'Venda')}
                                     fullWidth
                                     label='Status'
                                     name='status_of_sale'
@@ -249,17 +458,20 @@ export const ProductDetails: React.FC = () => {
                                     disabled={isLoading} />
                             </Grid>
 
-                            <Grid item xs={12} sm={12} md={6} lg={4} xl={4}>
-                                <VSelect
-                                    fullWidth
-                                    label='Tipo'
-                                    name='type'
-                                    options={[
-                                        { value: 'Original', label: 'Original' },
-                                        { value: 'Print', label: 'Print' },
-                                    ]}
-                                    disabled={isLoading} />
-                            </Grid>
+                            {isSale && (
+                                <Grid item xs={12} sm={12} md={6} lg={4} xl={4}>
+                                    <VSelect
+                                        changeExternalState={(status) => setIsPrint(status === 'Print')}
+                                        fullWidth
+                                        label='Tipo'
+                                        name='type'
+                                        options={[
+                                            { value: 'Original', label: 'Original' },
+                                            { value: 'Print', label: 'Print' },
+                                        ]}
+                                        disabled={isLoading} />
+                                </Grid>
+                            )}
 
                             <Grid item xs={12} sm={12} md={6} lg={4} xl={4}>
                                 <VAutoCompleteCategory isExternalLoading={isLoading} />
@@ -282,7 +494,15 @@ export const ProductDetails: React.FC = () => {
                             </Grid>
 
                             <Grid item xs={12} sm={12} md={6} lg={5} xl={5}>
-                                <VAutoCompleteDimension isExternalLoading={isLoading} />
+                                {(isPrint && !isGalery) ? (
+                                    <VAutoCompleteDimensionMultiple isExternalLoading={isLoading} />
+                                ) : (
+                                    <VAutoCompleteDimension isExternalLoading={isLoading} />
+                                )}
+                            </Grid>
+
+                            <Grid item xs={12} sm={12} md={6} lg={3} xl={3}>
+                                <VDateInput label='Data de produção' name='production_date' disabled={isLoading} />
                             </Grid>
 
                             <Grid item xs={12} sm={12} md={6} lg={6} xl={4}>
@@ -290,23 +510,27 @@ export const ProductDetails: React.FC = () => {
                             </Grid>
                         </Grid>
 
-                        <Grid item>
-                            <Typography variant='h6'>Venda</Typography>
-                        </Grid>
+                        {isSale && (
+                            <>
+                                <Grid item>
+                                    <Typography variant='h6'>Venda</Typography>
+                                </Grid>
 
-                        <Grid container item direction='row' spacing={2}>
-                            <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
-                                <VTextField fullWidth type='number' label='Quantidade' name='quantity' disabled={isLoading} />
-                            </Grid>
+                                <Grid container item direction='row' spacing={2}>
+                                    <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
+                                        <VTextField fullWidth type='number' label='Quantidade' name='quantity' disabled={isLoading} />
+                                    </Grid>
 
-                            <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
-                                <VTextField fullWidth type='number' label='Peso' name='weight' disabled={isLoading} />
-                            </Grid>
+                                    <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
+                                        <VTextField fullWidth type='number' label='Peso' name='weight' disabled={isLoading} />
+                                    </Grid>
 
-                            <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
-                                <VTextField fullWidth type='number' label='Preço' name='price' disabled={isLoading} />
-                            </Grid>
-                        </Grid>
+                                    <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
+                                        <VTextField fullWidth type='number' label='Preço' name='price' disabled={isLoading} />
+                                    </Grid>
+                                </Grid>
+                            </>
+                        )}
                     </Grid>
 
                 </Box>

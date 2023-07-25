@@ -10,9 +10,10 @@ interface SelectOptionType {
 type TVSelect = SelectProps & {
     name: string
     options: Array<SelectOptionType>
+    changeExternalState?: (status: string) => void;
 }
 
-export const VSelect: React.FC<TVSelect> = ({ name, options, ...rest }) => {
+export const VSelect: React.FC<TVSelect> = ({ name, options, changeExternalState, ...rest }) => {
     const { fieldName, registerField, defaultValue, error, clearError } = useField(name)
 
     const [value, setValue] = useState(defaultValue || '' || [])
@@ -31,7 +32,7 @@ export const VSelect: React.FC<TVSelect> = ({ name, options, ...rest }) => {
     }, [registerField, fieldName, value])
 
     return (
-        <FormControl fullWidth>
+        <FormControl fullWidth error={!!error}>
             <InputLabel id={`${name}-select-helper-label`}>{rest.label}</InputLabel>
             <Select
                 {...rest}
@@ -40,9 +41,13 @@ export const VSelect: React.FC<TVSelect> = ({ name, options, ...rest }) => {
                 defaultValue={defaultValue}
 
                 value={value}
-                onChange={e => { setValue(e.target.value) }}
-
-                onKeyDown={(e) => { error && clearError() }}
+                onChange={e => {
+                    setValue(e.target.value)
+                    error && clearError()
+                    if (changeExternalState) {
+                        changeExternalState(e.target.value)
+                    }
+                }}
             >
                 {options.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
@@ -51,7 +56,7 @@ export const VSelect: React.FC<TVSelect> = ({ name, options, ...rest }) => {
                 ))}
             </Select>
             {!!error && (
-                <FormHelperText>{error}</FormHelperText>
+                <FormHelperText error >{error}</FormHelperText>
             )}
         </FormControl>
     )

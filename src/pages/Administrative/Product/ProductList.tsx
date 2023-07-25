@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState } from 'react'
+import dayjs from 'dayjs'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Icon, IconButton, LinearProgress, Pagination, Paper, Table, TableBody, TableContainer, TableFooter, TableHead, TableRow } from '@mui/material'
 
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
-import { CategoryService, IListCategory } from '../../../shared/services/api/category/CategoryService'
+import { ProductService, IListProduct } from '../../../shared/services/api/product/ProductService'
 import { BasePageLayout } from '../../../shared/layouts'
 import { ListTools } from '../../../shared/components'
 import { useDebounce } from '../../../shared/hooks'
@@ -16,7 +17,7 @@ import { StyledTableCell, StyledTableRow } from '../../../shared/components/Styl
 export const ProductList: React.FC = () => {
     const [searchParams, setSearchParams] = useSearchParams()
 
-    const [rows, setRows] = useState<IListCategory[]>([])
+    const [rows, setRows] = useState<IListProduct[]>([])
     const [totalCount, setTotalCount] = useState(0)
     const [isLoading, setIsLoading] = useState(true)
 
@@ -44,7 +45,7 @@ export const ProductList: React.FC = () => {
 
         const fetchData = () => {
             debounce(async () => {
-                const result = await CategoryService.getAll(page, search)
+                const result = await ProductService.getAll(page, search)
                 setIsLoading(false)
 
                 if (result instanceof Error) {
@@ -65,7 +66,7 @@ export const ProductList: React.FC = () => {
     const handleDelete = async (id: number, name: string) => {
 
         if (confirm(`Realmente deseja apagar "${name}"?`)) {
-            const result = await CategoryService.deleteById(id)
+            const result = await ProductService.deleteById(id)
 
             if (result instanceof Error) {
                 toast.error(result.message)
@@ -81,7 +82,7 @@ export const ProductList: React.FC = () => {
 
     //Função de gerarPDF
     const handlePDF = async () => {
-        const result = await CategoryService.generatePdf(search)
+        const result = await ProductService.generatePdf(search)
 
         if (result instanceof Error) {
             toast.error(result.message)
@@ -101,15 +102,25 @@ export const ProductList: React.FC = () => {
         URL.revokeObjectURL(pdfUrl)
     }
 
+    const formattedPrice = (value: number | string) => {
+
+        if (typeof value === 'string') return ''
+
+        return value.toLocaleString('pt-BR', {
+            style: 'currency',
+            currency: 'BRL',
+        })
+    }
+
     return (
         <BasePageLayout
-            title="Categorias"
+            title="Produtos"
             toolBar={
                 <ListTools
                     showSearchInput
-                    newButtonText='Nova'
+                    newButtonText='Novo'
                     searchText={search}
-                    onClickNewButton={() => navigate('/admin/category/details/new')}
+                    onClickNewButton={() => navigate('/admin/product/details/new')}
                     onClickPDFButton={() => handlePDF()}
                     onChangeSearchText={text => setSearchParams({ search: text, page: '1' }, { replace: true })}
                 />
@@ -120,22 +131,42 @@ export const ProductList: React.FC = () => {
                     <TableHead>
                         <TableRow>
                             <StyledTableCell width={100} size='small' sx={{ fontWeight: 600 }}>Ações</StyledTableCell>
-                            <StyledTableCell size='small' sx={{ fontWeight: 600 }}>Nome</StyledTableCell>
+                            <StyledTableCell size='small' sx={{ fontWeight: 600 }}>Título</StyledTableCell>
+                            <StyledTableCell size='small' sx={{ fontWeight: 600 }}>Status</StyledTableCell>
+                            <StyledTableCell size='small' sx={{ fontWeight: 600 }}>StatusV</StyledTableCell>
+                            <StyledTableCell size='small' sx={{ fontWeight: 600 }}>Orientação</StyledTableCell>
+                            <StyledTableCell size='small' sx={{ fontWeight: 600 }}>Tipo</StyledTableCell>
+                            <StyledTableCell size='small' sx={{ fontWeight: 600 }}>Categoria</StyledTableCell>
+                            <StyledTableCell size='small' sx={{ fontWeight: 600 }}>Técnica</StyledTableCell>
+                            <StyledTableCell size='small' sx={{ fontWeight: 600 }}>Produção</StyledTableCell>
+                            <StyledTableCell size='small' sx={{ fontWeight: 600 }}>Qtd.</StyledTableCell>
+                            <StyledTableCell size='small' sx={{ fontWeight: 600 }}>Peso(g)</StyledTableCell>
+                            <StyledTableCell size='small' sx={{ fontWeight: 600 }}>Preço</StyledTableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {rows.map((row) => (
                             <StyledTableRow key={row.id}>
                                 <StyledTableCell size='small'>
-                                    <IconButton color='error' onClick={() => handleDelete(row.id, row.name)}>
+                                    <IconButton color='error' onClick={() => handleDelete(row.id, row.title)}>
                                         <Icon>delete</Icon>
                                     </IconButton>
 
-                                    <IconButton color='primary' onClick={() => navigate(`/admin/category/details/${row.id}`)}>
+                                    <IconButton color='primary' onClick={() => navigate(`/admin/product/details/${row.id}`)}>
                                         <Icon>edit</Icon>
                                     </IconButton>
                                 </StyledTableCell>
-                                <StyledTableCell size='small'>{row.name}</StyledTableCell>
+                                <StyledTableCell size='small'>{row.title}</StyledTableCell>
+                                <StyledTableCell size='small'>{row.status}</StyledTableCell>
+                                <StyledTableCell size='small'>{row.status_of_sale}</StyledTableCell>
+                                <StyledTableCell size='small'>{row.orientation}</StyledTableCell>
+                                <StyledTableCell size='small'>{row.type}</StyledTableCell>
+                                <StyledTableCell size='small'>{row.category_name}</StyledTableCell>
+                                <StyledTableCell size='small'>{row.technique_name}</StyledTableCell>
+                                <StyledTableCell size='small'>{dayjs(row.production_date).format('DD/MM/YYYY')}</StyledTableCell>
+                                <StyledTableCell size='small'>{row.quantity}</StyledTableCell>
+                                <StyledTableCell size='small'>{row.weight}</StyledTableCell>
+                                <StyledTableCell size='small'>{formattedPrice(row.price ?? '')}</StyledTableCell>
                             </StyledTableRow>
                         ))}
                     </TableBody>

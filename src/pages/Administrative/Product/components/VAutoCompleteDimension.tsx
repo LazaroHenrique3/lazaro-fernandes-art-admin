@@ -1,7 +1,9 @@
-import { useEffect, useState, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Autocomplete, CircularProgress, TextField } from '@mui/material'
+
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+
 import { DimensionService } from '../../../../shared/services/api/dimension/DimensionService'
 import { useDebounce } from '../../../../shared/hooks'
 import { useField } from '@unform/core'
@@ -16,30 +18,31 @@ interface VAutoCompleteDimensionProps {
 }
 
 export const VAutoCompleteDimension: React.FC<VAutoCompleteDimensionProps> = ({ isExternalLoading = false }) => {
-    const { fieldName, registerField, defaultValue, error, clearError } = useField('dimension_id')
+    const { fieldName, registerField, defaultValue, error, clearError } = useField('dimensions')
+
     const { debounce } = useDebounce()
 
-    const [selectedIds, setSelectedIds] = useState<number[]>(defaultValue || [])
+    const [selectedId, setSelectedId] = useState<number | undefined>(defaultValue)
+
     const [options, setOptions] = useState<TVAutoCompleteDimensionOption[]>([])
     const [isLoading, setIsLoading] = useState(false)
-
     const [search, setSearch] = useState('')
 
-    // Conectando de fato com o formulário
+    //Conectando de fato com o formulário
     useEffect(() => {
         registerField({
             name: fieldName,
-            getValue: () => selectedIds,
-            setValue: (_, newSelectedIds) => setSelectedIds(newSelectedIds),
+            getValue: () => selectedId,
+            setValue: (_, newSelectedId) => setSelectedId(newSelectedId)
         })
-    }, [registerField, fieldName, selectedIds])
+    }, [registerField, fieldName, selectedId])
 
     useEffect(() => {
         setIsLoading(true)
 
         const fetchData = () => {
             debounce(async () => {
-                const result = await DimensionService.getAll(1, search, selectedIds)
+                const result = await DimensionService.getAll(1, search, [Number(selectedId)])
                 setIsLoading(false)
 
                 if (result instanceof Error) {
@@ -47,7 +50,7 @@ export const VAutoCompleteDimension: React.FC<VAutoCompleteDimensionProps> = ({ 
                     return
                 }
 
-                setOptions(result.data.map((dimension) => ({ id: dimension.id, label: dimension.dimension })))
+                setOptions(result.data.map(dimension => ({ id: dimension.id, label: dimension.dimension })))
             })
         }
 
@@ -55,49 +58,36 @@ export const VAutoCompleteDimension: React.FC<VAutoCompleteDimensionProps> = ({ 
 
     }, [search])
 
-    const handleOptionChange = (newValues: TVAutoCompleteDimensionOption[]) => {
-        setSelectedIds(newValues.map((option) => option.id))
-        setSearch('')
-        clearError()
-    }
-
     const autoCompleteSelectedOption = useMemo(() => {
-        if (!selectedIds) return []
+        if (!selectedId) return null
 
-        const selectedOption = selectedIds.map((id) => options.find((option) => option.id === id))
-        if (!selectedOption) return []
+        const selectedOption = options.find(option => option.id === selectedId)
+        if (!selectedOption) return null
 
-        return selectedOption as TVAutoCompleteDimensionOption[]
-    }, [selectedIds, options])
+        return selectedOption
+    }, [selectedId, options])
 
     return (
         <Autocomplete
-            openText="Abrir"
-            closeText="Fechar"
-            noOptionsText="Sem opções"
-            loadingText="Carregando..."
-            disablePortal
-            multiple
+            openText='Abrir'
+            closeText='Fechar'
+            noOptionsText='Sem opções'
+            loadingText='Carregando...'
 
+            disablePortal
             value={autoCompleteSelectedOption}
-            inputValue={search}
 
             loading={isLoading}
             disabled={isExternalLoading}
-            popupIcon={isExternalLoading || isLoading ? <CircularProgress size={28} /> : undefined}
-            getOptionLabel={(option) => option?.label || ''}
-            onInputChange={(e, newValue) => {
-                if (e !== null) {
-                    setSearch(newValue)
-                }
-            }}
-            onChange={(_, newValues) => handleOptionChange(newValues as TVAutoCompleteDimensionOption[])}
+            popupIcon={(isExternalLoading || isLoading) ? <CircularProgress size={28} /> : undefined}
+            onInputChange={(_, newValue) => setSearch(newValue)}
+            onChange={(_, newValue) => { setSelectedId(newValue?.id); setSearch(''); clearError() }}
             options={options}
             renderInput={(params) => (
                 <TextField
                     {...params}
 
-                    label="Dimensão"
+                    label='Dimensão'
                     error={!!error}
                     helperText={error}
                 />
