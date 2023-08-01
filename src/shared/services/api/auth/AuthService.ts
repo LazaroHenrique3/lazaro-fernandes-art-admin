@@ -2,9 +2,10 @@ import { api } from '../axiosConfig'
 
 interface IAuth {
     name: string
+    idUser: string
     accessToken: string
     typeUser: string
-    permissions: number[]
+    accessLevel: string
 }
 
 interface ErrorResponse {

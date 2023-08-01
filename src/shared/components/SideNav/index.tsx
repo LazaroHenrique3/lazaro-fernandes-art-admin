@@ -64,7 +64,9 @@ export const SideNav: React.FC<IDrawerProps> = ({ children }) => {
     const { isDrawerOpen, toggleDrawerOpen, drawerOptions } = useDrawerContext()
 
     const { toggleTheme } = useAppThemeContext()
-    const { logout } = useAuthContext()
+    const { logout, idUser } = useAuthContext()
+
+    const navigate = useNavigate()
 
     return (
         <>
@@ -76,7 +78,7 @@ export const SideNav: React.FC<IDrawerProps> = ({ children }) => {
                             sx={{ height: theme.spacing(12), width: theme.spacing(12) }}
                             src='https://avatars.githubusercontent.com/u/78514404?v=4' />
 
-                        <Button variant='outlined' startIcon={<Icon>account_circle_icon</Icon>}>
+                        <Button variant='outlined' onClick={() => navigate(`/admin/administrator/details/${idUser}`)} startIcon={<Icon>account_circle_icon</Icon>}>
                             {name}
                         </Button>
                     </Box>
