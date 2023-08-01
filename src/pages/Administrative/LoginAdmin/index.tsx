@@ -10,20 +10,13 @@ import * as yup from 'yup'
 
 import { useAuthContext } from '../../../shared/contexts'
 import { VForm, VTextField, useVForm, IVFormErrors } from '../../../shared/forms'
-
-interface IFormData {
-    email: string
-    password: string
-}
-
-//Definindo o schema para validação
-const formatValidationSchema: yup.Schema<IFormData> = yup.object().shape({
-    email: yup.string().required().email().min(5).max(100),
-    password: yup.string().required().min(6).max(256),
-})
+import {
+    IFormData,
+    formatValidationSchema
+} from './validation/Schema'
 
 export const LoginAdmin = () => {
-    const {  login } = useAuthContext()
+    const { login } = useAuthContext()
 
     const [isLoading, setIsLoading] = useState(false)
     const { formRef } = useVForm()
@@ -39,7 +32,7 @@ export const LoginAdmin = () => {
             const result = await login(validateData.email, validateData.password)
             setIsLoading(false)
 
-            if(typeof result === 'string'){
+            if (typeof result === 'string') {
                 toast.error(result)
             } else {
                 navigate('/admin/admin-home')
@@ -67,7 +60,7 @@ export const LoginAdmin = () => {
                     <CardContent>
                         <Box display='flex' flexDirection='column' gap={3} width={250}>
                             <Typography variant='h4' align='center'>
-                                LOGIN 
+                                LOGIN
                             </Typography>
 
                             <VTextField fullWidth type='email' label='Email' name='email' disabled={isLoading} size='small' />
@@ -77,11 +70,11 @@ export const LoginAdmin = () => {
                     </CardContent>
                     <CardActions>
                         <Box width='100%' display='flex' justifyContent='center'>
-                            <Button 
-                                type='submit' 
-                                variant='contained' 
+                            <Button
+                                type='submit'
+                                variant='contained'
                                 disabled={isLoading}
-                                endIcon={isLoading ? <CircularProgress variant='indeterminate' color='inherit' size={20}/> : undefined}>
+                                endIcon={isLoading ? <CircularProgress variant='indeterminate' color='inherit' size={20} /> : undefined}>
                                 Entrar
                             </Button>
                         </Box>

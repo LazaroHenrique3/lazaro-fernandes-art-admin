@@ -11,15 +11,10 @@ import { VTextField, VForm, useVForm, IVFormErrors } from '../../../shared/forms
 
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-
-interface IFormData {
-    name: string
-}
-
-//Definindo o schema para validação
-const formatValidationSchema: yup.Schema<IFormData> = yup.object().shape({
-    name: yup.string().transform(value => (value ? value.trim() : '')).min(3).max(100).required(),
-})
+import { 
+    IFormData, 
+    formatValidationSchema
+} from './validation/Schemas'
 
 export const CategoryDetails: React.FC = () => {
     const { id = 'new' } = useParams<'id'>()

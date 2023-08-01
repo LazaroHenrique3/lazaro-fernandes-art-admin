@@ -15,7 +15,6 @@ type TVSelect = SelectProps & {
 
 export const VSelect: React.FC<TVSelect> = ({ name, options, changeExternalState, ...rest }) => {
     const { fieldName, registerField, defaultValue, error, clearError } = useField(name)
-
     const [value, setValue] = useState(defaultValue || '' || [])
 
     useEffect(() => {

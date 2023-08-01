@@ -18,7 +18,7 @@ interface VAutoCompleteDimensionProps {
 }
 
 export const VAutoCompleteDimension: React.FC<VAutoCompleteDimensionProps> = ({ isExternalLoading = false }) => {
-    const { fieldName, registerField, defaultValue, error, clearError } = useField('dimensions')
+    const { fieldName, registerField, defaultValue, error, clearError } = useField('dimension_id')
 
     const { debounce } = useDebounce()
 

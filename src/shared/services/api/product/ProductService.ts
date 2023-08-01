@@ -2,45 +2,67 @@ import { AxiosResponse } from 'axios'
 import { Environment } from '../../../enviroment'
 import { api } from '../axiosConfig'
 
+export interface IImageProductList {
+    id: number
+    url: string
+}
+
 export interface IListProduct {
     id: number
     status: 'Ativo' | 'Vendido' | 'Inativo'
-    status_of_sale: 'Venda' | 'Galeria'
     title: string
-    type: 'Original' | 'Print'
     orientation: 'Retrato' | 'Paisagem'
     quantity?: number
     production_date: Date | string
     description?: string
     weight?: number
     price?: number
-    main_image: any
-    products: string[] | number[]
-    product_images: any[]
+    main_image: string
+    product_images: IImageProductList[]
+    dimension_id: number
     technique_id: number
     category_id: number
     technique_name: string
     category_name: string
+    dimension_name: string
 }
 
 export interface IDetailProduct {
     id: number
     status: 'Ativo' | 'Vendido' | 'Inativo'
-    status_of_sale: 'Venda' | 'Galeria'
     title: string
-    type: 'Original' | 'Print'
     orientation: 'Retrato' | 'Paisagem'
-    quantity?: number
+    quantity: number
     production_date: Date | string
     description?: string
-    weight?: number
-    price?: number
-    main_image: any
-    product_images: any[]
+    weight: number
+    price: number
+    main_image: string
+    product_images: IImageProductList[]
+    dimension_id: number
     technique_id: number
     category_id: number
     technique_name: string
     category_name: string
+    dimension_name: string
+}
+
+export interface IDetailProductUpdate {
+    id: number
+    status: 'Ativo' | 'Vendido' | 'Inativo'
+    title: string
+    orientation: 'Retrato' | 'Paisagem'
+    quantity: number
+    production_date: Date | string
+    description?: string
+    weight: number
+    price: number
+    dimension_id: number
+    technique_id: number
+    category_id: number
+    technique_name: string
+    category_name: string
+    dimension_name: string
 }
 
 type IProductTotalCount = {
@@ -71,7 +93,6 @@ const getAll = async (page = 1, filter = '', id?: number): Promise<IProductTotal
         const { data, headers } = await api.get(relativeUrl)
 
         if (data) {
-            console.log(data)
             return {
                 data,
                 totalCount: Number(headers['x-total-count'] || Environment.LINE_LIMIT)
@@ -104,7 +125,7 @@ const getById = async (id: number): Promise<IDetailProduct | Error> => {
 
 }
 
-const create = async (createData: Omit<IDetailProduct, 'id'>): Promise<number | Error> => {
+const create = async (createData: FormData): Promise<number | Error> => {
 
     try {
         const { data } = await api.post('/product', createData)
@@ -122,15 +143,54 @@ const create = async (createData: Omit<IDetailProduct, 'id'>): Promise<number | 
     }
 }
 
-const updateById = async (id: number, updateData: IDetailProduct): Promise<void | Error> => {
+const insertNewImage = async(idProduct: number, newImage: FormData): Promise<AxiosResponse<string> | Error> => {
 
-    try {
-        await api.put(`/product/${id}`, updateData)
+    try{
+        const result: AxiosResponse<string> = await api.post(`/product/insertimage/${idProduct}`, newImage)
+        return result
     } catch (error) {
         console.error(error)
         return new Error((error as ErrorResponse).response?.data?.errors?.default || 'Erro ao atualizar registro.')
 
     }
+
+}
+
+const updateById = async (idImage: number, updateData: IDetailProductUpdate): Promise<void | Error> => {
+
+    try {
+        await api.put(`/product/${idImage}`, updateData)
+    } catch (error) {
+        console.error(error)
+        return new Error((error as ErrorResponse).response?.data?.errors?.default || 'Erro ao atualizar registro.')
+
+    }
+}
+
+const updateProductMainImage = async(idImage: number, newImage: FormData): Promise<AxiosResponse<string> | Error> => {
+
+    try{
+        const result: AxiosResponse<string> = await api.put(`/product/updatemainimage/${idImage}`, newImage)
+        return result
+    } catch (error) {
+        console.error(error)
+        return new Error((error as ErrorResponse).response?.data?.errors?.default || 'Erro ao atualizar registro.')
+
+    }
+
+}
+
+const updateProductImage = async(id: number, idProduct: number, newImage: FormData): Promise<AxiosResponse<string> | Error> => {
+
+    try{
+        const result: AxiosResponse<string> = await api.put(`/product/updateimage/${id}/${idProduct}`, newImage)
+        return result
+    } catch (error) {
+        console.error(error)
+        return new Error((error as ErrorResponse).response?.data?.errors?.default || 'Erro ao atualizar registro.')
+
+    }
+
 }
 
 const deleteById = async (id: number): Promise<void | Error> => {
@@ -140,6 +200,18 @@ const deleteById = async (id: number): Promise<void | Error> => {
     } catch (error) {
         console.error(error)
         return new Error((error as ErrorResponse).response?.data?.errors?.default || 'Erro ao deletar registro.')
+    }
+
+}
+
+const deleteProductImage = async(id: number, idProduct: number): Promise<void | Error> => {
+
+    try{
+        await api.delete(`/product/deleteimage/${id}/${idProduct}`)
+    } catch (error) {
+        console.error(error)
+        return new Error((error as ErrorResponse).response?.data?.errors?.default || 'Erro ao deletar registro.')
+
     }
 
 }
@@ -164,7 +236,11 @@ export const ProductService = {
     getAll,
     getById,
     create,
+    insertNewImage,
     updateById,
+    updateProductImage,
+    updateProductMainImage,
     deleteById,
+    deleteProductImage,
     generatePdf
 }

@@ -133,11 +133,10 @@ export const ProductList: React.FC = () => {
                             <StyledTableCell width={100} size='small' sx={{ fontWeight: 600 }}>Ações</StyledTableCell>
                             <StyledTableCell size='small' sx={{ fontWeight: 600 }}>Título</StyledTableCell>
                             <StyledTableCell size='small' sx={{ fontWeight: 600 }}>Status</StyledTableCell>
-                            <StyledTableCell size='small' sx={{ fontWeight: 600 }}>StatusV</StyledTableCell>
                             <StyledTableCell size='small' sx={{ fontWeight: 600 }}>Orientação</StyledTableCell>
-                            <StyledTableCell size='small' sx={{ fontWeight: 600 }}>Tipo</StyledTableCell>
                             <StyledTableCell size='small' sx={{ fontWeight: 600 }}>Categoria</StyledTableCell>
                             <StyledTableCell size='small' sx={{ fontWeight: 600 }}>Técnica</StyledTableCell>
+                            <StyledTableCell size='small' sx={{ fontWeight: 600 }}>Dimensão</StyledTableCell>
                             <StyledTableCell size='small' sx={{ fontWeight: 600 }}>Produção</StyledTableCell>
                             <StyledTableCell size='small' sx={{ fontWeight: 600 }}>Qtd.</StyledTableCell>
                             <StyledTableCell size='small' sx={{ fontWeight: 600 }}>Peso(g)</StyledTableCell>
@@ -158,11 +157,10 @@ export const ProductList: React.FC = () => {
                                 </StyledTableCell>
                                 <StyledTableCell size='small'>{row.title}</StyledTableCell>
                                 <StyledTableCell size='small'>{row.status}</StyledTableCell>
-                                <StyledTableCell size='small'>{row.status_of_sale}</StyledTableCell>
                                 <StyledTableCell size='small'>{row.orientation}</StyledTableCell>
-                                <StyledTableCell size='small'>{row.type}</StyledTableCell>
                                 <StyledTableCell size='small'>{row.category_name}</StyledTableCell>
                                 <StyledTableCell size='small'>{row.technique_name}</StyledTableCell>
+                                <StyledTableCell size='small'>{row.dimension_name}</StyledTableCell>
                                 <StyledTableCell size='small'>{dayjs(row.production_date).format('DD/MM/YYYY')}</StyledTableCell>
                                 <StyledTableCell size='small'>{row.quantity}</StyledTableCell>
                                 <StyledTableCell size='small'>{row.weight}</StyledTableCell>
@@ -176,7 +174,7 @@ export const ProductList: React.FC = () => {
                     <TableFooter>
                         {isLoading && (
                             <TableRow>
-                                <StyledTableCell size='small' colSpan={3}>
+                                <StyledTableCell size='small' colSpan={11}>
                                     <LinearProgress variant='indeterminate' />
                                 </StyledTableCell>
                             </TableRow>
@@ -184,7 +182,7 @@ export const ProductList: React.FC = () => {
 
                         {(totalCount > 0 && totalCount > Environment.LINE_LIMIT) && (
                             <TableRow>
-                                <StyledTableCell size='small' colSpan={3}>
+                                <StyledTableCell size='small' colSpan={11}>
                                     <Pagination
                                         page={page}
                                         count={Math.ceil(totalCount / Environment.LINE_LIMIT)}

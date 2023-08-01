@@ -1,5 +1,6 @@
 import { useRef, useState, useEffect } from 'react'
 import ReactDatePicker, { ReactDatePickerProps } from 'react-datepicker'
+import { parseISO } from 'date-fns'
 import { useField } from '@unform/core'
 import { TextField } from '@mui/material'
 
@@ -20,19 +21,21 @@ export const VDateInput: React.FC<TVDateInput> = ({ name, label, ...rest }) => {
     const datepickerRef = useRef(null)
     const { fieldName, registerField, defaultValue, error, clearError } = useField(name)
 
-    const [date, setDate] = useState<Date | null>(defaultValue || new Date())
+    const [date, setDate] = useState<Date | null>(defaultValue ? parseISO(defaultValue) : null)
 
     useEffect(() => {
         registerField({
             name: fieldName,
             ref: datepickerRef.current,
-            path: 'props.selected',
-            clearValue: (ref: any) => {
+            getValue: (ref) => ref.props.selected,
+            setValue: (ref, value) => {
+                if (value) { ref.setSelected(parseISO(value as string))}
+            },
+            clearValue: (ref) => {
                 ref.clear()
             },
         })
     }, [fieldName, registerField])
-
 
 
     return (
@@ -40,7 +43,7 @@ export const VDateInput: React.FC<TVDateInput> = ({ name, label, ...rest }) => {
             <ReactDatePicker
                 ref={datepickerRef}
                 selected={date}
-                onChange={(newValue) => {setDate(newValue);  error && clearError()}}
+                onChange={(newValue) => { setDate(newValue); error && clearError() }}
                 locale='ptBR'
                 dateFormat='dd/MM/yyyy'
                 customInput={<TextField fullWidth label={label} error={!!error} helperText={error} />}

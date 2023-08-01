@@ -11,17 +11,10 @@ import { BasePageLayout } from '../../../shared/layouts'
 import { DetailTools } from '../../../shared/components'
 import { DimensionService } from '../../../shared/services/api/dimension/DimensionService'
 import { VTextField, VForm, useVForm, IVFormErrors } from '../../../shared/forms'
-
-
-interface IFormData {
-    dimension: string
-}
-
-//Definindo o schema para validação
-const formatValidationSchema: yup.Schema<IFormData> = yup.object().shape({
-    dimension: yup.string().required().min(3).max(20)
-        .matches(/^\d+ x \d+$/, 'Formato inválido. Use o formato: "20 x 30"')
-})
+import {
+    IFormData,
+    formatValidationSchema
+} from './validation/Schemas'
 
 export const DimensionDetails: React.FC = () => {
     const { id = 'new' } = useParams<'id'>()

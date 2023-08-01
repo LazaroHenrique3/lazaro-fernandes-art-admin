@@ -8,7 +8,6 @@ interface IAuthContextData {
     isAuthenticated: boolean
     isLoading: boolean
     typeUser?: string
-    userPermissions?: number[]
     logout: () => void
     login: (email: string, password: string) => Promise<string | void>
 }
@@ -22,13 +21,11 @@ interface IAuthProviderProps {
 const LOCAL_STORAGE_KEY__ACCESS_TOKEN = 'APP_ACCESS_TOKEN'
 const LOCAL_STORAGE_KEY__USER_NAME = 'APP_USER_NAME'
 const LOCAL_STORAGE_KEY__TYPE_USER = 'APP_TYPE_USER'
-const LOCAL_STORAGE_KEY__USER_PERMISSIONS = 'APP_USER_PERMISSIONS'
 
 export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
     const [accessToken, setAccessToken] = useState<string>()
     const [name, setName] = useState<string>()
     const [typeUser, setTypeUser] = useState<string>()
-    const [userPermissions, setuserPermissions] = useState<number[]>()
 
     const [loading, setLoading] = useState(true)
 
@@ -36,20 +33,17 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
         const accessToken = localStorage.getItem(LOCAL_STORAGE_KEY__ACCESS_TOKEN)
         const name = localStorage.getItem(LOCAL_STORAGE_KEY__USER_NAME)
         const typeUser = localStorage.getItem(LOCAL_STORAGE_KEY__TYPE_USER)
-        const userPermissions = localStorage.getItem(LOCAL_STORAGE_KEY__USER_PERMISSIONS)
 
-        if (accessToken && name && typeUser && userPermissions) {
+        if (accessToken && name && typeUser) {
             api.defaults.headers.Authorization = `Bearer ${accessToken}`
             
             setAccessToken(accessToken)
             setName(JSON.parse(name))
             setTypeUser(JSON.parse(typeUser))
-            setuserPermissions(JSON.parse(userPermissions))
         } else {
             setAccessToken(undefined)
             setName(undefined)
             setTypeUser(undefined)
-            setuserPermissions(undefined)
         }
 
         setLoading(false)
@@ -64,14 +58,12 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
             localStorage.setItem(LOCAL_STORAGE_KEY__ACCESS_TOKEN, result.accessToken)
             localStorage.setItem(LOCAL_STORAGE_KEY__USER_NAME, JSON.stringify(result.name))
             localStorage.setItem(LOCAL_STORAGE_KEY__TYPE_USER, JSON.stringify(result.typeUser))
-            localStorage.setItem(LOCAL_STORAGE_KEY__USER_PERMISSIONS, JSON.stringify(result.permissions))
 
             api.defaults.headers.Authorization = `Bearer ${result.accessToken}`
             
             setAccessToken(result.accessToken)
             setName(result.name)
             setTypeUser(result.typeUser)
-            setuserPermissions(result.permissions)
         }
         
     }, [])
@@ -80,7 +72,6 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
         localStorage.removeItem(LOCAL_STORAGE_KEY__ACCESS_TOKEN)
         localStorage.removeItem(LOCAL_STORAGE_KEY__USER_NAME)
         localStorage.removeItem(LOCAL_STORAGE_KEY__TYPE_USER)
-        localStorage.removeItem(LOCAL_STORAGE_KEY__USER_PERMISSIONS)
 
         api.defaults.headers.Authorization = null
         setAccessToken(undefined)
@@ -90,7 +81,7 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
     const isLoading = useMemo(() => loading, [loading])
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated, isLoading, typeUser, userPermissions, name, login: handleLogin, logout: handleLogout }}>
+        <AuthContext.Provider value={{ isAuthenticated, isLoading, typeUser, name, login: handleLogin, logout: handleLogout }}>
             {children}
         </AuthContext.Provider>
     )

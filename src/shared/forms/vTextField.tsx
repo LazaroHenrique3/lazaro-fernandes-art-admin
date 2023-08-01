@@ -8,7 +8,6 @@ type TVTextField = TextFieldProps & {
 
 export const VTextField: React.FC<TVTextField> = ({ name, ...rest }) => {
     const { fieldName, registerField, defaultValue, error, clearError } = useField(name)
-
     const [value, setValue] = useState(defaultValue || '')
 
     useEffect(() => {
