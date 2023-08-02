@@ -87,7 +87,13 @@ export const AdministratorDetails: React.FC = () => {
                     toast.error(result.message)
                 } else {
                     toast.success('Registro salvo com sucesso!')
-                    navigate(`/admin/administrator/details/${result}`)
+
+                    if (accessLevel !== undefined && accessLevel === 'Root') {
+                        navigate(`/admin/administrator/details/${result}`)
+                        return
+                    }
+
+                    navigate('/admin/administrator')
                 }
             } else {
                 const result = await AdministratorService.updateById(Number(id), { id: Number(id), ...validateData })
@@ -146,7 +152,7 @@ export const AdministratorDetails: React.FC = () => {
                     showSaveButton
                     newButtonText='Nova'
                     showNewButton={id !== 'new'}
-                    showDeleteButton={id !== 'new'}
+                    showDeleteButton={accessLevel !== undefined && accessLevel === 'Root' && Number(id) !== Number(idUser) && id !== 'new'}
 
                     onClickSaveButton={() => formRef.current?.submitForm()}
                     onClickDeleteButton={() => handleDelete(Number(id), name)}
