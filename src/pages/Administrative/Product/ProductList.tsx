@@ -14,6 +14,16 @@ import { Environment } from '../../../shared/enviroment'
 
 import { StyledTableCell, StyledTableRow } from '../../../shared/components/StyledComponents/TableComponents'
 
+const formattedPrice = (value: number | string) => {
+
+    if (typeof value === 'string') return ''
+
+    return value.toLocaleString('pt-BR', {
+        style: 'currency',
+        currency: 'BRL',
+    })
+}
+
 export const ProductList: React.FC = () => {
     const [searchParams, setSearchParams] = useSearchParams()
 
@@ -100,16 +110,6 @@ export const ProductList: React.FC = () => {
 
         //Limpa a URL temporária após abrir o PDF para liberar recursos
         URL.revokeObjectURL(pdfUrl)
-    }
-
-    const formattedPrice = (value: number | string) => {
-
-        if (typeof value === 'string') return ''
-
-        return value.toLocaleString('pt-BR', {
-            style: 'currency',
-            currency: 'BRL',
-        })
     }
 
     return (

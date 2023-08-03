@@ -8,7 +8,7 @@ import { useAuthContext } from '../../../shared/contexts'
 
 import { BasePageLayout } from '../../../shared/layouts'
 import { DetailTools } from '../../../shared/components'
-import { AdministratorService } from '../../../shared/services/api/admnistrator/AdministratorService'
+import { AdministratorService } from '../../../shared/services/api/administrator/AdministratorService'
 import { VTextField, VForm, useVForm, IVFormErrors, VSelect } from '../../../shared/forms'
 
 import { toast } from 'react-toastify'
@@ -205,7 +205,7 @@ export const AdministratorDetails: React.FC = () => {
                             <Grid container item direction='row' spacing={2}>
 
                                 <Grid item xs={12} sm={12} md={6} lg={5} xl={5}>
-                                    <FormControlLabel control={<Checkbox checked={isAlterPassword} onChange={(_) => setIsAlterPassword(!isAlterPassword)} />} label='Alterar senha' />
+                                    <FormControlLabel control={<Checkbox checked={isAlterPassword} onChange={() => setIsAlterPassword(!isAlterPassword)} />} label='Alterar senha' />
                                 </Grid>
 
                             </Grid>

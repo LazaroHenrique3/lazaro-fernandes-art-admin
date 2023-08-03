@@ -7,6 +7,8 @@ import '../shared/services/yup/TranslationsYup'
 import { useDrawerContext } from '../shared/contexts'
 import {
     Dashboard,
+    CustomerList,
+    CustomerDetails,
     AdministratorList,
     AdministratorDetails,
     ProductDetails,
@@ -32,8 +34,13 @@ export const AppRoutes = () => {
                 path: '/admin/admin-home'
             },
             {
-                label: 'Administradores',
+                label: 'Clientes',
                 icon: 'supervisor_account_icon',
+                path: '/admin/customer'
+            },
+            {
+                label: 'Administradores',
+                icon: 'manage_accounts_icon',
                 path: '/admin/administrator'
             },
             {
@@ -64,6 +71,9 @@ export const AppRoutes = () => {
             <Route path='/admin/login' element={<LoginAdmin />} />
 
             <Route path='/admin/admin-home' element={<PrivateAdmin><Dashboard /></PrivateAdmin>} />
+
+            <Route path='/admin/customer' element={<PrivateAdmin><CustomerList /></PrivateAdmin>} />
+            <Route path='/admin/customer/details/:id' element={<PrivateAdmin><CustomerDetails /></PrivateAdmin>} />
             
             <Route path='/admin/administrator' element={<PrivateAdmin><AdministratorList /></PrivateAdmin>} />
             <Route path='/admin/administrator/details/:id' element={<PrivateAdmin><AdministratorDetails /></PrivateAdmin>} />

@@ -18,7 +18,7 @@ type InputProps = JSX.IntrinsicElements['input'] & Props
 export const VInputFile: React.FC<InputProps> = ({ name, label, isExternalLoading, ...rest }) => {
 
     const inputRef = useRef<HTMLInputElement>(null!)
-    const { fieldName, registerField, defaultValue, error, clearError } = useField(name)
+    const { fieldName, registerField, error, clearError } = useField(name)
 
     const [preview, setPreview] = useState([{ url: '', name: '' }])
 

@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Icon, IconButton, LinearProgress, Pagination, Paper, Table, TableBody, TableContainer, TableFooter, TableHead, TableRow } from '@mui/material'
+import dayjs from 'dayjs'
 
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
-import { AdministratorService, IListAdministrator } from '../../../shared/services/api/administrator/AdministratorService'
+import { CustomerService, IListCustomer } from '../../../shared/services/api/customer/CustomerService'
 import { BasePageLayout } from '../../../shared/layouts'
 import { ListTools } from '../../../shared/components'
 import { useDebounce } from '../../../shared/hooks'
@@ -15,10 +16,36 @@ import { useAuthContext } from '../../../shared/contexts'
 
 import { StyledTableCell, StyledTableRow } from '../../../shared/components/StyledComponents/TableComponents'
 
-export const AdministratorList: React.FC = () => {
+const formatCPF = (cpf: string): string => {
+    // Remove todos os caracteres não numéricos do CPF
+    const numericCPF = cpf.replace(/\D/g, '')
+
+    // Aplica a formatação do CPF (XXX.XXX.XXX-XX)
+    const formattedCPF = numericCPF.replace(
+        /^(\d{3})(\d{3})(\d{3})(\d{2})$/,
+        '$1.$2.$3-$4'
+    )
+
+    return formattedCPF
+}
+
+const formatPhoneNumber = (phoneNumber: string): string => {
+    // Remove todos os caracteres não numéricos do número de telefone
+    const numericPhoneNumber = phoneNumber.replace(/\D/g, '')
+
+    // Aplica a formatação do telefone (xx) xxxxx-xxxx
+    const formattedPhoneNumber = numericPhoneNumber.replace(
+        /^(\d{2})(\d{5})(\d{4})$/,
+        '($1) $2-$3'
+    )
+
+    return formattedPhoneNumber
+}
+
+export const CustomerList: React.FC = () => {
     const [searchParams, setSearchParams] = useSearchParams()
 
-    const [rows, setRows] = useState<IListAdministrator[]>([])
+    const [rows, setRows] = useState<IListCustomer[]>([])
     const [totalCount, setTotalCount] = useState(0)
     const [isLoading, setIsLoading] = useState(true)
 
@@ -48,7 +75,7 @@ export const AdministratorList: React.FC = () => {
 
         const fetchData = () => {
             debounce(async () => {
-                const result = await AdministratorService.getAll(page, search)
+                const result = await CustomerService.getAll(page, search)
                 setIsLoading(false)
 
                 if (result instanceof Error) {
@@ -69,7 +96,7 @@ export const AdministratorList: React.FC = () => {
     const handleDelete = async (id: number, name: string) => {
 
         if (confirm(`Realmente deseja apagar "${name}"?`)) {
-            const result = await AdministratorService.deleteById(id)
+            const result = await CustomerService.deleteById(id)
 
             if (result instanceof Error) {
                 toast.error(result.message)
@@ -85,7 +112,7 @@ export const AdministratorList: React.FC = () => {
 
     //Função de gerarPDF
     const handlePDF = async () => {
-        const result = await AdministratorService.generatePdf(search)
+        const result = await CustomerService.generatePdf(search)
 
         if (result instanceof Error) {
             toast.error(result.message)
@@ -107,13 +134,12 @@ export const AdministratorList: React.FC = () => {
 
     return (
         <BasePageLayout
-            title="Administradores"
+            title="Clientes"
             toolBar={
                 <ListTools
                     showSearchInput
-                    newButtonText='Novo'
+                    showNewButton={false}
                     searchText={search}
-                    onClickNewButton={() => navigate('/admin/administrator/details/new')}
                     onClickPDFButton={() => handlePDF()}
                     onChangeSearchText={text => setSearchParams({ search: text, page: '1' }, { replace: true })}
                 />
@@ -123,12 +149,14 @@ export const AdministratorList: React.FC = () => {
                 <Table>
                     <TableHead>
                         <TableRow>
-                            {(accessLevel !== undefined && accessLevel === 'Root') && (
-                                <StyledTableCell width={100} size='small' sx={{ fontWeight: 600 }}>Ações</StyledTableCell>
-                            )}
+                            <StyledTableCell width={100} size='small' sx={{ fontWeight: 600 }}>Ações</StyledTableCell>
                             <StyledTableCell size='small' sx={{ fontWeight: 600 }}>Status</StyledTableCell>
                             <StyledTableCell size='small' sx={{ fontWeight: 600 }}>Nome</StyledTableCell>
                             <StyledTableCell size='small' sx={{ fontWeight: 600 }}>Email</StyledTableCell>
+                            <StyledTableCell size='small' sx={{ fontWeight: 600 }}>Telefone</StyledTableCell>
+                            <StyledTableCell size='small' sx={{ fontWeight: 600 }}>Gênero</StyledTableCell>
+                            <StyledTableCell size='small' sx={{ fontWeight: 600 }}>Nascimento</StyledTableCell>
+                            <StyledTableCell size='small' sx={{ fontWeight: 600 }}>CPF</StyledTableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -140,7 +168,7 @@ export const AdministratorList: React.FC = () => {
                                             <Icon>delete</Icon>
                                         </IconButton>
 
-                                        <IconButton color='primary' onClick={() => navigate(`/admin/administrator/details/${row.id}`)}>
+                                        <IconButton color='primary' onClick={() => navigate(`/admin/customer/details/${row.id}`)}>
                                             <Icon>edit</Icon>
                                         </IconButton>
                                     </StyledTableCell>
@@ -149,6 +177,10 @@ export const AdministratorList: React.FC = () => {
                                 <StyledTableCell size='small'>{row.status}</StyledTableCell>
                                 <StyledTableCell size='small'>{row.name}</StyledTableCell>
                                 <StyledTableCell size='small'>{row.email}</StyledTableCell>
+                                <StyledTableCell size='small'>{formatPhoneNumber(row.cell_phone)}</StyledTableCell>
+                                <StyledTableCell size='small'>{row.genre}</StyledTableCell>
+                                <StyledTableCell size='small'>{dayjs(row.date_of_birth).format('DD/MM/YYYY')}</StyledTableCell>
+                                <StyledTableCell size='small'>{formatCPF(row.cpf)}</StyledTableCell>
                             </StyledTableRow>
                         ))}
                     </TableBody>

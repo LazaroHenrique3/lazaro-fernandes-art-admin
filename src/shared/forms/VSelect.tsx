@@ -1,6 +1,6 @@
 import { InputLabel, SelectProps, Select, MenuItem, FormHelperText, FormControl } from '@mui/material'
 import { useField } from '@unform/core'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 interface SelectOptionType {
     label: string;
