@@ -224,13 +224,11 @@ export const CustomerDetails: React.FC = () => {
                                     <ImageHandler
                                         handleDeleteImage={handleDeleteImage}
                                         handleUpdateImage={handleUpdateImage}
-                                        handleInsertImage={() => console.log()}
                                         isExternalLoading={isLoading}
                                         isInsertImage={false}
                                         urlImage={image}
                                         showDeleteButton={true}
                                         idImage={Number(id)}
-                                        typeImage='main'
                                     />
                                 </Grid>
                             </Grid>
@@ -245,15 +243,12 @@ export const CustomerDetails: React.FC = () => {
                                 <Grid key={image} container item direction='row' spacing={2}>
                                     <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
                                         <ImageHandler
-                                            handleDeleteImage={() => console.log()}
-                                            handleUpdateImage={() => console.log()}
                                             handleInsertImage={handleInsertImage}
                                             isExternalLoading={isLoading}
                                             isInsertImage={true}
                                             urlImage={''}
                                             showDeleteButton={false}
                                             idImage={Number(id)}
-                                            typeImage='product_image'
                                         />
                                     </Grid>
                                 </Grid>

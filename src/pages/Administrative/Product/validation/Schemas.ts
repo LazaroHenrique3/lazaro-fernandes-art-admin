@@ -30,6 +30,8 @@ export interface IFormDataUpdate {
     category_id: number
 }
 
+const MAX_PRODUCT_IMAGES = 4
+
 //Definindo o schema para validação default com as informações de venda(price, weight, quantity)
 export const formatValidationSchema: yup.Schema<IFormData> = yup.object().shape({
     status: yup.string().oneOf(['Ativo', 'Vendido', 'Inativo']).default('Ativo').required(),
@@ -99,8 +101,8 @@ export const formatValidationSchema: yup.Schema<IFormData> = yup.object().shape(
             //Verificando se foi passado imagem e se é mais que  o permitido
             if (product_images.length === 0) {
                 throw new yup.ValidationError('As imagens são obrigatórias!', value, 'product_images')
-            } else if (product_images.length > 4) {
-                throw new yup.ValidationError('É permitido o upload de até 4 imagens!', value, 'product_images')
+            } else if (product_images.length > MAX_PRODUCT_IMAGES ) {
+                throw new yup.ValidationError(`É permitido o upload de até ${MAX_PRODUCT_IMAGES} imagens!`, value, 'product_images')
             }
 
             //Verificando o formato das imagens

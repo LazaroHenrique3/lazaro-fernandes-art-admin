@@ -207,7 +207,7 @@ export const ProductDetails: React.FC = () => {
         toast.success('Imagem inserida com sucesso!')
     }
 
-    const handleUpdateImage = async (id: number, newImage: FileList, typeImage: 'main' | 'product_image') => {
+    const handleUpdateProductImage = async (id: number, newImage: FileList) => {
 
         setIsLoading(true)
 
@@ -215,15 +215,9 @@ export const ProductDetails: React.FC = () => {
 
         //convertendo em formdata
         const formData = new FormData()
-
         formData.append('image', image)
 
-        let result
-        if (typeImage === 'main') {
-            result = await ProductService.updateProductMainImage(id, formData)
-        } else {
-            result = await ProductService.updateProductImage(id, productId, formData)
-        }
+        const result = await ProductService.updateProductImage(id, productId, formData)
 
         setIsLoading(false)
 
@@ -232,30 +226,49 @@ export const ProductDetails: React.FC = () => {
             return
         }
 
-        if (typeImage === 'main') {
-            setMainImage(result.data)
+
+        const newUrl = result.data
+
+        //Atualizar o state com as imagens do produto, junto com a url retornada do servidor
+        const indexImage = productImages.findIndex(image => image.id === id)
+
+        if (indexImage !== -1) {
+            const newProductImages = productImages.map((image, index) => {
+                if (index === indexImage) {
+                    // Atualize a propriedade 'url' da imagem no objeto encontrado
+                    return { ...image, url: newUrl }
+                }
+                return image
+            })
+
+            setProductImages(newProductImages)
         } else {
-            const newUrl = result.data
-
-            //Atualizar o state com as imagens do produto, junto com a url retornada do servidor
-            const indexImage = productImages.findIndex(image => image.id === id)
-
-            if (indexImage !== -1) {
-                const newProductImages = productImages.map((image, index) => {
-                    if (index === indexImage) {
-                        // Atualize a propriedade 'url' da imagem no objeto encontrado
-                        return { ...image, url: newUrl }
-                    }
-                    return image
-                })
-
-                setProductImages(newProductImages)
-            } else {
-                toast.error('Erro inesperado ao atualizar imagem!')
-            }
-
+            toast.error('Erro inesperado ao atualizar imagem!')
         }
 
+        toast.success('Imagem atualizada com sucesso!')
+    }
+
+    const handleUpdateMainImage = async (id: number, newImage: FileList) => {
+
+        setIsLoading(true)
+
+        const [image] = newImage
+
+        //convertendo em formdata
+        const formData = new FormData()
+        formData.append('image', image)
+
+        const result = await ProductService.updateProductMainImage(id, formData)
+
+        setIsLoading(false)
+
+        if (result instanceof Error) {
+            toast.error(result.message)
+            return
+        }
+
+        setMainImage(result.data)
         toast.success('Imagem atualizada com sucesso!')
     }
 
@@ -350,15 +363,12 @@ export const ProductDetails: React.FC = () => {
                             <Grid container item direction='row' spacing={2}>
                                 <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
                                     <ImageHandler
-                                        handleDeleteImage={() => console.log()}
-                                        handleUpdateImage={handleUpdateImage}
-                                        handleInsertImage={() => console.log()}
+                                        handleUpdateImage={handleUpdateMainImage}
                                         isExternalLoading={isLoading}
                                         isInsertImage={false}
                                         urlImage={mainImage}
                                         showDeleteButton={false}
                                         idImage={productId}
-                                        typeImage='main'
                                     />
                                 </Grid>
 
@@ -367,14 +377,12 @@ export const ProductDetails: React.FC = () => {
                                         item xs={12} sm={12} md={6} lg={4} xl={2}>
                                         <ImageHandler
                                             handleDeleteImage={handleDeleteImage}
-                                            handleUpdateImage={handleUpdateImage}
-                                            handleInsertImage={() => console.log()}
+                                            handleUpdateImage={handleUpdateProductImage}
                                             isExternalLoading={isLoading}
                                             isInsertImage={false}
                                             urlImage={image.url}
                                             showDeleteButton={(productImages.length > 1)}
                                             idImage={image.id}
-                                            typeImage='product_image'
                                         />
                                     </Grid>
                                 ))}
@@ -390,15 +398,12 @@ export const ProductDetails: React.FC = () => {
                                 <Grid key={productImages.length} container item direction='row' spacing={2}>
                                     <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
                                         <ImageHandler
-                                            handleDeleteImage={() => console.log()}
-                                            handleUpdateImage={() => console.log()}
                                             handleInsertImage={handleInsertImage}
                                             isExternalLoading={isLoading}
                                             isInsertImage={true}
                                             urlImage={''}
                                             showDeleteButton={false}
                                             idImage={productId}
-                                            typeImage='product_image'
                                         />
                                     </Grid>
                                 </Grid>
