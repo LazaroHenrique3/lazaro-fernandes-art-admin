@@ -107,7 +107,7 @@ export const CustomerDetails: React.FC = () => {
         }
     }
 
-    /* const handleInsertImage = async (newImage: FileList) => {
+    const handleInsertImage = async (newImage: FileList) => {
 
         setIsLoading(true)
 
@@ -126,14 +126,11 @@ export const CustomerDetails: React.FC = () => {
         }
 
         //preparando para atualizar o state de imagens
-        const newImageObject = result.data
+        const newImageCustomer = result.data
 
-        const newProductImages = [...productImages, newImageObject]
-
-        setProductImages(newProductImages as IImageProductList[])
-
+        setImage(newImageCustomer)
         toast.success('Imagem inserida com sucesso!')
-    } */
+    }
 
     const handleUpdateImage = async (id: number, newImage: FileList) => {
 
@@ -250,7 +247,7 @@ export const CustomerDetails: React.FC = () => {
                                         <ImageHandler
                                             handleDeleteImage={() => console.log()}
                                             handleUpdateImage={() => console.log()}
-                                            handleInsertImage={() => console.log()}
+                                            handleInsertImage={handleInsertImage}
                                             isExternalLoading={isLoading}
                                             isInsertImage={true}
                                             urlImage={''}
