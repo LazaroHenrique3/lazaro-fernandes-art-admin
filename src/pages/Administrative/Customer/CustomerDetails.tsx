@@ -4,6 +4,8 @@ import { Box, Checkbox, FormControlLabel, Grid, LinearProgress, Paper, Typograph
 
 import * as yup from 'yup'
 
+import { useAuthContext } from '../../../shared/contexts'
+
 import { BasePageLayout } from '../../../shared/layouts'
 import { DetailTools, ImageHandler } from '../../../shared/components'
 import { CustomerService } from '../../../shared/services/api/customer/CustomerService'
@@ -38,6 +40,8 @@ export const CustomerDetails: React.FC = () => {
     const [image, setImage] = useState('')
 
     const [isAlterPassword, setIsAlterPassword] = useState(false)
+
+    const { accessLevel } = useAuthContext()
 
     useEffect(() => {
 
@@ -97,7 +101,7 @@ export const CustomerDetails: React.FC = () => {
             const errorsYup: yup.ValidationError = errors as yup.ValidationError
 
             const validationErrors: IVFormErrors = {}
-            console.log('Deu erro?', errorsYup.inner)
+
             errorsYup.inner.forEach(error => {
                 if (!error.path) return
 
@@ -190,7 +194,6 @@ export const CustomerDetails: React.FC = () => {
 
     }
 
-    console.log('image: ', image)
     return (
         <BasePageLayout
             title={`'${name}'`}
@@ -309,13 +312,15 @@ export const CustomerDetails: React.FC = () => {
 
                         </Grid>
 
-                        <Grid container item direction='row' spacing={2}>
+                        {accessLevel !== undefined && accessLevel === 'Root' && (
+                            <Grid container item direction='row' spacing={2}>
 
-                            <Grid item xs={12} sm={12} md={6} lg={5} xl={5}>
-                                <FormControlLabel control={<Checkbox checked={isAlterPassword} onChange={() => setIsAlterPassword(!isAlterPassword)} />} label='Alterar senha' />
+                                <Grid item xs={12} sm={12} md={6} lg={5} xl={5}>
+                                    <FormControlLabel control={<Checkbox checked={isAlterPassword} onChange={() => setIsAlterPassword(!isAlterPassword)} />} label='Alterar senha' />
+                                </Grid>
+
                             </Grid>
-
-                        </Grid>
+                        )}
 
                         {isAlterPassword && (
                             <Grid container item direction='row' spacing={2}>

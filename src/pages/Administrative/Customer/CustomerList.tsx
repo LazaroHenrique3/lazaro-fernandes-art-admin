@@ -162,18 +162,15 @@ export const CustomerList: React.FC = () => {
                     <TableBody>
                         {rows.map((row) => (
                             <StyledTableRow key={row.id}>
-                                {(accessLevel !== undefined && accessLevel === 'Root') && (
-                                    <StyledTableCell size='small'>
-                                        <IconButton color='error' onClick={() => handleDelete(row.id, row.name)}>
-                                            <Icon>delete</Icon>
-                                        </IconButton>
+                                <StyledTableCell size='small'>
+                                    <IconButton color='error' onClick={() => handleDelete(row.id, row.name)}>
+                                        <Icon>delete</Icon>
+                                    </IconButton>
 
-                                        <IconButton color='primary' onClick={() => navigate(`/admin/customer/details/${row.id}`)}>
-                                            <Icon>edit</Icon>
-                                        </IconButton>
-                                    </StyledTableCell>
-
-                                )}
+                                    <IconButton color='primary' onClick={() => navigate(`/admin/customer/details/${row.id}`)}>
+                                        <Icon>edit</Icon>
+                                    </IconButton>
+                                </StyledTableCell>
                                 <StyledTableCell size='small'>{row.status}</StyledTableCell>
                                 <StyledTableCell size='small'>{row.name}</StyledTableCell>
                                 <StyledTableCell size='small'>{row.email}</StyledTableCell>
@@ -190,7 +187,7 @@ export const CustomerList: React.FC = () => {
                     <TableFooter>
                         {isLoading && (
                             <TableRow>
-                                <StyledTableCell size='small' colSpan={3}>
+                                <StyledTableCell size='small' colSpan={8}>
                                     <LinearProgress variant='indeterminate' />
                                 </StyledTableCell>
                             </TableRow>
