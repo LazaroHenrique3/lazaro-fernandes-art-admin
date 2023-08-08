@@ -1,46 +1,36 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { Icon, IconButton, LinearProgress, Pagination, Paper, Table, TableBody, TableContainer, TableFooter, TableHead, TableRow } from '@mui/material'
+import {
+    Icon,
+    IconButton,
+    LinearProgress,
+    Pagination,
+    Paper,
+    Table,
+    TableBody,
+    TableContainer,
+    TableFooter,
+    TableHead,
+    TableRow
+} from '@mui/material'
+
 import dayjs from 'dayjs'
 
-import { toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
-
-import { CustomerService, IListCustomer } from '../../../shared/services/api/customer/CustomerService'
+import {  IListCustomer } from '../../../shared/services/api/customer/CustomerService'
 import { BasePageLayout } from '../../../shared/layouts'
 import { ListTools } from '../../../shared/components'
-import { useDebounce } from '../../../shared/hooks'
 import { Environment } from '../../../shared/enviroment'
-
-import { useAuthContext } from '../../../shared/contexts'
 
 import { StyledTableCell, StyledTableRow } from '../../../shared/components/StyledComponents/TableComponents'
 
-const formatCPF = (cpf: string): string => {
-    // Remove todos os caracteres não numéricos do CPF
-    const numericCPF = cpf.replace(/\D/g, '')
+import { formatCPF, formatPhoneNumber } from './util/formatFunctions'
 
-    // Aplica a formatação do CPF (XXX.XXX.XXX-XX)
-    const formattedCPF = numericCPF.replace(
-        /^(\d{3})(\d{3})(\d{3})(\d{2})$/,
-        '$1.$2.$3-$4'
-    )
+//Hooks personalizados
+import { 
+    UseFetchCustomerData,
+    UseHandleCustomer
+} from './hooks/listHooks'
 
-    return formattedCPF
-}
-
-const formatPhoneNumber = (phoneNumber: string): string => {
-    // Remove todos os caracteres não numéricos do número de telefone
-    const numericPhoneNumber = phoneNumber.replace(/\D/g, '')
-
-    // Aplica a formatação do telefone (xx) xxxxx-xxxx
-    const formattedPhoneNumber = numericPhoneNumber.replace(
-        /^(\d{2})(\d{5})(\d{4})$/,
-        '($1) $2-$3'
-    )
-
-    return formattedPhoneNumber
-}
 
 export const CustomerList: React.FC = () => {
     const [searchParams, setSearchParams] = useSearchParams()
@@ -49,11 +39,7 @@ export const CustomerList: React.FC = () => {
     const [totalCount, setTotalCount] = useState(0)
     const [isLoading, setIsLoading] = useState(true)
 
-    //Para adicionar delay na pesquisa
-    const { debounce } = useDebounce()
     const navigate = useNavigate()
-
-    const { accessLevel } = useAuthContext()
 
     //Fazer a pesquisa do input de pesquisa através da URL
     //Toda vez que for digitado um texto será mudado o searchParams da Url
@@ -70,67 +56,10 @@ export const CustomerList: React.FC = () => {
         return Number(searchParams.get('page') || '1')
     }, [searchParams])
 
-    useEffect(() => {
-        setIsLoading(true)
-
-        const fetchData = () => {
-            debounce(async () => {
-                const result = await CustomerService.getAll(page, search)
-                setIsLoading(false)
-
-                if (result instanceof Error) {
-                    toast.error(result.message)
-                    return
-                }
-
-                setRows(result.data)
-                setTotalCount(result.totalCount)
-            })
-        }
-
-        fetchData()
-
-    }, [search, page])
-
-    //Função de exclusão
-    const handleDelete = async (id: number, name: string) => {
-
-        if (confirm(`Realmente deseja apagar "${name}"?`)) {
-            const result = await CustomerService.deleteById(id)
-
-            if (result instanceof Error) {
-                toast.error(result.message)
-                return
-            }
-
-            setRows(oldRows => [
-                ...oldRows.filter(oldRow => oldRow.id !== id)
-            ])
-            toast.success('Registro apagado com sucesso!')
-        }
-    }
-
-    //Função de gerarPDF
-    const handlePDF = async () => {
-        const result = await CustomerService.generatePdf(search)
-
-        if (result instanceof Error) {
-            toast.error(result.message)
-            return
-        }
-
-        // Manipula o buffer do PDF recebido
-        const pdfBlob = new Blob([result], { type: 'application/pdf' })
-
-        //Cria uma URL temporária para o blob do PDF
-        const pdfUrl = URL.createObjectURL(pdfBlob)
-
-        // Abre o PDF em outra janela
-        window.open(pdfUrl, '_blank')
-
-        //Limpa a URL temporária após abrir o PDF para liberar recursos
-        URL.revokeObjectURL(pdfUrl)
-    }
+    //Hooks personalizados
+    UseFetchCustomerData({setIsLoading, setRows, setTotalCount, search, page})
+   
+    const { handleDelete, handlePDF } = UseHandleCustomer({setRows, rows, search})
 
     return (
         <BasePageLayout

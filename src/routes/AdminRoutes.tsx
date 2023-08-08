@@ -1,7 +1,7 @@
 import { Routes, Route} from 'react-router-dom'
 import { useEffect } from 'react'
 
-import { PrivateAdmin } from '.././shared/components'
+import { PrivateAdmin } from '../shared/components'
 
 import '../shared/services/yup/TranslationsYup'
 import { useDrawerContext } from '../shared/contexts'
@@ -20,10 +20,10 @@ import {
     DimensionDetails,
     DimensionList,
     LoginAdmin,
-    PageNotFound
+    PageNotFound,
 } from '../pages'
 
-export const AppRoutes = () => {
+export const AdminRoutes = () => {
     const { setDrawerOptions } = useDrawerContext()
 
     useEffect(() => {

@@ -5,3 +5,5 @@ export * from './ImageHandler'
 export * from './PrivateAdmin'
 export * from './Charts/DonutChart'
 export * from './Charts/LineChart'
+
+export * from './NavBar'

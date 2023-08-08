@@ -1,21 +1,31 @@
 import { BrowserRouter } from 'react-router-dom'
-import { AppRoutes } from './routes'
-import { AppThemeProvider, DrawerProvider, AuthProvider } from './shared/contexts'
+
+import {
+    AppThemeProvider,
+    DrawerProvider,
+    AuthProvider
+} from './shared/contexts'
+
+import { AdminRoutes } from './routes'
 
 //Importando o Toasts
-import { ToastContainer, toast  } from 'react-toastify'
+import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
 function App() {
     return (
         <AuthProvider>
             <AppThemeProvider>
-                <DrawerProvider>
-                    <BrowserRouter>
-                        <AppRoutes />
-                        <ToastContainer autoClose={5000} position={toast.POSITION.BOTTOM_LEFT} />
-                    </BrowserRouter>
-                </DrawerProvider>
+
+                <BrowserRouter>
+
+                    <DrawerProvider>
+                        <AdminRoutes />
+                    </DrawerProvider>
+
+                    <ToastContainer autoClose={5000} position={toast.POSITION.BOTTOM_LEFT} />
+                </BrowserRouter>
+
             </AppThemeProvider>
         </AuthProvider>
     )

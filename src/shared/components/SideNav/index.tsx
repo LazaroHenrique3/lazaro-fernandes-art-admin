@@ -16,6 +16,8 @@ import { Box } from '@mui/material'
 import { useAppThemeContext, useDrawerContext, useAuthContext } from '../../contexts'
 import { useMatch, useNavigate, useResolvedPath } from 'react-router-dom'
 
+import logo from '../../../images/logo.svg'
+
 interface IListItemLinkProps {
     to: string,
     label: string,
@@ -76,7 +78,7 @@ export const SideNav: React.FC<IDrawerProps> = ({ children }) => {
                     <Box width='100%' height={theme.spacing(20)} marginY={1} display='flex' gap={1} alignItems='center' justifyContent='center' flexDirection='column'>
                         <Avatar
                             sx={{ height: theme.spacing(12), width: theme.spacing(12) }}
-                            src='https://avatars.githubusercontent.com/u/78514404?v=4' />
+                            src={logo} />
 
                         <Button variant='outlined' onClick={() => navigate(`/admin/administrator/details/${idUser}`)} startIcon={<Icon>account_circle_icon</Icon>}>
                             {name}

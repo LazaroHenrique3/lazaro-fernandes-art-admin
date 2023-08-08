@@ -1,36 +1,32 @@
 import { useNavigate, useParams } from 'react-router-dom'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Box, Checkbox, FormControlLabel, Grid, LinearProgress, Paper, Typography } from '@mui/material'
-
-import * as yup from 'yup'
 
 import { useAuthContext } from '../../../shared/contexts'
 
 import { BasePageLayout } from '../../../shared/layouts'
 import { DetailTools, ImageHandler } from '../../../shared/components'
-import { CustomerService } from '../../../shared/services/api/customer/CustomerService'
+
 import {
     VTextField,
     VForm,
     useVForm,
-    IVFormErrors,
     VSelect,
     VDateInput,
     VTextFieldCPF,
     VTextFieldCellphone
 } from '../../../shared/forms'
 
-import { toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
-import {
-    IFormData,
-    IFormDataUpdate,
-    formatValidationSchema,
-    formatValidationSchemaUpdate
-} from './validation/Schemas'
+//Hooks personalizados
+import { 
+    UseFetchCustomerData,
+    UseHandleCustomer,
+    UseHandleCustomerImage
+} from './hooks/detailsHooks'
 
 export const CustomerDetails: React.FC = () => {
     const { id = 'new' } = useParams<'id'>()
+
     const navigate = useNavigate()
 
     const { formRef } = useVForm()
@@ -43,156 +39,11 @@ export const CustomerDetails: React.FC = () => {
 
     const { accessLevel } = useAuthContext()
 
-    useEffect(() => {
+    //Hooks personalizados de Customer
+    UseFetchCustomerData({setIsLoading, setName, setImage, formRef, id})
 
-        const fetchData = async () => {
-
-            setIsLoading(true)
-            const result = await CustomerService.getById(Number(id))
-
-            setIsLoading(false)
-
-            if (result instanceof Error) {
-                toast.error(result.message)
-                navigate('/admin/customer')
-                return
-            }
-
-            setName(result.name)
-            setImage(result.image)
-            formRef.current?.setData(result)
-        }
-
-        fetchData()
-
-    }, [id])
-
-    const handleSave = async (data: IFormDataUpdate) => {
-        try {
-
-            const cell_phone = data.cell_phone.replace(/[^\w]/g, '')
-            const cpf = data.cpf.replace(/[^\w]/g, '')
-
-            let validateData: IFormData | IFormDataUpdate
-
-            //Verificando se é update ou novo
-            if (id === 'new' || !isAlterPassword) {
-                validateData = await formatValidationSchema.validate({ ...data, cell_phone, cpf }, { abortEarly: false })
-            } else {
-                validateData = await formatValidationSchemaUpdate.validate({ ...data, cell_phone, cpf }, { abortEarly: false })
-            }
-
-            setIsLoading(true)
-
-            const result = await CustomerService.updateById(Number(id), { id: Number(id), ...validateData })
-            setIsLoading(false)
-
-            if (result instanceof Error) {
-                toast.error(result.message)
-                return
-            }
-
-            toast.success('Registro salvo com sucesso!')
-            setIsAlterPassword(false)
-            setName(data.name)
-
-        } catch (errors) {
-
-            const errorsYup: yup.ValidationError = errors as yup.ValidationError
-
-            const validationErrors: IVFormErrors = {}
-
-            errorsYup.inner.forEach(error => {
-                if (!error.path) return
-
-                validationErrors[error.path] = error.message
-                formRef.current?.setErrors(validationErrors)
-            })
-        }
-    }
-
-    const handleInsertImage = async (newImage: FileList) => {
-
-        setIsLoading(true)
-
-        const [image] = newImage
-
-        //convertendo em formdata
-        const formData = new FormData()
-        formData.append('image', image)
-
-        const result = await CustomerService.insertNewImage(Number(id), formData)
-        setIsLoading(false)
-
-        if (result instanceof Error) {
-            toast.error(result.message)
-            return
-        }
-
-        //preparando para atualizar o state de imagens
-        const newImageCustomer = result.data
-
-        setImage(newImageCustomer)
-        toast.success('Imagem inserida com sucesso!')
-    }
-
-    const handleUpdateImage = async (id: number, newImage: FileList) => {
-
-        setIsLoading(true)
-
-        const [image] = newImage
-        //convertendo em formdata
-        const formData = new FormData()
-
-        formData.append('image', image)
-
-        const result = await CustomerService.updateCustomerImage(Number(id), formData)
-
-        setIsLoading(false)
-
-        if (result instanceof Error) {
-            toast.error(result.message)
-            return
-        }
-
-        setImage(result.data)
-        toast.success('Imagem atualizada com sucesso!')
-    }
-
-    const handleDelete = async (id: number, name: string) => {
-
-        if (confirm(`Realmente deseja apagar "${name}"?`)) {
-            const result = await CustomerService.deleteById(id)
-
-            if (result instanceof Error) {
-                toast.error(result.message)
-                return
-            }
-
-            toast.success('Registro apagado com sucesso!')
-            navigate('/admin/customer')
-        }
-    }
-
-    const handleDeleteImage = async () => {
-
-        if (confirm('Realmente deseja apagar a imagem')) {
-
-            setIsLoading(true)
-
-            const result = await CustomerService.deleteCustomerImage(Number(id))
-            setIsLoading(false)
-
-            if (result instanceof Error) {
-                toast.error(result.message)
-                return
-            }
-
-            setImage('')
-            toast.success('Imagem excluída com sucesso!')
-        }
-
-    }
+    const { handleSave, handleDelete } = UseHandleCustomer({setIsLoading, setName, setIsAlterPassword, isAlterPassword, formRef, id})
+    const { handleInsertImage, handleUpdateImage, handleDeleteImage } = UseHandleCustomerImage({setIsLoading, setImage, id})
 
     return (
         <BasePageLayout

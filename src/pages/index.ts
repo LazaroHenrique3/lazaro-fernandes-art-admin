@@ -20,4 +20,6 @@ export * from './Administrative/Dimension/DimensionDetails'
 
 export * from './Administrative/Dashboard'
 
+export * from './Ecommerce/Home'
+
 export * from './PageNotFound'
