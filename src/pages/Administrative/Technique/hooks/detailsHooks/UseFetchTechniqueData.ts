@@ -5,7 +5,7 @@ import { FormHandles } from '@unform/core'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
-import { AdministratorService } from '../../../../../shared/services/api/administrator/AdministratorService'
+import { TechniqueService } from '../../../../../shared/services/api/technique/TechniqueService'
 
 interface IUseFetchAdministratorDataProps {
     setIsLoading: (status: boolean) => void
@@ -14,7 +14,7 @@ interface IUseFetchAdministratorDataProps {
     id: string
 }
 
-export const UseFetchAdministratorData = ({setIsLoading, setName, formRef, id}: IUseFetchAdministratorDataProps) => {
+export const UseFetchTechniqueData = ({setIsLoading, setName, formRef, id}: IUseFetchAdministratorDataProps ) => {
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -23,13 +23,13 @@ export const UseFetchAdministratorData = ({setIsLoading, setName, formRef, id}: 
     
             if (id !== 'new') {
                 setIsLoading(true)
-                const result = await AdministratorService.getById(Number(id))
+                const result = await TechniqueService.getById(Number(id))
     
                 setIsLoading(false)
     
                 if (result instanceof Error) {
                     toast.error(result.message)
-                    navigate('/admin/administrator')
+                    navigate('/admin/technique')
                     return
                 }
     
@@ -37,8 +37,7 @@ export const UseFetchAdministratorData = ({setIsLoading, setName, formRef, id}: 
                 formRef.current?.setData(result)
             } else {
                 formRef.current?.setData({
-                    name: '',
-                    email: ''
+                    name: ''
                 })
             }
     
@@ -50,4 +49,6 @@ export const UseFetchAdministratorData = ({setIsLoading, setName, formRef, id}: 
     }, [id])
 
 }
+
+
 

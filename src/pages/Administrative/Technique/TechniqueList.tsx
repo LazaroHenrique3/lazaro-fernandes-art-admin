@@ -13,6 +13,12 @@ import { Environment } from '../../../shared/enviroment'
 
 import { StyledTableCell, StyledTableRow } from '../../../shared/components/StyledComponents/TableComponents'
 
+//Hooks personalizados
+import {
+    UseFetchTechniqueData,
+    UseHandleTechnique
+} from './hooks/listHooks'
+
 export const TechniqueList: React.FC = () => {
     const [searchParams, setSearchParams] = useSearchParams()
 
@@ -61,46 +67,10 @@ export const TechniqueList: React.FC = () => {
 
     }, [search, page])
 
-    //Função de exclusão
-    const handleDelete = async (id: number, name: string) => {
+    //Hooks personalizados
+    UseFetchTechniqueData({setIsLoading, setRows, setTotalCount, search, page})
 
-        if (confirm(`Realmente deseja apagar "${name}"?`)) {
-            const result = await TechniqueService.deleteById(id)
-
-            if (result instanceof Error) {
-                toast.error(result.message)
-                return
-            }
-
-            setRows(oldRows => [
-                ...oldRows.filter(oldRow => oldRow.id !== id)
-            ])
-
-            toast.success('Registro apagado com sucesso!')
-        }
-    }
-
-    //Função de gerarPDF
-    const handlePDF = async () => {
-        const result = await TechniqueService.generatePdf(search)
-
-        if (result instanceof Error) {
-            toast.error(result.message)
-            return
-        }
-
-        // Manipula o buffer do PDF recebido
-        const pdfBlob = new Blob([result], { type: 'application/pdf' })
-
-        //Cria uma URL temporária para o blob do PDF
-        const pdfUrl = URL.createObjectURL(pdfBlob)
-
-        // Abre o PDF em outra janela
-        window.open(pdfUrl, '_blank')
-
-        //Limpa a URL temporária após abrir o PDF para liberar recursos
-        URL.revokeObjectURL(pdfUrl)
-    }
+    const { handleDelete, handlePDF } = UseHandleTechnique({ setRows, rows, search })
 
     return (
         <BasePageLayout

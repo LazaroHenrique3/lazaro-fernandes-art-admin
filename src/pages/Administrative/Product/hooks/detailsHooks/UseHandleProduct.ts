@@ -16,14 +16,14 @@ import {
 
 import { IDetailProductUpdate, ProductService } from '../../../../../shared/services/api/product/ProductService'
 
-interface IUseSaveProduct {
+interface IUseHandleProduct {
     setIsLoading: (status: boolean) => void
     setName: (name: string) => void
     formRef: React.RefObject<FormHandles>
     id: string
 }
 
-export const UseHandleProduct = ({setIsLoading, setName, formRef, id}: IUseSaveProduct) => {
+export const UseHandleProduct = ({setIsLoading, setName, formRef, id}: IUseHandleProduct) => {
     const navigate = useNavigate()
 
     const handleSave = async (data: IFormData) => {
