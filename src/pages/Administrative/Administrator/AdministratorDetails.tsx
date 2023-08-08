@@ -1,24 +1,18 @@
 import { useNavigate, useParams } from 'react-router-dom'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Box, Checkbox, FormControlLabel, Grid, LinearProgress, Paper, Typography } from '@mui/material'
-
-import * as yup from 'yup'
 
 import { useAuthContext } from '../../../shared/contexts'
 
 import { BasePageLayout } from '../../../shared/layouts'
 import { DetailTools } from '../../../shared/components'
-import { AdministratorService } from '../../../shared/services/api/administrator/AdministratorService'
-import { VTextField, VForm, useVForm, IVFormErrors, VSelect } from '../../../shared/forms'
+import { VTextField, VForm, useVForm, VSelect } from '../../../shared/forms'
 
-import { toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
+//Hooks personalizados
 import {
-    IFormData,
-    IFormDataUpdate,
-    formatValidationSchema,
-    formatValidationSchemaUpdate
-} from './validation/Schemas'
+    UseFetchAdministratorData,
+    UseHandleAdministrator
+} from './hooks/detailsHooks'
 
 export const AdministratorDetails: React.FC = () => {
     const { id = 'new' } = useParams<'id'>()
@@ -31,118 +25,12 @@ export const AdministratorDetails: React.FC = () => {
 
     const [isAlterPassword, setIsAlterPassword] = useState(false)
 
-    const { idUser, handleName, accessLevel } = useAuthContext()
+    const { idUser, accessLevel } = useAuthContext()
 
-    useEffect(() => {
+    //Hooks personalizados de Customer
+    UseFetchAdministratorData({setIsLoading, setName, formRef, id})
 
-        const fetchData = async () => {
-
-            if (id !== 'new') {
-                setIsLoading(true)
-                const result = await AdministratorService.getById(Number(id))
-
-                setIsLoading(false)
-
-                if (result instanceof Error) {
-                    toast.error(result.message)
-                    navigate('/admin/administrator')
-                    return
-                }
-
-                setName(result.name)
-                formRef.current?.setData(result)
-            } else {
-                formRef.current?.setData({
-                    name: '',
-                    email: ''
-                })
-            }
-
-            return
-        }
-
-        fetchData()
-
-    }, [id])
-
-    const handleSave = async (data: IFormData) => {
-        try {
-
-            let validateData: IFormData | IFormDataUpdate
-
-            //Verificando se é update ou novo
-            if (id === 'new' || !isAlterPassword) {
-                validateData = await formatValidationSchema.validate(data, { abortEarly: false })
-            } else {
-                validateData = await formatValidationSchemaUpdate.validate(data, { abortEarly: false })
-            }
-
-            setIsLoading(true)
-
-            if (id === 'new') {
-                const result = await AdministratorService.create(validateData)
-                setIsLoading(false)
-
-                if (result instanceof Error) {
-                    toast.error(result.message)
-                } else {
-                    toast.success('Registro salvo com sucesso!')
-
-                    if (accessLevel !== undefined && accessLevel === 'Root') {
-                        navigate(`/admin/administrator/details/${result}`)
-                        return
-                    }
-
-                    navigate('/admin/administrator')
-                }
-            } else {
-                const result = await AdministratorService.updateById(Number(id), { id: Number(id), ...validateData })
-                setIsLoading(false)
-
-                if (result instanceof Error) {
-                    toast.error(result.message)
-                    return
-                }
-
-                //Significa que é o usuario logado que está alterando suas próprias informações
-                if (Number(id) === Number(idUser)) {
-                    handleName(data.name)
-                    localStorage.setItem('APP_USER_NAME', JSON.stringify(data.name))
-                }
-
-                toast.success('Registro salvo com sucesso!')
-                setIsAlterPassword(false)
-                setName(data.name)
-            }
-        } catch (errors) {
-
-            const errorsYup: yup.ValidationError = errors as yup.ValidationError
-
-            const validationErrors: IVFormErrors = {}
-
-            errorsYup.inner.forEach(error => {
-                if (!error.path) return
-
-                validationErrors[error.path] = error.message
-                formRef.current?.setErrors(validationErrors)
-            })
-        }
-    }
-
-    const handleDelete = async (id: number, name: string) => {
-
-        if (confirm(`Realmente deseja apagar "${name}"?`)) {
-            const result = await AdministratorService.deleteById(id)
-
-            if (result instanceof Error) {
-                toast.error(result.message)
-                return
-            }
-
-            toast.success('Registro apagado com sucesso!')
-            navigate('/admin/administrator')
-        }
-    }
+    const { handleSave, handleDelete } = UseHandleAdministrator({setIsLoading, setIsAlterPassword, setName, isAlterPassword, formRef, id})
 
     return (
         <BasePageLayout
