@@ -1,28 +1,22 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import dayjs from 'dayjs'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Icon, IconButton, LinearProgress, Pagination, Paper, Table, TableBody, TableContainer, TableFooter, TableHead, TableRow } from '@mui/material'
 
-import { toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
-
-import { ProductService, IListProduct } from '../../../shared/services/api/product/ProductService'
+import { IListProduct } from '../../../shared/services/api/product/ProductService'
 import { BasePageLayout } from '../../../shared/layouts'
 import { ListTools } from '../../../shared/components'
-import { useDebounce } from '../../../shared/hooks'
 import { Environment } from '../../../shared/enviroment'
+
+import { formattedPrice } from './util/formatFunctions'
 
 import { StyledTableCell, StyledTableRow } from '../../../shared/components/StyledComponents/TableComponents'
 
-const formattedPrice = (value: number | string) => {
-
-    if (typeof value === 'string') return ''
-
-    return value.toLocaleString('pt-BR', {
-        style: 'currency',
-        currency: 'BRL',
-    })
-}
+//Hooks personalizados
+import {
+    UseFetchProductData,
+    UseHandleProduct
+} from './hooks/listHooks'
 
 export const ProductList: React.FC = () => {
     const [searchParams, setSearchParams] = useSearchParams()
@@ -31,8 +25,6 @@ export const ProductList: React.FC = () => {
     const [totalCount, setTotalCount] = useState(0)
     const [isLoading, setIsLoading] = useState(true)
 
-    //Para adicionar delay na pesquisa
-    const { debounce } = useDebounce()
     const navigate = useNavigate()
 
     //Fazer a pesquisa do input de pesquisa através da URL
@@ -50,67 +42,10 @@ export const ProductList: React.FC = () => {
         return Number(searchParams.get('page') || '1')
     }, [searchParams])
 
-    useEffect(() => {
-        setIsLoading(true)
+    //Hooks personalizados
+    UseFetchProductData({ setIsLoading, setRows, setTotalCount, search, page })
 
-        const fetchData = () => {
-            debounce(async () => {
-                const result = await ProductService.getAll(page, search)
-                setIsLoading(false)
-
-                if (result instanceof Error) {
-                    toast.error(result.message)
-                    return
-                }
-
-                setRows(result.data)
-                setTotalCount(result.totalCount)
-            })
-        }
-
-        fetchData()
-
-    }, [search, page])
-
-    //Função de exclusão
-    const handleDelete = async (id: number, name: string) => {
-
-        if (confirm(`Realmente deseja apagar "${name}"?`)) {
-            const result = await ProductService.deleteById(id)
-
-            if (result instanceof Error) {
-                toast.error(result.message)
-                return
-            }
-
-            setRows(oldRows => [
-                ...oldRows.filter(oldRow => oldRow.id !== id)
-            ])
-            toast.success('Registro apagado com sucesso!')
-        }
-    }
-
-    //Função de gerarPDF
-    const handlePDF = async () => {
-        const result = await ProductService.generatePdf(search)
-
-        if (result instanceof Error) {
-            toast.error(result.message)
-            return
-        }
-
-        // Manipula o buffer do PDF recebido
-        const pdfBlob = new Blob([result], { type: 'application/pdf' })
-
-        //Cria uma URL temporária para o blob do PDF
-        const pdfUrl = URL.createObjectURL(pdfBlob)
-
-        // Abre o PDF em outra janela
-        window.open(pdfUrl, '_blank')
-
-        //Limpa a URL temporária após abrir o PDF para liberar recursos
-        URL.revokeObjectURL(pdfUrl)
-    }
+    const { handleDelete, handlePDF } = UseHandleProduct({setRows, rows, search})
 
     return (
         <BasePageLayout
