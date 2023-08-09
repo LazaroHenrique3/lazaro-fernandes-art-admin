@@ -10,18 +10,18 @@ import 'react-toastify/dist/ReactToastify.css'
 import {
     IFormData,
     formatValidationSchema
-} from '../.././validation/Schemas'
+} from '../../validation/Schemas'
 
-import { TechniqueService } from '../../../../../shared/services/api/technique/TechniqueService'
+import { CategoryService } from '../../../../../shared/services/api/category/CategoryService'
 
-interface IUseHandleTechniqueProps {
+interface IUseHandleCategoryProps {
     setIsLoading: (status: boolean) => void
     setName: (name: string) => void
     formRef: React.RefObject<FormHandles>
     id: string
 }
 
-export const UseHandleTechnique = ({setIsLoading, setName, formRef, id}: IUseHandleTechniqueProps ) => {
+export const UseHandleCategory = ({setIsLoading, setName, formRef, id}: IUseHandleCategoryProps ) => {
     const navigate = useNavigate()
 
     const handleSave = async (data: IFormData) => {
@@ -31,17 +31,17 @@ export const UseHandleTechnique = ({setIsLoading, setName, formRef, id}: IUseHan
             setIsLoading(true)
     
             if (id === 'new') {
-                const result = await TechniqueService.create(validateData)
+                const result = await CategoryService.create(validateData)
                 setIsLoading(false)
     
                 if (result instanceof Error) {
                     toast.error(result.message)
                 } else {
                     toast.success('Registro salvo com sucesso!')
-                    navigate(`/admin/technique/details/${result}`)
+                    navigate(`/admin/category/details/${result}`)
                 }
             } else {
-                const result = await TechniqueService.updateById(Number(id), { id: Number(id), ...validateData })
+                const result = await CategoryService.updateById(Number(id), { id: Number(id), ...validateData })
                 setIsLoading(false)
     
                 if (result instanceof Error) {
@@ -70,7 +70,7 @@ export const UseHandleTechnique = ({setIsLoading, setName, formRef, id}: IUseHan
     const handleDelete = async (id: number, name: string) => {
 
         if (confirm(`Realmente deseja apagar "${name}"?`)) {
-            const result = await TechniqueService.deleteById(id)
+            const result = await CategoryService.deleteById(id)
 
             if (result instanceof Error) {
                 toast.error(result.message)
@@ -78,7 +78,7 @@ export const UseHandleTechnique = ({setIsLoading, setName, formRef, id}: IUseHan
             }
 
             toast.success('Registro apagado com sucesso!')
-            navigate('/admin/technique')
+            navigate('/admin/category')
         }
     }
 

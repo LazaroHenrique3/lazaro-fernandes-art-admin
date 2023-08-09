@@ -1,20 +1,20 @@
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
-import { TechniqueService, IListTechnique } from '../../../../../shared/services/api/technique/TechniqueService'
+import { CategoryService, IListCategory } from '../../../../../shared/services/api/category/CategoryService'
 
-interface IUseHandleTechniqueProps {
-    setRows: (techniques: IListTechnique[]) => void
-    rows:  IListTechnique[]
+interface IUseHandleCategoryProps {
+    setRows: (categorys: IListCategory[]) => void
+    rows:  IListCategory[]
     search: string
 }
 
-export const UseHandleTechnique = ({ setRows, rows, search }: IUseHandleTechniqueProps) => {
+export const UseHandleCategory = ({ setRows, rows, search }: IUseHandleCategoryProps) => {
 
     const handleDelete = async (id: number, name: string) => {
 
         if (confirm(`Realmente deseja apagar "${name}"?`)) {
-            const result = await TechniqueService.deleteById(id)
+            const result = await CategoryService.deleteById(id)
 
             if (result instanceof Error) {
                 toast.error(result.message)
@@ -29,7 +29,7 @@ export const UseHandleTechnique = ({ setRows, rows, search }: IUseHandleTechniqu
     }
 
     const handlePDF = async () => {
-        const result = await TechniqueService.generatePdf(search)
+        const result = await CategoryService.generatePdf(search)
 
         if (result instanceof Error) {
             toast.error(result.message)

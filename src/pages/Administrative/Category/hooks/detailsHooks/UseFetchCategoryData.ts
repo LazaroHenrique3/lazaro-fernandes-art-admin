@@ -5,16 +5,16 @@ import { FormHandles } from '@unform/core'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
-import { TechniqueService } from '../../../../../shared/services/api/technique/TechniqueService'
+import { CategoryService } from '../../../../../shared/services/api/category/CategoryService'
 
-interface IUseFetchTechniqueDataProps {
+interface IUseFetchCategoryDataProps {
     setIsLoading: (status: boolean) => void
     setName: (name: string) => void
     formRef: React.RefObject<FormHandles>
     id: string
 }
 
-export const UseFetchTechniqueData = ({setIsLoading, setName, formRef, id}: IUseFetchTechniqueDataProps ) => {
+export const UseFetchCategoryData = ({setIsLoading, setName, formRef, id}: IUseFetchCategoryDataProps ) => {
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -23,13 +23,13 @@ export const UseFetchTechniqueData = ({setIsLoading, setName, formRef, id}: IUse
     
             if (id !== 'new') {
                 setIsLoading(true)
-                const result = await TechniqueService.getById(Number(id))
+                const result = await CategoryService.getById(Number(id))
     
                 setIsLoading(false)
     
                 if (result instanceof Error) {
                     toast.error(result.message)
-                    navigate('/admin/technique')
+                    navigate('/admin/category')
                     return
                 }
     
