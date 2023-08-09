@@ -20,10 +20,11 @@ export const TechniqueDetails: React.FC = () => {
 
     const [isLoading, setIsLoading] = useState(false)
     const [name, setName] = useState('')
+    
+    //Hooks personalizados
+    UseFetchTechniqueData({ setIsLoading, setName, formRef, id })
 
-    UseFetchTechniqueData({setIsLoading, setName, formRef, id})
-
-    const { handleSave, handleDelete } = UseHandleTechnique({setIsLoading, setName, formRef, id})
+    const { handleSave, handleDelete } = UseHandleTechnique({ setIsLoading, setName, formRef, id })
 
     return (
         <BasePageLayout

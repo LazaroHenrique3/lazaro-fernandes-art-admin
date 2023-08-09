@@ -1,17 +1,31 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { Icon, IconButton, LinearProgress, Pagination, Paper, Table, TableBody, TableContainer, TableFooter, TableHead, TableRow } from '@mui/material'
+import {
+    Icon,
+    IconButton,
+    LinearProgress,
+    Pagination,
+    Paper,
+    Table,
+    TableBody,
+    TableContainer,
+    TableFooter,
+    TableHead,
+    TableRow
+} from '@mui/material'
 
-import { toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
-
-import { DimensionService, IListDimension } from '../../../shared/services/api/dimension/DimensionService'
+import { IListDimension } from '../../../shared/services/api/dimension/DimensionService'
 import { BasePageLayout } from '../../../shared/layouts'
 import { ListTools } from '../../../shared/components'
-import { useDebounce } from '../../../shared/hooks'
 import { Environment } from '../../../shared/enviroment'
 
 import { StyledTableCell, StyledTableRow } from '../../../shared/components/StyledComponents/TableComponents'
+
+//Hooks personalizados
+import {
+    UseFetchDimensionData,
+    UseHandleDimension
+} from './hooks/listHooks'
 
 export const DimensionList: React.FC = () => {
     const [searchParams, setSearchParams] = useSearchParams()
@@ -20,8 +34,6 @@ export const DimensionList: React.FC = () => {
     const [totalCount, setTotalCount] = useState(0)
     const [isLoading, setIsLoading] = useState(true)
 
-    //Para adicionar delay na pesquisa
-    const { debounce } = useDebounce()
     const navigate = useNavigate()
 
     //Fazer a pesquisa do input de pesquisa através da URL
@@ -38,69 +50,11 @@ export const DimensionList: React.FC = () => {
         //Pega o parâmetro na URL
         return Number(searchParams.get('page') || '1')
     }, [searchParams])
+    //Hooks personalizados
 
-    useEffect(() => {
-        setIsLoading(true)
+    UseFetchDimensionData({ setIsLoading, setRows, setTotalCount, search, page })
 
-        const fetchData = () => {
-            debounce(async () => {
-                const result = await DimensionService.getAll(page, search)
-                setIsLoading(false)
-
-                if (result instanceof Error) {
-                    toast.error(result.message)
-                    return
-                }
-
-                setRows(result.data)
-                setTotalCount(result.totalCount)
-            })
-        }
-
-        fetchData()
-
-    }, [search, page])
-
-    //Função de exclusão
-    const handleDelete = async (id: number, name: string) => {
-
-        if (confirm(`Realmente deseja apagar "${name}"?`)) {
-            const result = await DimensionService.deleteById(id)
-
-            if (result instanceof Error) {
-                toast.error(result.message)
-                return
-            }
-
-            setRows(oldRows => [
-                ...oldRows.filter(oldRow => oldRow.id !== id)
-            ])
-
-            toast.success('Registro apagado com sucesso!')
-        }
-    }
-
-    //Função de gerarPDF
-    const handlePDF = async () => {
-        const result = await DimensionService.generatePdf(search)
-
-        if (result instanceof Error) {
-            toast.error(result.message)
-            return
-        }
-
-        // Manipula o buffer do PDF recebido
-        const pdfBlob = new Blob([result], { type: 'application/pdf' })
-
-        //Cria uma URL temporária para o blob do PDF
-        const pdfUrl = URL.createObjectURL(pdfBlob)
-
-        // Abre o PDF em outra janela
-        window.open(pdfUrl, '_blank')
-
-        //Limpa a URL temporária após abrir o PDF para liberar recursos
-        URL.revokeObjectURL(pdfUrl)
-    }
+    const { handleDelete, handlePDF } = UseHandleDimension({ setRows, rows, search })
 
     return (
         <BasePageLayout

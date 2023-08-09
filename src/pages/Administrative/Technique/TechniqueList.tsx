@@ -1,14 +1,22 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { Icon, IconButton, LinearProgress, Pagination, Paper, Table, TableBody, TableContainer, TableFooter, TableHead, TableRow } from '@mui/material'
+import {
+    Icon,
+    IconButton,
+    LinearProgress,
+    Pagination,
+    Paper,
+    Table,
+    TableBody,
+    TableContainer,
+    TableFooter,
+    TableHead,
+    TableRow
+} from '@mui/material'
 
-import { toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
-
-import { TechniqueService, IListTechnique } from '../../../shared/services/api/technique/TechniqueService'
+import { IListTechnique } from '../../../shared/services/api/technique/TechniqueService'
 import { BasePageLayout } from '../../../shared/layouts'
 import { ListTools } from '../../../shared/components'
-import { useDebounce } from '../../../shared/hooks'
 import { Environment } from '../../../shared/enviroment'
 
 import { StyledTableCell, StyledTableRow } from '../../../shared/components/StyledComponents/TableComponents'
@@ -27,7 +35,6 @@ export const TechniqueList: React.FC = () => {
     const [isLoading, setIsLoading] = useState(true)
 
     //Para adicionar delay na pesquisa
-    const { debounce } = useDebounce()
     const navigate = useNavigate()
 
     //Fazer a pesquisa do input de pesquisa através da URL
@@ -45,30 +52,8 @@ export const TechniqueList: React.FC = () => {
         return Number(searchParams.get('page') || '1')
     }, [searchParams])
 
-    useEffect(() => {
-        setIsLoading(true)
-
-        const fetchData = () => {
-            debounce(async () => {
-                const result = await TechniqueService.getAll(page, search)
-                setIsLoading(false)
-
-                if (result instanceof Error) {
-                    toast.error(result.message)
-                    return
-                }
-
-                setRows(result.data)
-                setTotalCount(result.totalCount)
-            })
-        }
-
-        fetchData()
-
-    }, [search, page])
-
     //Hooks personalizados
-    UseFetchTechniqueData({setIsLoading, setRows, setTotalCount, search, page})
+    UseFetchTechniqueData({ setIsLoading, setRows, setTotalCount, search, page })
 
     const { handleDelete, handlePDF } = UseHandleTechnique({ setRows, rows, search })
 

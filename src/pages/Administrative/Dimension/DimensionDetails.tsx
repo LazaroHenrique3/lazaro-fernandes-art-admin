@@ -1,20 +1,16 @@
 import { useNavigate, useParams } from 'react-router-dom'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Box, Grid, LinearProgress, Paper, Typography } from '@mui/material'
-
-import { toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
-
-import * as yup from 'yup'
 
 import { BasePageLayout } from '../../../shared/layouts'
 import { DetailTools } from '../../../shared/components'
-import { DimensionService } from '../../../shared/services/api/dimension/DimensionService'
-import { VTextField, VForm, useVForm, IVFormErrors } from '../../../shared/forms'
+import { VTextField, VForm, useVForm } from '../../../shared/forms'
+
+//Hooks personalizados
 import {
-    IFormData,
-    formatValidationSchema
-} from './validation/Schemas'
+    UseFetchDimensionData,
+    UseHandleDimension,
+} from './hooks/detailsHooks'
 
 export const DimensionDetails: React.FC = () => {
     const { id = 'new' } = useParams<'id'>()
@@ -25,95 +21,11 @@ export const DimensionDetails: React.FC = () => {
     const [isLoading, setIsLoading] = useState(false)
     const [dimension, setDimension] = useState('')
 
-    useEffect(() => {
+    //Hooks personalizados
+    UseFetchDimensionData({setIsLoading, setDimension, formRef, id})
 
-        const fetchData = async () => {
-
-            if (id !== 'new') {
-                setIsLoading(true)
-                const result = await DimensionService.getById(Number(id))
-
-                setIsLoading(false)
-
-                if (result instanceof Error) {
-                    toast.error(result.message)
-                    navigate('/admin/dimension')
-                    return
-                }
-
-                setDimension(result.dimension)
-                formRef.current?.setData(result)
-            } else {
-                formRef.current?.setData({
-                    dimension: ''
-                })
-            }
-
-            return
-        }
-
-        fetchData()
-
-    }, [id])
-
-    const handleSave = async (data: IFormData) => {
-        try {
-            const validateData = await formatValidationSchema.validate(data, { abortEarly: false })
-
-            setIsLoading(true)
-
-            if (id === 'new') {
-                const result = await DimensionService.create(validateData)
-                setIsLoading(false)
-
-                if (result instanceof Error) {
-                    toast.error(result.message)
-                } else {
-                    toast.success('Registro salvo com sucesso!')
-                    navigate(`/admin/dimension/details/${result}`)
-                }
-            } else {
-                const result = await DimensionService.updateById(Number(id), { id: Number(id), ...validateData })
-                setIsLoading(false)
-
-                if (result instanceof Error) {
-                    toast.error(result.message)
-                    return
-                }
-
-                toast.success('Registro salvo com sucesso!')
-                setDimension(data.dimension)
-            }
-        } catch (errors) {
-
-            const errorsYup: yup.ValidationError = errors as yup.ValidationError
-
-            const validationErrors: IVFormErrors = {}
-
-            errorsYup.inner.forEach(error => {
-                if (!error.path) return
-
-                validationErrors[error.path] = error.message
-                formRef.current?.setErrors(validationErrors)
-            })
-        }
-    }
-
-    const handleDelete = async (id: number, dimension: string) => {
-
-        if (confirm(`Realmente deseja apagar "${dimension}"?`)) {
-            const result = await DimensionService.deleteById(id)
-
-            if (result instanceof Error) {
-                toast.error(result.message)
-                return
-            }
-
-            toast.success('Registro apagado com sucesso!')
-            navigate('/admin/dimension')
-        }
-    }
-
+    const { handleSave, handleDelete } = UseHandleDimension({setIsLoading, setDimension, formRef, id})
+  
     return (
         <BasePageLayout
             title={(id === 'new') ? 'Nova técnica' : `'${dimension}'`}
