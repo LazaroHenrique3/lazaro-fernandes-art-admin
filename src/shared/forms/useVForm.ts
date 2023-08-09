@@ -1,8 +1,8 @@
 import { FormHandles } from '@unform/core'
 import { useRef } from 'react'
 
-export const useVForm = () => {
+export const useVForm= (customFormName: string) => {
     const formRef = useRef<FormHandles>(null)
 
-    return { formRef }
+    return { [customFormName]: formRef }
 }

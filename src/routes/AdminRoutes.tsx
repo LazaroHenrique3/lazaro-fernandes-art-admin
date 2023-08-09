@@ -20,6 +20,8 @@ import {
     DimensionDetails,
     DimensionList,
     LoginAdmin,
+    ForgotPassword,
+    RedefinePassword,
     PageNotFound,
 } from '../pages'
 
@@ -69,6 +71,9 @@ export const AdminRoutes = () => {
     return (
         <Routes>
             <Route path='/admin/login' element={<LoginAdmin />} />
+
+            <Route path='/admin/forgot-password' element={<ForgotPassword />} />
+            <Route path='/admin/redefine-password/:email' element={<RedefinePassword />} />
 
             <Route path='/admin/admin-home' element={<PrivateAdmin><Dashboard /></PrivateAdmin>} />
 

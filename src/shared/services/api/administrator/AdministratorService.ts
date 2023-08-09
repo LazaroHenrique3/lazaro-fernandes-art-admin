@@ -16,6 +16,13 @@ export interface IDetailAdministrator {
     email: string
 }
 
+export interface IRedefineAdministrator {
+    email: string
+    verification_token: string
+    password: string
+    confirmPassword: string
+}
+
 type IAdministratorTotalCount = {
     data: IListAdministrator[],
     totalCount: number
@@ -116,6 +123,29 @@ const deleteById = async (id: number): Promise<void | Error> => {
 
 }
 
+const forgotPassword = async (email: string): Promise<AxiosResponse<string> | Error> => {
+
+    try {
+        const result: AxiosResponse<string> = await api.post('/administrator/forgotpassword', {email})
+        return result
+    } catch (error) {
+        console.error(error)
+        return new Error((error as ErrorResponse).response?.data?.errors?.default || 'Houve um erro inesperado.')
+    }
+
+}
+
+const redefinePassword = async (redefineData: IRedefineAdministrator): Promise<void | Error> => {
+
+    try {
+        await api.post('/administrator/redefinepassword', redefineData)
+    } catch (error) {
+        console.error(error)
+        return new Error((error as ErrorResponse).response?.data?.errors?.default || 'Erro ao deletar registro.')
+    }
+
+}
+
 const generatePdf = async (filter = ''): Promise<Uint8Array | Error> => {
 
     try {
@@ -138,5 +168,7 @@ export const AdministratorService = {
     create,
     updateById,
     deleteById,
+    forgotPassword,
+    redefinePassword,
     generatePdf
 }

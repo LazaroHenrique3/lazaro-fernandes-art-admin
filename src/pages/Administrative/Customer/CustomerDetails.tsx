@@ -29,7 +29,7 @@ export const CustomerDetails: React.FC = () => {
 
     const navigate = useNavigate()
 
-    const { formRef } = useVForm()
+    const { formRef } = useVForm('formRef')
 
     const [isLoading, setIsLoading] = useState(false)
     const [name, setName] = useState('')

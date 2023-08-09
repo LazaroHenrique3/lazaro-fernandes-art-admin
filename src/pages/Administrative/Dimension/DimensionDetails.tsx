@@ -16,7 +16,7 @@ export const DimensionDetails: React.FC = () => {
     const { id = 'new' } = useParams<'id'>()
     const navigate = useNavigate()
 
-    const { formRef } = useVForm()
+    const { formRef } = useVForm('formRef')
 
     const [isLoading, setIsLoading] = useState(false)
     const [dimension, setDimension] = useState('')

@@ -29,7 +29,7 @@ export const ProductDetails: React.FC = () => {
     const { id = 'new' } = useParams<'id'>()
     const navigate = useNavigate()
 
-    const { formRef } = useVForm()
+    const { formRef } = useVForm('formRef')
 
     const [isLoading, setIsLoading] = useState(false)
 

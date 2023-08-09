@@ -1,4 +1,6 @@
 export * from './Administrative/LoginAdmin'
+export * from './Administrative/ForgotPassword'
+export * from './Administrative/RedefinePassword'
 
 export * from './Administrative/Customer/CustomerList'
 export * from './Administrative/Customer/CustomerDetails'
