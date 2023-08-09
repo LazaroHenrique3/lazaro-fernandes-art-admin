@@ -3,13 +3,13 @@ import 'react-toastify/dist/ReactToastify.css'
 
 import { CustomerService } from '../../../../../shared/services/api/customer/CustomerService'
 
-interface IUseCustomerImage {
+interface IUseHandleCustomerImage {
     setIsLoading: (status: boolean) => void
     setImage: (image: string) => void
     id: string
 }
 
-export const UseHandleCustomerImage = ({setIsLoading, setImage, id}: IUseCustomerImage) => {
+export const UseHandleCustomerImage = ({setIsLoading, setImage, id}: IUseHandleCustomerImage) => {
 
     const handleUpdateImage = async (id: number, newImage: FileList) => {
         setIsLoading(true)

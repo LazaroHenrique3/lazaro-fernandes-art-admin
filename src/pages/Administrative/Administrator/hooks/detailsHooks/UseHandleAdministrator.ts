@@ -18,7 +18,7 @@ import {
 
 import { AdministratorService } from '../../../../../shared/services/api/administrator/AdministratorService'
 
-interface IUseAdministratorCustomer {
+interface IUseHandleAdministratorProps {
     setIsLoading: (status: boolean) => void
     setName: (name: string) => void
     setIsAlterPassword: (status: boolean) => void
@@ -33,7 +33,7 @@ export const UseHandleAdministrator = ({
     setName,
     isAlterPassword,
     formRef,
-    id }: IUseAdministratorCustomer) => {
+    id }: IUseHandleAdministratorProps) => {
 
     const navigate = useNavigate()
 

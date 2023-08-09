@@ -3,13 +3,13 @@ import 'react-toastify/dist/ReactToastify.css'
 
 import { AdministratorService, IListAdministrator } from '../../../../../shared/services/api/administrator/AdministratorService'
 
-interface IUseHandleAdministrator {
+interface IUseHandleAdministratorProps {
     setRows: (administrators: IListAdministrator[]) => void
     rows:  IListAdministrator[]
     search: string
 }
 
-export const UseHandleAdministrator = ({ setRows, rows, search }: IUseHandleAdministrator) => {
+export const UseHandleAdministrator = ({ setRows, rows, search }: IUseHandleAdministratorProps) => {
 
     const handleDelete = async (id: number, name: string) => {
 

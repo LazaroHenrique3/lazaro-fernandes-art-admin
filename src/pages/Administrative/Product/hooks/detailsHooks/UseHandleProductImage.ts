@@ -3,7 +3,7 @@ import 'react-toastify/dist/ReactToastify.css'
 
 import { IImageProductList, ProductService } from '../../../../../shared/services/api/product/ProductService'
 
-interface IUseCustomerImage {
+interface IUseHandleCustomerImage {
     setIsLoading: (status: boolean) => void
     setProductImages: (images: IImageProductList[]) => void
     setMainImage: (image: string) => void
@@ -13,7 +13,7 @@ interface IUseCustomerImage {
 
 const MAX_PRODUCT_IMAGES = 4
 
-export const UseHandleProductImage = ({setIsLoading, setProductImages, setMainImage, productImages, productId}: IUseCustomerImage ) => {
+export const UseHandleProductImage = ({setIsLoading, setProductImages, setMainImage, productImages, productId}: IUseHandleCustomerImage ) => {
 
     const handleInsertImage = async (newImage: FileList) => {
 

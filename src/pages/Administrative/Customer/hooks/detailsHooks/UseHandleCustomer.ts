@@ -16,7 +16,7 @@ import {
     formatValidationSchemaUpdate
 } from '../../validation/Schemas'
 
-interface IUseSaveCustomer {
+interface IUseHandleCustomerProps {
     setIsLoading: (status: boolean) => void
     setName: (name: string) => void
     setIsAlterPassword: (status: boolean) => void
@@ -25,7 +25,7 @@ interface IUseSaveCustomer {
     id: string
 }
 
-export const UseHandleCustomer = ({ setIsLoading, setName, setIsAlterPassword, isAlterPassword, formRef, id }: IUseSaveCustomer) => {
+export const UseHandleCustomer = ({ setIsLoading, setName, setIsAlterPassword, isAlterPassword, formRef, id }: IUseHandleCustomerProps) => {
     const navigate = useNavigate()
 
     const handleSave = async (data: IFormDataUpdate) => {
