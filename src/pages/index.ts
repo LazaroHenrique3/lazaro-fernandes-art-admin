@@ -1,27 +1,26 @@
-export * from './Administrative/LoginAdmin'
-export * from './Administrative/ForgotPassword'
-export * from './Administrative/RedefinePassword'
+export * from './LoginAdmin'
+export * from './ForgotPassword'
+export * from './RedefinePassword'
 
-export * from './Administrative/Customer/CustomerList'
-export * from './Administrative/Customer/CustomerDetails'
+export * from './Customer/CustomerList'
+export * from './Customer/CustomerDetails'
 
-export * from './Administrative/Administrator/AdministratorList'
-export * from './Administrative/Administrator/AdministratorDetails'
+export * from './Administrator/AdministratorList'
+export * from './Administrator/AdministratorDetails'
 
-export * from './Administrative/Product/ProductList'
-export * from './Administrative/Product/ProductDetails'
+export * from './Product/ProductList'
+export * from './Product/ProductDetails'
 
-export * from './Administrative/Category/CategoryList'
-export * from './Administrative/Category/CategoryDetails'
+export * from './Category/CategoryList'
+export * from './Category/CategoryDetails'
 
-export * from './Administrative/Technique/TechniqueList'
-export * from './Administrative/Technique/TechniqueDetails'
+export * from './Technique/TechniqueList'
+export * from './Technique/TechniqueDetails'
 
-export * from './Administrative/Dimension/DimensionList'
-export * from './Administrative/Dimension/DimensionDetails'
+export * from './Dimension/DimensionList'
+export * from './Dimension/DimensionDetails'
 
-export * from './Administrative/Dashboard'
+export * from './Dashboard'
 
-export * from './Ecommerce/Home'
 
 export * from './PageNotFound'
