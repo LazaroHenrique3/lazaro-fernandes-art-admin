@@ -17,7 +17,7 @@ import {
 import { IListCategory } from '../../shared/services/api/category/CategoryService'
 import { BasePageLayout } from '../../shared/layouts'
 import { ListTools } from '../../shared/components'
-import { Environment } from '../../shared/enviroment'
+import { Environment } from '../../shared/environment'
 
 import { StyledTableCell, StyledTableRow } from '../../shared/components/StyledComponents/TableComponents'
 

@@ -5,7 +5,7 @@ import { Icon, IconButton, LinearProgress, Pagination, Paper, Table, TableBody, 
 import { IListAdministrator } from '../../shared/services/api/administrator/AdministratorService'
 import { BasePageLayout } from '../../shared/layouts'
 import { ListTools } from '../../shared/components'
-import { Environment } from '../../shared/enviroment'
+import { Environment } from '../../shared/environment'
 
 import { useAuthContext } from '../../shared/contexts'
 

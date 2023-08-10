@@ -1,6 +1,6 @@
 import { Box, Button, Paper, TextField, useTheme, Icon } from '@mui/material'
 
-import { Environment } from '../../enviroment'
+import { Environment } from '../../environment'
 
 interface IListToolsProps {
     searchText?: string

@@ -6,7 +6,7 @@ import { Icon, IconButton, LinearProgress, Pagination, Paper, Table, TableBody, 
 import { IListProduct } from '../../shared/services/api/product/ProductService'
 import { BasePageLayout } from '../../shared/layouts'
 import { ListTools } from '../../shared/components'
-import { Environment } from '../../shared/enviroment'
+import { Environment } from '../../shared/environment'
 
 import { formattedPrice } from './util/formatFunctions'
 

@@ -1,5 +1,5 @@
 import { AxiosResponse } from 'axios'
-import { Environment } from '../../../enviroment'
+import { Environment } from '../../../environment'
 import { api } from '../axiosConfig'
 
 export interface IListDimension {
