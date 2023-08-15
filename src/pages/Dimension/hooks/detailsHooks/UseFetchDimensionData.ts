@@ -7,14 +7,14 @@ import 'react-toastify/dist/ReactToastify.css'
 
 import { DimensionService } from '../../../../shared/services/api/dimension/DimensionService'
 
-interface IUseFetchAdministratorDataProps {
+interface IUseFetchDimensionDataProps {
     setIsLoading: (status: boolean) => void
     setDimension: (name: string) => void
     formRef: React.RefObject<FormHandles>
     id: string
 }
 
-export const UseFetchDimensionData = ({setIsLoading, setDimension, formRef, id}: IUseFetchAdministratorDataProps ) => {
+export const UseFetchDimensionData = ({setIsLoading, setDimension, formRef, id}: IUseFetchDimensionDataProps ) => {
     const navigate = useNavigate()
 
     useEffect(() => {
