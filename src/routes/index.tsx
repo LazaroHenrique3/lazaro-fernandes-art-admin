@@ -9,6 +9,8 @@ import {
     Dashboard,
     CustomerList,
     CustomerDetails,
+    CustomerAddressDetails,
+    CustomerAddressList,
     AdministratorList,
     AdministratorDetails,
     ProductDetails,
@@ -79,6 +81,8 @@ export const AdminRoutes = () => {
 
             <Route path='/admin/customer' element={<PrivateAdmin><CustomerList /></PrivateAdmin>} />
             <Route path='/admin/customer/details/:id' element={<PrivateAdmin><CustomerDetails /></PrivateAdmin>} />
+            <Route path='/admin/customer/customer-address/list/:idCustomer/:nameCustomer' element={<PrivateAdmin><CustomerAddressList /></PrivateAdmin>} />
+            <Route path='/admin/customer/customer-address/details/:idCustomer/:id/:nameCustomer' element={<PrivateAdmin><CustomerAddressDetails /></PrivateAdmin>} />
             
             <Route path='/admin/administrator' element={<PrivateAdmin><AdministratorList /></PrivateAdmin>} />
             <Route path='/admin/administrator/details/:id' element={<PrivateAdmin><AdministratorDetails /></PrivateAdmin>} />

@@ -1,6 +1,18 @@
 import { useMemo, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { Icon, IconButton, LinearProgress, Pagination, Paper, Table, TableBody, TableContainer, TableFooter, TableHead, TableRow } from '@mui/material'
+import {
+    Icon,
+    IconButton,
+    LinearProgress,
+    Pagination,
+    Paper,
+    Table,
+    TableBody,
+    TableContainer,
+    TableFooter,
+    TableHead,
+    TableRow
+} from '@mui/material'
 
 import { IListAdministrator } from '../../shared/services/api/administrator/AdministratorService'
 import { BasePageLayout } from '../../shared/layouts'
@@ -9,7 +21,10 @@ import { Environment } from '../../shared/environment'
 
 import { useAuthContext } from '../../shared/contexts'
 
-import { StyledTableCell, StyledTableRow } from '../../shared/components/StyledComponents/TableComponents'
+import { 
+    StyledTableCell, 
+    StyledTableRow 
+} from '../../shared/components/StyledComponents/TableComponents'
 
 //Hooks personalizados
 import {

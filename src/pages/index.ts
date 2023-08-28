@@ -5,6 +5,9 @@ export * from './RedefinePassword'
 export * from './Customer/CustomerList'
 export * from './Customer/CustomerDetails'
 
+export * from './CustomerAddress/CustomerAddressDetails'
+export * from './CustomerAddress/CustomerAddressList'
+
 export * from './Administrator/AdministratorList'
 export * from './Administrator/AdministratorDetails'
 

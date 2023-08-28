@@ -1,6 +1,16 @@
 import { useNavigate, useParams } from 'react-router-dom'
 import { useState } from 'react'
-import { Box, Checkbox, FormControlLabel, Grid, LinearProgress, Paper, Typography } from '@mui/material'
+import {
+    Box,
+    Checkbox,
+    FormControlLabel,
+    Grid,
+    LinearProgress,
+    Paper,
+    Typography,
+    Button,
+    Icon
+} from '@mui/material'
 
 import { useAuthContext } from '../../shared/contexts'
 
@@ -18,7 +28,7 @@ import {
 } from '../../shared/forms'
 
 //Hooks personalizados
-import { 
+import {
     UseFetchCustomerData,
     UseHandleCustomer,
     UseHandleCustomerImage
@@ -40,10 +50,10 @@ export const CustomerDetails: React.FC = () => {
     const { accessLevel } = useAuthContext()
 
     //Hooks personalizados de Customer
-    UseFetchCustomerData({setIsLoading, setName, setImage, formRef, id})
+    UseFetchCustomerData({ setIsLoading, setName, setImage, formRef, id })
 
-    const { handleSave, handleDelete } = UseHandleCustomer({setIsLoading, setName, setIsAlterPassword, isAlterPassword, formRef, id})
-    const { handleInsertImage, handleUpdateImage, handleDeleteImage } = UseHandleCustomerImage({setIsLoading, setImage, id})
+    const { handleSave, handleDelete } = UseHandleCustomer({ setIsLoading, setName, setIsAlterPassword, isAlterPassword, formRef, id })
+    const { handleInsertImage, handleUpdateImage, handleDeleteImage } = UseHandleCustomerImage({ setIsLoading, setImage, id })
 
     return (
         <BasePageLayout
@@ -154,7 +164,7 @@ export const CustomerDetails: React.FC = () => {
                             </Grid>
 
                             <Grid item xs={12} sm={12} md={6} lg={3} xl={3}>
-                                <VDateInput label='Data de produção' name='date_of_birth' disabled={isLoading} />
+                                <VDateInput label='Data de nascimento' name='date_of_birth' disabled={isLoading} />
                             </Grid>
 
                             <Grid item xs={12} sm={12} md={6} lg={3} xl={3}>
@@ -187,8 +197,22 @@ export const CustomerDetails: React.FC = () => {
                             </Grid>
                         )}
 
-                    </Grid>
+                        {id !== 'new' && (
+                            <Grid container item direction='row' spacing={2}>
 
+                                <Grid item xs={12} sm={12} md={6} lg={5} xl={5}>
+                                    <Button
+                                        variant='contained'
+                                        startIcon={<Icon>map</Icon>}
+                                        onClick={() => navigate(`/admin/customer/customer-address/list/${id}/${name}`)}>
+                                        Endereços
+                                    </Button>
+                                </Grid>
+
+                            </Grid>
+                        )}
+
+                    </Grid>
                 </Box>
             </VForm>
 
