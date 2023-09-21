@@ -28,7 +28,7 @@ export const DimensionDetails: React.FC = () => {
   
     return (
         <BasePageLayout
-            title={(id === 'new') ? 'Nova técnica' : `'${dimension}'`}
+            title={(id === 'new') ? 'Nova Dimensão' : `'${dimension}'`}
             toolBar={
                 <DetailTools
                     showSaveButton
