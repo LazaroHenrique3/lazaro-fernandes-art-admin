@@ -12,6 +12,7 @@ const INITIAL_FORM_VALUES = {
     orientation: '',
     main_image: '',
     product_images: '',
+    production_date: '',
     quantity: '',
     description: '',
     weight: '',
