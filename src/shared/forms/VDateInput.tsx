@@ -41,12 +41,13 @@ export const VDateInput: React.FC<TVDateInput> = ({ name, label, ...rest }) => {
     return (
         <div className={`customDatePickerWidth ${error ? 'customDatePickerError' : ''}`}>
             <ReactDatePicker
+                autoComplete='off'
                 ref={datepickerRef}
                 selected={date}
                 onChange={(newValue) => { setDate(newValue); error && clearError() }}
                 locale='ptBR'
                 dateFormat='dd/MM/yyyy'
-                customInput={<TextField fullWidth label={label} error={!!error} helperText={error} />}
+                customInput={<TextField autoComplete='off' fullWidth label={label} error={!!error} helperText={error} />}
                 {...rest}
             />
         </div>
