@@ -2,6 +2,9 @@ export * from './LoginAdmin'
 export * from './ForgotPassword'
 export * from './RedefinePassword'
 
+export * from './Sales/SaleList'
+export * from './Sales/SaleDetails'
+
 export * from './Customer/CustomerList'
 export * from './Customer/CustomerDetails'
 
@@ -24,6 +27,5 @@ export * from './Dimension/DimensionList'
 export * from './Dimension/DimensionDetails'
 
 export * from './Dashboard'
-
 
 export * from './PageNotFound'

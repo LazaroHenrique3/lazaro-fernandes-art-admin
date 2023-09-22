@@ -7,6 +7,8 @@ import '../shared/services/yup/TranslationsYup'
 import { useDrawerContext } from '../shared/contexts'
 import {
     Dashboard,
+    SaleList,
+    SaleDetails,
     CustomerList,
     CustomerDetails,
     CustomerAddressDetails,
@@ -36,6 +38,11 @@ export const AdminRoutes = () => {
                 label: 'Página inicial',
                 icon: 'home',
                 path: '/admin/admin-home'
+            },
+            {
+                label: 'Vendas',
+                icon: 'shopping_bag_icon',
+                path: '/admin/sale'
             },
             {
                 label: 'Clientes',
@@ -78,6 +85,9 @@ export const AdminRoutes = () => {
             <Route path='/admin/redefine-password/:email' element={<RedefinePassword />} />
 
             <Route path='/admin/admin-home' element={<PrivateAdmin><Dashboard /></PrivateAdmin>} />
+
+            <Route path='/admin/sale' element={<PrivateAdmin><SaleList /></PrivateAdmin>} />
+            <Route path='/admin/sale/details/:id' element={<PrivateAdmin><SaleDetails /></PrivateAdmin>} />
 
             <Route path='/admin/customer' element={<PrivateAdmin><CustomerList /></PrivateAdmin>} />
             <Route path='/admin/customer/details/:id' element={<PrivateAdmin><CustomerDetails /></PrivateAdmin>} />
