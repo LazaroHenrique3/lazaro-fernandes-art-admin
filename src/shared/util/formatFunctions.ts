@@ -1,3 +1,5 @@
+import dayjs from 'dayjs'
+
 export const formatCPF = (cpf: string): string => {
     // Remove todos os caracteres não numéricos do CPF
     const numericCPF = cpf.replace(/\D/g, '')
@@ -32,4 +34,18 @@ export const formatCEP = (cep: string): string => {
     const formattedCEP = numericCEP.replace(/^(\d{5})(\d{3})$/, '$1-$2')
 
     return formattedCEP
+}
+
+export const formattedPrice = (value: number | string) => {
+
+    if (typeof value === 'string') return ''
+
+    return value.toLocaleString('pt-BR', {
+        style: 'currency',
+        currency: 'BRL',
+    })
+}
+
+export const formattedDateBR = (date: string | Date): string => {
+    return dayjs(date).format('DD/MM/YYYY')
 }

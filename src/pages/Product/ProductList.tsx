@@ -1,16 +1,33 @@
 import { useMemo, useState } from 'react'
-import dayjs from 'dayjs'
+
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { Icon, IconButton, LinearProgress, Pagination, Paper, Table, TableBody, TableContainer, TableFooter, TableHead, TableRow } from '@mui/material'
+import { 
+    Icon, 
+    IconButton, 
+    LinearProgress, 
+    Pagination, 
+    Paper, 
+    Table, 
+    TableBody, 
+    TableContainer, 
+    TableFooter, 
+    TableHead, 
+    TableRow 
+} from '@mui/material'
 
 import { IListProduct } from '../../shared/services/api/product/ProductService'
 import { BasePageLayout } from '../../shared/layouts'
 import { ListTools } from '../../shared/components'
 import { Environment } from '../../shared/environment'
+import { 
+    formattedDateBR, 
+    formattedPrice 
+} from '../../shared/util'
 
-import { formattedPrice } from './util/formatFunctions'
-
-import { StyledTableCell, StyledTableRow } from '../../shared/components/StyledComponents/TableComponents'
+import { 
+    StyledTableCell, 
+    StyledTableRow 
+} from '../../shared/components/StyledComponents/TableComponents'
 
 //Hooks personalizados
 import {
@@ -96,7 +113,7 @@ export const ProductList: React.FC = () => {
                                 <StyledTableCell size='small'>{row.category_name}</StyledTableCell>
                                 <StyledTableCell size='small'>{row.technique_name}</StyledTableCell>
                                 <StyledTableCell size='small'>{row.dimension_name}</StyledTableCell>
-                                <StyledTableCell size='small'>{dayjs(row.production_date).format('DD/MM/YYYY')}</StyledTableCell>
+                                <StyledTableCell size='small'>{formattedDateBR(row.production_date)}</StyledTableCell>
                                 <StyledTableCell size='small'>{row.quantity}</StyledTableCell>
                                 <StyledTableCell size='small'>{row.weight}</StyledTableCell>
                                 <StyledTableCell size='small'>{formattedPrice(row.price ?? '')}</StyledTableCell>

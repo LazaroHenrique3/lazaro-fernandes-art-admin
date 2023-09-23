@@ -23,12 +23,12 @@ import { BasePageLayout } from '../../shared/layouts'
 import { IListAddress } from '../../shared/services/api/address/AddressService'
 import { ListTools } from '../../shared/components'
 import { Environment } from '../../shared/environment'
-import { formatCEP } from '../Customer/util/formatFunctions'
 
 import {
     StyledTableCell,
     StyledTableRow
 } from '../.././shared/components/StyledComponents/TableComponents'
+import { formatCEP } from '../../shared/util'
 
 //Hooks personalizados
 import {

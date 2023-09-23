@@ -8,22 +8,20 @@ import {
     Box
 } from '@mui/material'
 
-import { 
-    TSalePaymentMethods, 
-    TSaleStatus 
+import {
+    TSalePaymentMethods,
+    TSaleStatus
 } from '../../../shared/services/api/sales/SaleService'
 
 interface IPaymentSelectCardProps {
     saleStatus: TSaleStatus
     paymentMethod: TSalePaymentMethods
-    handlePaymentOrder: () => void
     handleConcludeOrder: () => void
 }
 
 export const OrderPaymentOrConcludeCard: React.FC<IPaymentSelectCardProps> = ({
     paymentMethod,
     saleStatus,
-    handlePaymentOrder,
     handleConcludeOrder
 }) => {
     return (
@@ -39,14 +37,7 @@ export const OrderPaymentOrConcludeCard: React.FC<IPaymentSelectCardProps> = ({
                             {saleStatus === 'Ag. Pagamento' && paymentMethod}
                         </Box>
 
-                        {(saleStatus === 'Ag. Pagamento') ? (
-                            <Button
-                                onClick={handlePaymentOrder}
-                                variant='contained'
-                                startIcon={<Icon>attach_money</Icon>}>
-                                Pagar
-                            </Button>
-                        ) : (
+                        {(saleStatus === 'Enviado') && (
                             <Button
                                 onClick={handleConcludeOrder}
                                 variant='contained'

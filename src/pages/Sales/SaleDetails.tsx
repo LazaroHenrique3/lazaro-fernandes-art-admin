@@ -15,24 +15,29 @@ import {
     Skeleton
 } from '@mui/material'
 
-import { 
+import {
     StyledTableCell,
     StyledTableRow
 } from '../../shared/components/StyledComponents/TableComponents'
 
-import { formattedPrice } from '../Product/util/formatFunctions'
+import { formattedPrice } from '../../shared/util'
 
-import { 
+import {
     ISaleItemsList,
     TSalePaymentMethods,
     TSaleStatus
 } from '../../shared/services/api/sales/SaleService'
 
-import { 
-    IListAddress 
+import {
+    IListAddress
 } from '../../shared/services/api/address/AddressService'
 
 import {
+    IListCustomer
+} from '../../shared/services/api/customer/CustomerService'
+
+import {
+    CustomerInfoCard,
     DeliveryAddressCard,
     OrderPaymentOrConcludeCard
 } from './components'
@@ -40,7 +45,9 @@ import {
 import { BasePageLayout } from '../../shared/layouts'
 import { DetailTools } from '../../shared/components'
 
-import { 
+import { useAuthContext } from '../../shared/contexts'
+
+import {
     VTextField,
     VForm,
     useVForm,
@@ -53,7 +60,9 @@ import {
 } from './hooks/detailsHooks'
 
 export const SaleDetails: React.FC = () => {
-    const { id = '' } = useParams<'id'>()
+    const { accessLevel } = useAuthContext()
+
+    const { id = '', idUser = '' } = useParams<'id' | 'idUser'>()
     const navigate = useNavigate()
 
     const { formRef } = useVForm('formRef')
@@ -66,9 +75,22 @@ export const SaleDetails: React.FC = () => {
 
     const [salesItems, setSaleItems] = useState<ISaleItemsList[]>([])
     const [saleAddress, setSaleAddress] = useState<IListAddress>({} as IListAddress)
+    const [saleCustomer, setSaleCustomer] = useState<IListCustomer>({} as IListCustomer)
 
     //Hooks personalizados
-    UseFetchSaleData({ setIsLoading, setSaleItems, setSaleAddress, setPaymentMethod, setSaleStatus, setName, formRef, id })
+    UseFetchSaleData({
+        setIsLoading,
+        setSaleItems,
+        setSaleAddress,
+        setPaymentMethod,
+        setSaleStatus,
+        setName,
+        setSaleCustomer,
+        formRef,
+        id,
+        idUser
+    })
+
     const { handleConcludeSale } = UseHandleSale({ formRef, setSaleStatus, setIsLoading })
 
     return (
@@ -78,7 +100,7 @@ export const SaleDetails: React.FC = () => {
                 <DetailTools
                     showSaveButton={false}
                     showNewButton={false}
-                    showDeleteButton={false}
+                    showDeleteButton={(accessLevel === 'Root')}
 
                     onClickBackButton={() => navigate('/admin/sale')}
                 />
@@ -205,9 +227,20 @@ export const SaleDetails: React.FC = () => {
                         <Grid container item xs={12} sm={6} lg={4} xl={3}>
                             <Skeleton variant="rectangular" width={300} height={200} />
                         </Grid>
+
+                        <Grid container item xs={12} sm={6} lg={4} xl={3}>
+                            <Skeleton variant="rectangular" width={300} height={200} />
+                        </Grid>
                     </>
                 ) : (
                     <>
+                        <CustomerInfoCard
+                            name={saleCustomer.name}
+                            email={saleCustomer.email}
+                            phoneNumber={saleCustomer.cell_phone}
+                            cpf={saleCustomer.cpf}
+                        />
+
                         <DeliveryAddressCard
                             cep={saleAddress.cep}
                             city={saleAddress.city}
@@ -220,7 +253,6 @@ export const SaleDetails: React.FC = () => {
 
                         {(saleStatus === 'Ag. Pagamento' || saleStatus === 'Enviado') &&
                             <OrderPaymentOrConcludeCard
-                                handlePaymentOrder={() => console.log('id: ', Number(id))}
                                 handleConcludeOrder={() => handleConcludeSale(Number(id))}
                                 paymentMethod={paymentMethod}
                                 saleStatus={saleStatus}

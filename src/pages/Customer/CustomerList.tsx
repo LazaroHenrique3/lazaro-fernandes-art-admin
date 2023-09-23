@@ -14,23 +14,27 @@ import {
     TableRow
 } from '@mui/material'
 
-import dayjs from 'dayjs'
-
 import {  IListCustomer } from '../../shared/services/api/customer/CustomerService'
 import { BasePageLayout } from '../../shared/layouts'
 import { ListTools } from '../../shared/components'
 import { Environment } from '../../shared/environment'
 
-import { StyledTableCell, StyledTableRow } from '../../shared/components/StyledComponents/TableComponents'
+import { 
+    StyledTableCell, 
+    StyledTableRow 
+} from '../../shared/components/StyledComponents/TableComponents'
 
-import { formatCPF, formatPhoneNumber } from './util/formatFunctions'
+import { 
+    formatCPF, 
+    formatPhoneNumber, 
+    formattedDateBR
+} from '../../shared/util'
 
 //Hooks personalizados
 import { 
     UseFetchCustomerData,
     UseHandleCustomer
 } from './hooks/listHooks'
-
 
 export const CustomerList: React.FC = () => {
     const [searchParams, setSearchParams] = useSearchParams()
@@ -105,7 +109,7 @@ export const CustomerList: React.FC = () => {
                                 <StyledTableCell size='small'>{row.email}</StyledTableCell>
                                 <StyledTableCell size='small'>{formatPhoneNumber(row.cell_phone)}</StyledTableCell>
                                 <StyledTableCell size='small'>{row.genre}</StyledTableCell>
-                                <StyledTableCell size='small'>{dayjs(row.date_of_birth).format('DD/MM/YYYY')}</StyledTableCell>
+                                <StyledTableCell size='small'>{formattedDateBR(row.date_of_birth)}</StyledTableCell>
                                 <StyledTableCell size='small'>{formatCPF(row.cpf)}</StyledTableCell>
                             </StyledTableRow>
                         ))}

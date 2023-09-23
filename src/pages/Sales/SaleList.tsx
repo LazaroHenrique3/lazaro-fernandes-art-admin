@@ -13,7 +13,6 @@ import {
     TableHead,
     TableRow
 } from '@mui/material'
-import dayjs from 'dayjs'
 
 import { BasePageLayout } from '../../shared/layouts'
 import { ISaleListAll } from '../../shared/services/api/sales/SaleService'
@@ -26,7 +25,7 @@ import {
     StyledTableRow
 } from '../../shared/components/StyledComponents/TableComponents'
 
-import { formattedPrice } from '../Product/util/formatFunctions'
+import { formattedDateBR, formattedPrice } from '../../shared/util'
 
 //Hooks personalizados
 import {
@@ -99,7 +98,7 @@ export const SaleList = () => {
                                         </IconButton>
                                     }
 
-                                    <IconButton color='primary' onClick={() => navigate(`/admin/sale/details/${row.id}`)}>
+                                    <IconButton color='primary' onClick={() => navigate(`/admin/sale/details/${row.id}/${row.customer_id}`)}>
                                         <Icon>visibility</Icon>
                                     </IconButton>
                                 </StyledTableCell>
@@ -107,8 +106,8 @@ export const SaleList = () => {
                                 <StyledTableCell size='small'>{`#${row.id}`}</StyledTableCell>
                                 <StyledTableCell size='small'>{row.status}</StyledTableCell>
                                 <StyledTableCell size='small'>{row.customer_name}</StyledTableCell>
-                                <StyledTableCell size='small'>{dayjs(row.order_date).format('DD/MM/YYYY')}</StyledTableCell>
-                                <StyledTableCell size='small'>{dayjs(row.payment_due_date).format('DD/MM/YYYY')}</StyledTableCell>
+                                <StyledTableCell size='small'>{formattedDateBR(row.order_date)}</StyledTableCell>
+                                <StyledTableCell size='small'>{formattedDateBR(row.payment_due_date)}</StyledTableCell>
                                 <StyledTableCell size='small'>{formattedPrice(row.total + row.shipping_cost)}</StyledTableCell>
                             </StyledTableRow>
                         ))}

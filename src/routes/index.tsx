@@ -87,7 +87,7 @@ export const AdminRoutes = () => {
             <Route path='/admin/admin-home' element={<PrivateAdmin><Dashboard /></PrivateAdmin>} />
 
             <Route path='/admin/sale' element={<PrivateAdmin><SaleList /></PrivateAdmin>} />
-            <Route path='/admin/sale/details/:id' element={<PrivateAdmin><SaleDetails /></PrivateAdmin>} />
+            <Route path='/admin/sale/details/:id/:idUser' element={<PrivateAdmin><SaleDetails /></PrivateAdmin>} />
 
             <Route path='/admin/customer' element={<PrivateAdmin><CustomerList /></PrivateAdmin>} />
             <Route path='/admin/customer/details/:id' element={<PrivateAdmin><CustomerDetails /></PrivateAdmin>} />

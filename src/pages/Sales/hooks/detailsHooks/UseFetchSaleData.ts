@@ -1,12 +1,10 @@
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { FormHandles } from '@unform/core'
-import dayjs from 'dayjs'
 
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
-import { useAuthContext } from '../../../../shared/contexts'
 import {  
     ISaleItemsList,
     ISaleListById,
@@ -14,8 +12,20 @@ import {
     TSalePaymentMethods,
     TSaleStatus 
 } from '../../../../shared/services/api/sales/SaleService'
-import { IListAddress } from '../../../../shared/services/api/address/AddressService'
-import { formattedPrice } from '../../../Product/util/formatFunctions'
+
+import { 
+    CustomerService, 
+    IListCustomer 
+} from '../../../../shared/services/api/customer/CustomerService'
+
+import { 
+    IListAddress 
+} from '../../../../shared/services/api/address/AddressService'
+
+import { 
+    formattedDateBR, 
+    formattedPrice 
+} from '../../../../shared/util'
 
 interface IUseFetchSaleDataProps {
     setIsLoading: (status: boolean) => void
@@ -24,8 +34,10 @@ interface IUseFetchSaleDataProps {
     setSaleStatus: (status: TSaleStatus) => void
     setSaleItems: (saleItems: ISaleItemsList[]) => void
     setSaleAddress: (saleAddress: IListAddress) => void
+    setSaleCustomer: (saleAddress: IListCustomer) => void
     formRef: React.RefObject<FormHandles>
     id: string
+    idUser: string
 }
 
 export const UseFetchSaleData = ({ 
@@ -35,26 +47,34 @@ export const UseFetchSaleData = ({
     setPaymentMethod,
     setSaleStatus, 
     setSaleAddress, 
+    setSaleCustomer,
     formRef, 
-    id }: IUseFetchSaleDataProps) => {
-
-    const { idUser } = useAuthContext()
+    id,
+    idUser }: IUseFetchSaleDataProps) => {
 
     const navigate = useNavigate()
 
     useEffect(() => {
 
         const fetchData = async () => {
-            if (!idUser) return
 
             setIsLoading(true)
-            const result = await SaleService.getById(idUser, Number(id))
+            const result = await SaleService.getById(Number(idUser), Number(id))
+            
+            //Buscando o cliente da venda
+            const saleCustomer = await CustomerService.getById(Number(idUser))
 
             setIsLoading(false)
 
             if (result instanceof Error) {
                 toast.error(result.message)
-                navigate('/customer/orders')
+                navigate('/admin/sale')
+                return
+            }
+
+            if (saleCustomer instanceof Error) {
+                toast.error(saleCustomer.message)
+                navigate('/admin/sale')
                 return
             }
 
@@ -73,6 +93,9 @@ export const UseFetchSaleData = ({
             setPaymentMethod(sale.payment_method)
             setSaleStatus(sale.status)
 
+            //Setando a sinformações do cliente da venda
+            setSaleCustomer(saleCustomer)
+
             setName(`${formattedOrder.customer_name} - #${formattedOrder.id}`)
             formRef.current?.setData(formattedOrder)
         }
@@ -86,17 +109,17 @@ export const UseFetchSaleData = ({
 const formatOrderInfo = (sale: Omit<ISaleListById, 'sale_items' | 'sale_address'>) => {
 
     //Tratando caso essas informações ainda não tenham sido informadas
-    const deliveryDate = sale.delivery_date ? dayjs(sale.delivery_date).format('DD/MM/YYYY') : ' '
-    const paymentReceivedDate = sale.payment_received_date ? dayjs(sale.payment_received_date).format('DD/MM/YYYY') : ' '
+    const deliveryDate = sale.delivery_date ? formattedDateBR(sale.delivery_date) : ' '
+    const paymentReceivedDate = sale.payment_received_date ? formattedDateBR(sale.payment_received_date) : ' '
     const trackingCode = sale.tracking_code ? sale.tracking_code : ' '
 
     //Formatando as Strings
     const shippingCost = formattedPrice(sale.shipping_cost)
     const subtotal = formattedPrice(sale.total)
     const totalOrderCost = formattedPrice(sale.total + sale.shipping_cost)
-    const orderDate = dayjs(sale.order_date).format('DD/MM/YYYY')
-    const estimatedDeliveryDate = dayjs(sale.estimated_delivery_date).format('DD/MM/YYYY')
-    const paymentDueDate = dayjs(sale.payment_due_date).format('DD/MM/YYYY')
+    const orderDate = formattedDateBR(sale.order_date)
+    const estimatedDeliveryDate = formattedDateBR(sale.estimated_delivery_date)
+    const paymentDueDate = formattedDateBR(sale.payment_due_date)
 
     const formattedOrder = {
         ...sale,
