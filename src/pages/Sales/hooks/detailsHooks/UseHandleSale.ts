@@ -66,7 +66,26 @@ export const UseHandleSale = ({ formRef, setSaleStatus, setIsLoading }: IUseCalc
         }
     }
 
-    return { handleConcludeSale }
+    const handleDeleteSale = async (idCustomer: number, idSale: number) => {
+        if (!idUser) return
+
+        if (confirm('Realmente deseja deletar este pedido?')) {
+            setIsLoading(true)
+
+            const result = await SaleService.deleteById(idCustomer, idSale)
+
+            if (result instanceof Error) {
+                toast.error(result.message)
+                return
+            }
+
+            toast.success('Registro apagado com sucesso!')
+            navigate('/admin/sale')
+        }
+
+    }
+
+    return { handleConcludeSale, handleDeleteSale }
 
 }
 

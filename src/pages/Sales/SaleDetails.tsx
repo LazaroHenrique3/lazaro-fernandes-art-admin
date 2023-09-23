@@ -62,7 +62,7 @@ import {
 export const SaleDetails: React.FC = () => {
     const { accessLevel } = useAuthContext()
 
-    const { id = '', idUser = '' } = useParams<'id' | 'idUser'>()
+    const { idSale = '', idCustomer = '' } = useParams<'idSale' | 'idCustomer'>()
     const navigate = useNavigate()
 
     const { formRef } = useVForm('formRef')
@@ -87,11 +87,11 @@ export const SaleDetails: React.FC = () => {
         setName,
         setSaleCustomer,
         formRef,
-        id,
-        idUser
+        idSale,
+        idCustomer
     })
 
-    const { handleConcludeSale } = UseHandleSale({ formRef, setSaleStatus, setIsLoading })
+    const { handleConcludeSale, handleDeleteSale } = UseHandleSale({ formRef, setSaleStatus, setIsLoading })
 
     return (
         <BasePageLayout
@@ -102,6 +102,7 @@ export const SaleDetails: React.FC = () => {
                     showNewButton={false}
                     showDeleteButton={(accessLevel === 'Root')}
 
+                    onClickDeleteButton={() => handleDeleteSale(Number(idCustomer), Number(idSale))}
                     onClickBackButton={() => navigate('/admin/sale')}
                 />
             }>
@@ -253,7 +254,7 @@ export const SaleDetails: React.FC = () => {
 
                         {(saleStatus === 'Ag. Pagamento' || saleStatus === 'Enviado') &&
                             <OrderPaymentOrConcludeCard
-                                handleConcludeOrder={() => handleConcludeSale(Number(id))}
+                                handleConcludeOrder={() => handleConcludeSale(Number(idSale))}
                                 paymentMethod={paymentMethod}
                                 saleStatus={saleStatus}
                             />

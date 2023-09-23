@@ -36,8 +36,8 @@ interface IUseFetchSaleDataProps {
     setSaleAddress: (saleAddress: IListAddress) => void
     setSaleCustomer: (saleAddress: IListCustomer) => void
     formRef: React.RefObject<FormHandles>
-    id: string
-    idUser: string
+    idSale: string
+    idCustomer: string
 }
 
 export const UseFetchSaleData = ({ 
@@ -49,8 +49,8 @@ export const UseFetchSaleData = ({
     setSaleAddress, 
     setSaleCustomer,
     formRef, 
-    id,
-    idUser }: IUseFetchSaleDataProps) => {
+    idSale,
+    idCustomer }: IUseFetchSaleDataProps) => {
 
     const navigate = useNavigate()
 
@@ -59,10 +59,10 @@ export const UseFetchSaleData = ({
         const fetchData = async () => {
 
             setIsLoading(true)
-            const result = await SaleService.getById(Number(idUser), Number(id))
+            const result = await SaleService.getById(Number(idCustomer), Number(idSale))
             
             //Buscando o cliente da venda
-            const saleCustomer = await CustomerService.getById(Number(idUser))
+            const saleCustomer = await CustomerService.getById(Number(idCustomer))
 
             setIsLoading(false)
 
@@ -102,7 +102,7 @@ export const UseFetchSaleData = ({
 
         fetchData()
 
-    }, [id])
+    }, [idSale])
 
 }
 
