@@ -8,7 +8,7 @@ import {
 import { 
     formatCPF, 
     formatPhoneNumber 
-} from '../../../shared/util'
+} from '../../../../shared/util'
 
 interface IInfoAddressProps {
     label: string

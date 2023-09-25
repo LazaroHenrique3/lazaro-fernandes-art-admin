@@ -5,7 +5,7 @@ import {
     Typography
 } from '@mui/material'
 
-import { formatCEP } from '../../../shared/util'
+import { formatCEP } from '../../../../shared/util'
 
 interface IInfoAddressProps {
     label: string

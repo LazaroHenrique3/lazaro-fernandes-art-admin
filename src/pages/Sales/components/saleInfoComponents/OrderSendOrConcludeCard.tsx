@@ -11,11 +11,11 @@ import {
 
 import {
     SendSaleModal
-} from '../../../shared/components/Modals/SendSale/SendSale'
+} from '../../../../shared/components/Modals/SendSale/SendSale'
 
 import {
     TSaleStatus
-} from '../../../shared/services/api/sales/SaleService'
+} from '../../../../shared/services/api/sales/SaleService'
 
 interface IOrderSendOrConcludeCardProps {
     saleStatus: TSaleStatus
