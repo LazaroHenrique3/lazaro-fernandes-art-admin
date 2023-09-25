@@ -1,3 +1,4 @@
+import { FormHandles } from '@unform/core'
 import {
     Grid,
     Card,
@@ -9,19 +10,28 @@ import {
 } from '@mui/material'
 
 import {
-    TSalePaymentMethods,
+    SendSaleModal
+} from '../../../shared/components/Modals/SendSale/SendSale'
+
+import {
     TSaleStatus
 } from '../../../shared/services/api/sales/SaleService'
 
-interface IPaymentSelectCardProps {
+interface IOrderSendOrConcludeCardProps {
     saleStatus: TSaleStatus
-    paymentMethod: TSalePaymentMethods
+    idSale: number,
+    idCustomerSale: number,
+    updateSendStatus: (status: TSaleStatus) => void
+    formRef: React.RefObject<FormHandles>
     handleConcludeOrder: () => void
 }
 
-export const OrderPaymentOrConcludeCard: React.FC<IPaymentSelectCardProps> = ({
-    paymentMethod,
+export const OrderSendOrConcludeCard: React.FC<IOrderSendOrConcludeCardProps> = ({
     saleStatus,
+    idSale,
+    idCustomerSale,
+    updateSendStatus,
+    formRef,
     handleConcludeOrder
 }) => {
     return (
@@ -33,11 +43,15 @@ export const OrderPaymentOrConcludeCard: React.FC<IPaymentSelectCardProps> = ({
                             <Typography variant='h6' marginBottom={3}>
                                 {saleStatus}
                             </Typography>
-
-                            {saleStatus === 'Ag. Pagamento' && paymentMethod}
                         </Box>
 
-                        {(saleStatus === 'Enviado') && (
+                        {(saleStatus === 'Em preparação') ? (
+                            <SendSaleModal
+                                updateSendStatus={updateSendStatus}
+                                externalFormSaleRef={formRef}
+                                idSale={idSale}
+                                idCustomer={idCustomerSale} />
+                        ) : (
                             <Button
                                 onClick={handleConcludeOrder}
                                 variant='contained'
@@ -45,6 +59,7 @@ export const OrderPaymentOrConcludeCard: React.FC<IPaymentSelectCardProps> = ({
                                 Pedido recebido
                             </Button>
                         )}
+
                     </Box>
                 </CardContent>
             </Card>

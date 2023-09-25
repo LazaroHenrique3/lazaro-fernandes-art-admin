@@ -21,29 +21,6 @@ export const UseHandleSale = ({ formRef, setSaleStatus, setIsLoading }: IUseCalc
 
     const { idUser } = useAuthContext()
 
-    /* const handlePaySale = async (idSale: number) => {
-        if (!idUser) return
-
-        if (confirm('Confirmar pagamento do pedido?')) {
-            setIsLoading(true)
-            const result = await SaleService.paySale(idUser, idSale)
-
-            setIsLoading(false)
-
-            if (result instanceof Error) {
-                toast.error(result.message)
-                navigate('/customer/orders')
-                return
-            }
-
-            setSaleStatus('Em preparação')
-
-            //Adicionando as informações atualizadas
-            formRef.current?.setFieldValue('status', 'Em preparação')
-            formRef.current?.setFieldValue('payment_received_date', getCurrentDate())
-        }
-    } */
-
     const handleConcludeSale = async (idSale: number) => {
         if (!idUser) return
 

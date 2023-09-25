@@ -135,7 +135,7 @@ const getById = async (idCustomer: number, idSale: number): Promise<ISaleListByI
 const sendSale = async (idCustomer: number, idSale: number, trackingCode: string): Promise<void | Error> => {
 
     try {
-        await api.put(`/sale/send/${idCustomer}/${idSale}`, trackingCode)
+        await api.put(`/sale/send/${idCustomer}/${idSale}`, {tracking_code: trackingCode})
     } catch (error) {
         console.error(error)
         return new Error((error as ErrorResponse).response?.data?.errors?.default || 'Erro ao enviar venda.')

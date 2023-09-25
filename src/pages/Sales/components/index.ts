@@ -1,3 +1,3 @@
 export * from './DeliveryAddressCard'
-export * from './OrderPaymentOrConcludeCard'
+export * from './OrderSendOrConcludeCard'
 export * from  './CustomerInfoCard'

@@ -24,7 +24,6 @@ import { formattedPrice } from '../../shared/util'
 
 import {
     ISaleItemsList,
-    TSalePaymentMethods,
     TSaleStatus
 } from '../../shared/services/api/sales/SaleService'
 
@@ -39,7 +38,7 @@ import {
 import {
     CustomerInfoCard,
     DeliveryAddressCard,
-    OrderPaymentOrConcludeCard
+    OrderSendOrConcludeCard
 } from './components'
 
 import { BasePageLayout } from '../../shared/layouts'
@@ -70,7 +69,6 @@ export const SaleDetails: React.FC = () => {
     const [isLoading, setIsLoading] = useState(false)
     const [name, setName] = useState('')
 
-    const [paymentMethod, setPaymentMethod] = useState<TSalePaymentMethods>('' as TSalePaymentMethods)
     const [saleStatus, setSaleStatus] = useState<TSaleStatus>('' as TSaleStatus)
 
     const [salesItems, setSaleItems] = useState<ISaleItemsList[]>([])
@@ -82,7 +80,6 @@ export const SaleDetails: React.FC = () => {
         setIsLoading,
         setSaleItems,
         setSaleAddress,
-        setPaymentMethod,
         setSaleStatus,
         setName,
         setSaleCustomer,
@@ -252,11 +249,14 @@ export const SaleDetails: React.FC = () => {
                             complement={saleAddress.complement}
                         />
 
-                        {(saleStatus === 'Ag. Pagamento' || saleStatus === 'Enviado') &&
-                            <OrderPaymentOrConcludeCard
+                        {(saleStatus === 'Em preparação' || saleStatus === 'Enviado') &&
+                            <OrderSendOrConcludeCard
                                 handleConcludeOrder={() => handleConcludeSale(Number(idSale))}
-                                paymentMethod={paymentMethod}
+                                updateSendStatus={setSaleStatus}
+                                formRef={formRef}
                                 saleStatus={saleStatus}
+                                idSale={Number(idSale)}
+                                idCustomerSale={Number(idCustomer)}
                             />
                         }
                     </>

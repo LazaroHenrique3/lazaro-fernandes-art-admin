@@ -9,7 +9,6 @@ import {
     ISaleItemsList,
     ISaleListById,
     SaleService,
-    TSalePaymentMethods,
     TSaleStatus 
 } from '../../../../shared/services/api/sales/SaleService'
 
@@ -30,7 +29,6 @@ import {
 interface IUseFetchSaleDataProps {
     setIsLoading: (status: boolean) => void
     setName: (name: string) => void
-    setPaymentMethod: (paymentMethod: TSalePaymentMethods) => void
     setSaleStatus: (status: TSaleStatus) => void
     setSaleItems: (saleItems: ISaleItemsList[]) => void
     setSaleAddress: (saleAddress: IListAddress) => void
@@ -44,7 +42,6 @@ export const UseFetchSaleData = ({
     setIsLoading, 
     setName, 
     setSaleItems, 
-    setPaymentMethod,
     setSaleStatus, 
     setSaleAddress, 
     setSaleCustomer,
@@ -90,7 +87,6 @@ export const UseFetchSaleData = ({
             //Setando as informações do endereço de entrega
             setSaleAddress(sale_address)
 
-            setPaymentMethod(sale.payment_method)
             setSaleStatus(sale.status)
 
             //Setando a sinformações do cliente da venda
