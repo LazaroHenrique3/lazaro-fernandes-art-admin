@@ -167,6 +167,17 @@ const concludeSale = async (idCustomer: number, idSale: number): Promise<void | 
 
 }
 
+const updateTrackingCode = async (idCustomer: number, idSale: number, trackingCode: string): Promise<void | Error> => {
+
+    try {
+        await api.put(`/sale/update/tracking-code/${idCustomer}/${idSale}`, {tracking_code: trackingCode})
+    } catch (error) {
+        console.error(error)
+        return new Error((error as ErrorResponse).response?.data?.errors?.default || 'Erro ao atualizar registro.')
+    }
+
+}
+
 const deleteById = async (idCustomer: number, idSale: number): Promise<void | Error> => {
 
     try {
@@ -200,6 +211,7 @@ export const SaleService = {
     sendSale,
     cancelSale,
     concludeSale,
+    updateTrackingCode,
     deleteById,
     generatePdf
 }

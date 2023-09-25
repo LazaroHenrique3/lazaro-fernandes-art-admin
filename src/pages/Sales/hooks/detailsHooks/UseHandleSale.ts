@@ -1,32 +1,69 @@
+import * as yup from 'yup'
 import { FormHandles } from '@unform/core'
 import { useNavigate } from 'react-router-dom'
+
+import { IVFormErrors } from '../../../../shared/forms'
 
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
-import { useAuthContext } from '../../../../shared/contexts'
-import {  
+import {
+    IFormData,
+    formatValidationSchema
+} from '../../validation/Schema'
+
+import {
     SaleService,
-    TSaleStatus 
+    TSaleStatus
 } from '../../../../shared/services/api/sales/SaleService'
 
 interface IUseCalculateShippingProps {
+    idSale: string
+    idCustomer: string
     formRef: React.RefObject<FormHandles>
     setSaleStatus: (status: TSaleStatus) => void
     setIsLoading: (status: boolean) => void
 }
 
-export const UseHandleSale = ({ formRef, setSaleStatus, setIsLoading }: IUseCalculateShippingProps) => {
+export const UseHandleSale = ({ idSale, idCustomer, formRef, setSaleStatus, setIsLoading }: IUseCalculateShippingProps) => {
     const navigate = useNavigate()
 
-    const { idUser } = useAuthContext()
+    const handleUpdateTrackingCode = async (data: IFormData) => {
 
-    const handleConcludeSale = async (idSale: number) => {
-        if (!idUser) return
-
-        if (confirm('Confirma que seu pedido foi entregue?')) {
+        try {
+            const validateData = await formatValidationSchema.validate(data, { abortEarly: false })
             setIsLoading(true)
-            const result = await SaleService.concludeSale(idUser, idSale)
+            console.log('idSale: ', Number(idSale), 'idCustomer: ',  Number(idCustomer))
+            const result = await SaleService.updateTrackingCode(Number(idSale), Number(idCustomer), validateData.tracking_code)
+            setIsLoading(false)
+
+            if (result instanceof Error) {
+                toast.error(result.message)
+            } else {
+                toast.success('Registro atualizado com sucesso!')
+            }
+
+        } catch (errors) {
+
+            const errorsYup: yup.ValidationError = errors as yup.ValidationError
+
+            const validationErrors: IVFormErrors = {}
+
+            errorsYup.inner.forEach(error => {
+                if (!error.path) return
+
+                validationErrors[error.path] = error.message
+                formRef.current?.setErrors(validationErrors)
+            })
+        }
+
+    }
+
+    const handleConcludeSale = async () => {
+
+        if (confirm('Confirma que o pedido foi entregue?')) {
+            setIsLoading(true)
+            const result = await SaleService.concludeSale(Number(idCustomer), Number(idSale))
 
             setIsLoading(false)
 
@@ -43,13 +80,12 @@ export const UseHandleSale = ({ formRef, setSaleStatus, setIsLoading }: IUseCalc
         }
     }
 
-    const handleDeleteSale = async (idCustomer: number, idSale: number) => {
-        if (!idUser) return
+    const handleDeleteSale = async () => {
 
         if (confirm('Realmente deseja deletar este pedido?')) {
             setIsLoading(true)
 
-            const result = await SaleService.deleteById(idCustomer, idSale)
+            const result = await SaleService.deleteById(Number(idCustomer), Number(idSale))
 
             if (result instanceof Error) {
                 toast.error(result.message)
@@ -62,7 +98,7 @@ export const UseHandleSale = ({ formRef, setSaleStatus, setIsLoading }: IUseCalc
 
     }
 
-    return { handleConcludeSale, handleDeleteSale }
+    return { handleUpdateTrackingCode, handleConcludeSale, handleDeleteSale }
 
 }
 

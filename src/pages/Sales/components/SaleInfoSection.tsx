@@ -24,7 +24,7 @@ interface ISaleInfoSection {
     idCustomer: number,
     formRef: React.RefObject<FormHandles>
     setSaleStatus: (newStatus: TSaleStatus) => void,
-    handleConcludeSale: (idSale: number) => void
+    handleConcludeSale: () => void
 }
 
 export const SaleInfoSection: React.FC<ISaleInfoSection> = ({
@@ -80,7 +80,7 @@ export const SaleInfoSection: React.FC<ISaleInfoSection> = ({
 
                     {(saleStatus === 'Em preparação' || saleStatus === 'Enviado') &&
                         <OrderSendOrConcludeCard
-                            handleConcludeOrder={() => handleConcludeSale(Number(idSale))}
+                            handleConcludeOrder={() => handleConcludeSale()}
                             updateSendStatus={setSaleStatus}
                             formRef={formRef}
                             saleStatus={saleStatus}
