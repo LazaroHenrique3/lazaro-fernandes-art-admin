@@ -1,65 +1,100 @@
 import { useState } from 'react'
-import { Box, Button, ButtonGroup, Card, CardContent, Grid, Typography, Icon } from '@mui/material'
+import {
+    Box,
+    Card,
+    CardContent,
+    Grid,
+    Typography,
+    Icon,
+    Skeleton
+} from '@mui/material'
 
-import { DonutChart, LineChart } from '../../shared/components'
+import { formattedPrice } from '../../shared/util'
 import { BasePageLayout } from '../../shared/layouts'
+
+import {
+    IFinancialInformations
+} from '../../shared/services/api/sales/SaleService'
+
+import {
+    CategoriesChart,
+} from '../../shared/components'
+
+//Hooks personalizados
+import {
+    UseFetchFinancialData
+} from './hooks/UseFetchFinancialData'
 
 export const Dashboard = () => {
 
-    const [typeInfoDashboard, setTypeInfoDashboard] = useState('financial')
+    const [isLoading, setIsLoading] = useState(true)
+    const [financialData, setFinancialData] = useState<IFinancialInformations>({} as IFinancialInformations)
+
+    UseFetchFinancialData({ setIsLoading, setFinancialData })
+
+    const isNegativeBalance = financialData.currentMonthBilling < financialData.lastMonthBilling
 
     return (
         <BasePageLayout title='Página inicial'>
-
-            <Box marginX={2}>
-                <ButtonGroup variant='contained' >
-                    <Button onClick={() => {setTypeInfoDashboard('financial')}}>Financeiro</Button>
-                    <Button onClick={() => {setTypeInfoDashboard('shipping')}}>Envios</Button>
-                </ButtonGroup>
-            </Box>
 
             <Box width='100%' overflow='hidden' display='flex' flexDirection='column'>
                 <Grid container margin={2}>
                     <Grid item container spacing={2}>
                         <Grid item xs={12} sm={12} md={6} lg={4}>
                             <Card sx={{ height: '100%' }}>
-                                <CardContent>
-                                    <Typography variant='h5' align='center'>
-                                        Faturamento(Mês Passado):
-                                    </Typography>
-
-                                    <Box padding={2} display='flex' justifyContent='center' alignItems='center'>
-                                        <Typography variant='h4'>
-                                            R$: 2.000,00
+                                {(isLoading) ? (
+                                    <Skeleton variant="rectangular" width={450} height={200} />
+                                ) : (
+                                    <CardContent>
+                                        <Typography variant='h5' align='center'>
+                                            Faturamento(Mês Passado):
                                         </Typography>
-                                    </Box>
-                                </CardContent>
+
+                                        <Box padding={2} display='flex' justifyContent='center' alignItems='center'>
+                                            <Typography variant='h4'>
+                                                {formattedPrice(financialData.lastMonthBilling)}
+                                            </Typography>
+                                        </Box>
+                                    </CardContent>
+                                )}
                             </Card>
                         </Grid>
 
                         <Grid item xs={12} sm={12} md={6} lg={4}>
                             <Card sx={{ height: '100%' }}>
-                                <CardContent>
-                                    <Typography variant='h5' align='center'>
-                                        Faturamento(Mês Atual):
-                                    </Typography>
-
-                                    <Box padding={2} display='flex' flexDirection='column' justifyContent='center' alignItems='center'>
-                                        <Typography variant='h4'>
-                                            R$: 1.500,00
+                                {(isLoading) ? (
+                                    <Skeleton variant="rectangular" width={450} height={200} />
+                                ) : (
+                                    <CardContent>
+                                        <Typography variant='h5' align='center'>
+                                            Faturamento(Mês Atual):
                                         </Typography>
 
-                                        <Box color='red' display='flex' flexDirection='row' justifyContent='center' alignItems='center'>
-                                            <Icon>
-                                                keyboard_double_arrow_down_ico
-                                            </Icon>
-
-                                            <Typography variant='h6'>
-                                                ( R$: -500,00)
+                                        <Box padding={2} display='flex' flexDirection='column' justifyContent='center' alignItems='center'>
+                                            <Typography variant='h4'>
+                                                {formattedPrice(financialData.currentMonthBilling)}
                                             </Typography>
+
+                                            <Box
+                                                color={isNegativeBalance ? 'red' : 'green'}
+                                                display='flex'
+                                                flexDirection='row'
+                                                justifyContent='center'
+                                                alignItems='center'>
+
+                                                <Icon>
+                                                    {isNegativeBalance ? 'keyboard_double_arrow_down_ico' : 'keyboard_double_arrow_up_ico'}
+                                                </Icon>
+
+                                                <Typography
+                                                    variant='h6'
+                                                    color={isNegativeBalance ? 'red' : 'green'}>
+                                                    {(formattedPrice(financialData.currentMonthBilling - financialData.lastMonthBilling))}
+                                                </Typography>
+                                            </Box>
                                         </Box>
-                                    </Box>
-                                </CardContent>
+                                    </CardContent>
+                                )}
                             </Card>
                         </Grid>
                     </Grid>
@@ -67,18 +102,15 @@ export const Dashboard = () => {
 
                 <Grid container margin={2}>
                     <Grid container spacing={2}>
-                        <Grid item xs={12} sm={12} md={12} lg={6}>
-                            <Card sx={{ height: '100%' }}>
-                                <CardContent>
-                                    <LineChart />
-                                </CardContent>
-                            </Card>
-                        </Grid>
                         <Grid item xs={12} sm={12} md={12} lg={4}>
                             <Card sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', width: '100%' }}>
-                                <CardContent>
-                                    <DonutChart />
-                                </CardContent>
+                                {(isLoading) ? (
+                                    <Skeleton variant="rectangular" width={700} height={400} />
+                                ) : (
+                                    <CardContent>
+                                        <CategoriesChart dataChart={financialData.topCategories}  />
+                                    </CardContent>
+                                )}
                             </Card>
                         </Grid>
                     </Grid>

@@ -109,7 +109,6 @@ export const CustomerAddressList = () => {
                                         <Icon>edit</Icon>
                                     </IconButton>
                                 </StyledTableCell>
-
                                 <StyledTableCell size='small'>{row.city}</StyledTableCell>
                                 <StyledTableCell size='small'>{row.state}</StyledTableCell>
                                 <StyledTableCell size='small'>{row.number}</StyledTableCell>

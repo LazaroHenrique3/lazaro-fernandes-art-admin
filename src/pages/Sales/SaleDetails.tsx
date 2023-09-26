@@ -143,9 +143,10 @@ export const SaleDetails: React.FC = () => {
 
                             <Grid item xs={12} sm={12} md={6} lg={4} xl={3}>
                                 <VTextField 
-                                    fullWidth label={`Código de rastreio ${(saleStatus === 'Ag. Pagamento' || saleStatus === 'Em preparação') ? '🚫' : ''}`} 
+                                    fullWidth 
+                                    label={`Código de rastreio ${(saleStatus === 'Ag. Pagamento' || saleStatus === 'Em preparação' || saleStatus === 'Cancelada') ? '🚫' : ''}`} 
                                     name='tracking_code' 
-                                    InputProps={{ readOnly: (saleStatus === 'Ag. Pagamento' || saleStatus === 'Em preparação') }} 
+                                    InputProps={{ readOnly: (saleStatus === 'Ag. Pagamento' || saleStatus === 'Em preparação' || saleStatus === 'Cancelada') }} 
                                     disabled={isLoading} />
                             </Grid>
 

@@ -83,6 +83,18 @@ type ISaleTotalCount = {
     totalCount: number
 }
 
+export type TTopCategories = {
+    name: string
+    total_sales: number
+}
+
+export interface IFinancialInformations {
+    topCategories: TTopCategories[]
+    totalRevenue: number
+    currentMonthBilling: number
+    lastMonthBilling: number
+}
+
 interface ErrorResponse {
     response: {
         data?: {
@@ -91,6 +103,26 @@ interface ErrorResponse {
             }
         }
     }
+}
+
+const getFinancialInformation = async  (): Promise<IFinancialInformations | Error> => {
+
+    try {
+
+        const { data } = await api.get('/sales/financial-information')
+
+        if (data) {
+            return data
+        }
+
+        return new Error('Erro ao consultar registro.')
+
+        
+    } catch (error) {
+        console.error(error)
+        return new Error((error as ErrorResponse).response?.data?.errors?.default || 'Erro ao buscar informações.')
+    }
+
 }
 
 const getAllAdmin = async (page = 1, filter = ''): Promise<ISaleTotalCount | Error> => {
@@ -206,6 +238,7 @@ const generatePdf = async (filter = ''): Promise<Uint8Array | Error> => {
 }
 
 export const SaleService = {
+    getFinancialInformation,
     getAllAdmin,
     getById,
     sendSale,
