@@ -106,11 +106,11 @@ export const Dashboard = () => {
                             <Card sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', width: '100%' }}>
                                 {(isLoading) ? (
                                     <Skeleton variant="rectangular" width={700} height={400} />
-                                ) : (
+                                ) : (financialData.topCategories.length > 0) ? (
                                     <CardContent>
                                         <CategoriesChart dataChart={financialData.topCategories}  />
                                     </CardContent>
-                                )}
+                                ) : (<></>)}
                             </Card>
                         </Grid>
                     </Grid>
