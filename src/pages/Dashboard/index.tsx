@@ -6,6 +6,9 @@ import {
     Grid,
     Typography,
     Icon,
+    FormGroup,
+    FormControlLabel,
+    Switch,
     Skeleton
 } from '@mui/material'
 
@@ -30,6 +33,8 @@ export const Dashboard = () => {
     const [isLoading, setIsLoading] = useState(true)
     const [financialData, setFinancialData] = useState<IFinancialInformations>({} as IFinancialInformations)
 
+    const [isTotalRevenue, setIsTotalRevenue] = useState(false)
+
     UseFetchFinancialData({ setIsLoading, setFinancialData })
 
     const isNegativeBalance = financialData.currentMonthBilling < financialData.lastMonthBilling
@@ -47,13 +52,19 @@ export const Dashboard = () => {
                                 ) : (
                                     <CardContent>
                                         <Typography variant='h5' align='center'>
-                                            Faturamento(Mês Passado):
+                                            Faturamento({(isTotalRevenue) ? 'Total' : 'Mês Passado'}):
                                         </Typography>
 
                                         <Box padding={2} display='flex' justifyContent='center' alignItems='center'>
                                             <Typography variant='h4'>
-                                                {formattedPrice(financialData.lastMonthBilling)}
+                                                {(isTotalRevenue) ? formattedPrice(financialData.totalRevenue) : formattedPrice(financialData.lastMonthBilling)}
                                             </Typography>
+                                        </Box>
+
+                                        <Box padding={2} display='flex' justifyContent='center' alignItems='center'>
+                                            <FormGroup>
+                                                <FormControlLabel control={<Switch onClick={() => setIsTotalRevenue(!isTotalRevenue)} />} label="Total" />
+                                            </FormGroup>
                                         </Box>
                                     </CardContent>
                                 )}
@@ -108,7 +119,7 @@ export const Dashboard = () => {
                                     <Skeleton variant="rectangular" width={700} height={400} />
                                 ) : (financialData.topCategories.length > 0) ? (
                                     <CardContent>
-                                        <CategoriesChart dataChart={financialData.topCategories}  />
+                                        <CategoriesChart dataChart={financialData.topCategories} />
                                     </CardContent>
                                 ) : (<></>)}
                             </Card>
