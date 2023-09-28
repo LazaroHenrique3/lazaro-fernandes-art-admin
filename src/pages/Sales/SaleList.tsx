@@ -118,7 +118,7 @@ export const SaleList = () => {
                     <TableFooter>
                         {isLoading && (
                             <TableRow>
-                                <StyledTableCell size='small' colSpan={6}>
+                                <StyledTableCell size='small' colSpan={7}>
                                     <LinearProgress variant='indeterminate' />
                                 </StyledTableCell>
                             </TableRow>
@@ -126,7 +126,7 @@ export const SaleList = () => {
 
                         {(totalCount > 0 && totalCount > Environment.LINE_LIMIT) && (
                             <TableRow>
-                                <StyledTableCell size='small' colSpan={6}>
+                                <StyledTableCell size='small' colSpan={7}>
                                     <Pagination
                                         page={page}
                                         count={Math.ceil(totalCount / Environment.LINE_LIMIT)}
