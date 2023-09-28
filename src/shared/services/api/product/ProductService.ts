@@ -7,11 +7,14 @@ export interface IImageProductList {
     url: string
 }
 
+export type TProductStatus = 'Ativo' | 'Vendido' | 'Inativo' 
+export type TProductOrientation = 'Retrato' | 'Paisagem'
+
 export interface IListProduct {
     id: number
-    status: 'Ativo' | 'Vendido' | 'Inativo'
+    status: TProductStatus
     title: string
-    orientation: 'Retrato' | 'Paisagem'
+    orientation: TProductOrientation
     quantity?: number
     production_date: Date | string
     description?: string
@@ -29,9 +32,9 @@ export interface IListProduct {
 
 export interface IDetailProduct {
     id: number
-    status: 'Ativo' | 'Vendido' | 'Inativo'
+    status: TProductStatus
     title: string
-    orientation: 'Retrato' | 'Paisagem'
+    orientation: TProductOrientation
     quantity: number
     production_date: Date | string
     description?: string
@@ -49,9 +52,9 @@ export interface IDetailProduct {
 
 export interface IDetailProductUpdate {
     id: number
-    status: 'Ativo' | 'Vendido' | 'Inativo'
+    status: TProductStatus
     title: string
-    orientation: 'Retrato' | 'Paisagem'
+    orientation: TProductOrientation
     quantity: number
     production_date: Date | string
     description?: string
@@ -84,9 +87,9 @@ const getAll = async (page = 1, filter = '', id?: number): Promise<IProductTotal
     let relativeUrl = ''
 
     if (id) {
-        relativeUrl = `/product?id=${id}&page=${page}&limit=${Environment.LINE_LIMIT}&filter=${filter}`
+        relativeUrl = `/admin/product?id=${id}&page=${page}&limit=${Environment.LINE_LIMIT}&filter=${filter}`
     } else {
-        relativeUrl = `/product?page=${page}&limit=${Environment.LINE_LIMIT}&filter=${filter}`
+        relativeUrl = `/admin/product?page=${page}&limit=${Environment.LINE_LIMIT}&filter=${filter}`
     }
 
     try {

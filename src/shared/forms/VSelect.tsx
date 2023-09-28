@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 interface SelectOptionType {
     label: string;
     value: string | number;
+    disabled?: boolean
 }
 
 type TVSelect = SelectProps & {
@@ -49,7 +50,7 @@ export const VSelect: React.FC<TVSelect> = ({ name, options, changeExternalState
                 }}
             >
                 {options.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
+                    <MenuItem key={option.value} value={option.value} disabled={option?.disabled}>
                         {option.label}
                     </MenuItem>
                 ))}

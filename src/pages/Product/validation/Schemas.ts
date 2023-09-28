@@ -1,9 +1,14 @@
 import * as yup from 'yup'
 
+import {
+    TProductOrientation,
+    TProductStatus
+} from '../../../shared/services/api/product/ProductService'
+
 export interface IFormData {
-    status: 'Ativo' | 'Vendido' | 'Inativo'
+    status: TProductStatus
     title: string
-    orientation: 'Retrato' | 'Paisagem'
+    orientation: TProductOrientation
     quantity: number
     production_date: Date | string
     description?: string
@@ -17,9 +22,9 @@ export interface IFormData {
 }
 
 export interface IFormDataUpdate {
-    status: 'Ativo' | 'Vendido' | 'Inativo'
+    status: TProductStatus
     title: string
-    orientation: 'Retrato' | 'Paisagem'
+    orientation: TProductOrientation
     quantity: number
     production_date: Date | string
     description?: string
@@ -101,7 +106,7 @@ export const formatValidationSchema: yup.Schema<IFormData> = yup.object().shape(
             //Verificando se foi passado imagem e se é mais que  o permitido
             if (product_images.length === 0) {
                 throw new yup.ValidationError('As imagens são obrigatórias!', value, 'product_images')
-            } else if (product_images.length > MAX_PRODUCT_IMAGES ) {
+            } else if (product_images.length > MAX_PRODUCT_IMAGES) {
                 throw new yup.ValidationError(`É permitido o upload de até ${MAX_PRODUCT_IMAGES} imagens!`, value, 'product_images')
             }
 
@@ -175,7 +180,27 @@ export const formatValidationSchemaUpdate: yup.Schema<IFormDataUpdate> = yup.obj
     dimension_id: yup.number().moreThan(0).required(),
     technique_id: yup.number().moreThan(0).required(),
     category_id: yup.number().moreThan(0).required(),
-    quantity: yup.number().moreThan(0).required(),
+    quantity: yup.number().test('quantity-conditional-validation', 'A quantidade deve ser maior que zero!', function (value) {
+        const status = this.resolve(yup.ref('status'))
+        if (status === 'Ativo') {
+            if (typeof value === 'number' && value > 0) {
+                return true
+            } else {
+                return this.createError({
+                    path: this.path,
+                    message: 'A quantidade deve ser maior que zero!',
+                })
+            }
+        } else if (status === 'Vendido') {
+            if (typeof value === 'number' && value > 0) {
+                return this.createError({
+                    path: this.path,
+                    message: 'Produtos vendidos precisam ter 0 und!',
+                })
+            }
+        }
+        return true
+    }).required(),
     price: yup.number().moreThan(0).required(),
     weight: yup.number().moreThan(0).required(),
 })

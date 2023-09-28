@@ -35,6 +35,7 @@ export const UseHandleProduct = ({setIsLoading, setName, formRef, id}: IUseHandl
                 validateData = await formatValidationSchema.validate(data, { abortEarly: false })
             } else {
                 validateData = await formatValidationSchemaUpdate.validate(data, { abortEarly: false })
+                console.log('AHHHH: ', validateData)
             }
     
             setIsLoading(true)
@@ -78,7 +79,7 @@ export const UseHandleProduct = ({setIsLoading, setName, formRef, id}: IUseHandl
             } else {
     
                 const result = await ProductService.updateById(Number(id), validateData as IDetailProductUpdate)
-    
+                
                 setIsLoading(false)
     
                 if (result instanceof Error) {

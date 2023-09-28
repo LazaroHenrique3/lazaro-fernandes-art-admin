@@ -42,11 +42,11 @@ export const ProductDetails: React.FC = () => {
     UseFetchProductData({ setIsLoading, setName, setProductId, setMainImage, setProductImages, formRef, id })
 
     const { handleDelete, handleSave } = UseHandleProduct({ setIsLoading, setName, formRef, id })
-    const { 
+    const {
         handleInsertImage,
         handleUpdateProductImage,
         handleUpdateMainImage,
-        handleDeleteImage } 
+        handleDeleteImage }
         = UseHandleProductImage({ setIsLoading, setProductImages, setMainImage, productImages, productId })
 
     return (
@@ -148,6 +148,21 @@ export const ProductDetails: React.FC = () => {
                         </Grid>
 
                         <Grid container item direction='row' spacing={2}>
+                            {(id !== 'new') && (
+                                <Grid item xs={12} sm={12} md={6} lg={3} xl={3}>
+                                    <VSelect
+                                        fullWidth
+                                        label='Status'
+                                        name='status'
+                                        options={[
+                                            { value: 'Ativo', label: 'Ativo' },
+                                            { value: 'Vendido', label: 'Vendido'},
+                                            { value: 'Inativo', label: 'Inativo' }
+                                        ]}
+                                        disabled={isLoading} />
+                                </Grid>
+                            )}
+
                             <Grid item xs={12} sm={12} md={6} lg={3} xl={3}>
                                 <VTextField fullWidth label='Título' name='title' disabled={isLoading} />
                             </Grid>
@@ -185,7 +200,7 @@ export const ProductDetails: React.FC = () => {
                             </Grid>
 
                             <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
-                                <VTextField fullWidth type='number' label='Peso' name='weight' disabled={isLoading} />
+                                <VTextField fullWidth type='number' label='Peso(g)' name='weight' disabled={isLoading} />
                             </Grid>
 
                             <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>

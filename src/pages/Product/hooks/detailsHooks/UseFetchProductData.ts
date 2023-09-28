@@ -5,7 +5,10 @@ import { FormHandles } from '@unform/core'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
-import { IImageProductList, ProductService } from '../../../../shared/services/api/product/ProductService'
+import { 
+    IImageProductList, 
+    ProductService,  
+} from '../../../../shared/services/api/product/ProductService'
 
 const INITIAL_FORM_VALUES = {
     title: '',
