@@ -24,7 +24,6 @@ Esta é uma aplicação React desenvolvida como parte do meu projeto de TCC no c
 * **TypeScript**
 
 ## 📚 Bibliotecas Utilizadas
-* **React**
 * **Material UI**
 * **Unform**
 * **axios**
