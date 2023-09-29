@@ -1,10 +1,20 @@
 import { useNavigate, useParams } from 'react-router-dom'
 import { useState } from 'react'
-import { Box, Grid, LinearProgress, Paper, Typography } from '@mui/material'
+import { 
+    Box, 
+    Grid, 
+    LinearProgress, 
+    Paper, 
+    Typography 
+} from '@mui/material'
 
 import { BasePageLayout } from '../../shared/layouts'
 import { DetailTools } from '../../shared/components'
-import { VTextField, VForm, useVForm } from '../../shared/forms'
+import { 
+    VTextField, 
+    VForm, 
+    useVForm 
+} from '../../shared/forms'
 
 //Hooks personalizados
 import {
