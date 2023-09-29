@@ -7,16 +7,15 @@
 
 ## Status: 🚧 Em Andamento 🚧
 
-Esta é uma API server desenvolvida como parte do meu projeto de TCC no curso de Análise e Desenvolvimento de Sistemas. A API oferece suporte a um e-commerce especializado na comercialização de obras de arte, 
-focando principalmente em pinturas em telas. Utilizei tecnologias como TypeScript e Node.js para construir essa API a partir do zero, desde a concepção dos requisitos funcionais e não funcionais até o deploy.
-Alguns dos recursos que considero relevantes para mencionar incluem: Serviço de autenticação JWT e upload de imagens. Priorizei a segurança e a integridade das informações, implementando middlewares 
-para garantir que todos os dados permaneçam o mais coesos e consistentes possível. 
-
-Este projeto pessoal Fullstack foi desenvolvido do zero com o objetivo de consolidar meus conhecimentos em React e Node até o momento. Utilizei boas práticas de desenvolvimento, como a adição de comentários relevantes, a escolha de nomes adequados para as variáveis e a utilização da melhor forma possível da componentização do React, entre outras. Além disso, foi implementado um sistema de login (JWT no Backend e Context API no Frontend), um sistema de validação de formulários com Yup e Hook-Form e o styled-components foi utilizado para a estilização. Senti uma grande evolução neste projeto e pude identificar pontos em que posso melhorar, e já estou trabalhando nisso.
+Esta é uma aplicação React desenvolvida como parte do meu projeto de TCC no curso de Análise e Desenvolvimento de Sistemas. A ideia foi criar um e-commerce especializado na comercialização de obras de arte, com foco principal em pinturas em telas. Para isso, dividi o frontend em duas aplicações: uma para o lado da loja e outra para o lado administrativo. Este repositório é dedicado à aplicação do lado administrativo, responsável por gerenciar as principais operações do sistema, como cadastro de categorias, técnicas, dimensões, produtos e administradores, bem como o gerenciamento de clientes e vendas. Além disso, ela apresenta dados financeiros relevantes na Dashboard. Adotei boas práticas de desenvolvimento, incluindo a adição de comentários pertinentes, a escolha de nomes adequados para as variáveis e a eficaz utilização da componentização no React, entre outras práticas recomendadas. Além disso, implementei um sistema de login e uma robusta validação de formulários com Yup e Unform, além de utilizar a biblioteca de componentes Material UI 5 para a interface do usuário.
 
 ### 👀 Aplicações Relacionadas
 * **Front End Ecommerce: <a href="https://github.com/LazaroHenrique3/lazaro-fernandes-art-ecommerce">Lázaro Fernandes Art Store</a>**
 * **API Server: <a href="https://github.com/LazaroHenrique3/lazaro-fernandes-art-api/tree/main">Lázaro Fernandes Art API</a>**
+
+## 🚀 Próximas Features
+
+* **Refatorar o Código**
 
 ## 🛠️ Construído com
 
