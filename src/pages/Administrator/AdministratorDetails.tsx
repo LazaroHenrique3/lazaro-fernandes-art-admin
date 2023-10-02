@@ -1,12 +1,26 @@
 import { useNavigate, useParams } from 'react-router-dom'
 import { useState } from 'react'
-import { Box, Checkbox, FormControlLabel, Grid, LinearProgress, Paper, Typography } from '@mui/material'
+import {
+    Box,
+    Checkbox,
+    FormControlLabel,
+    Grid,
+    LinearProgress,
+    Paper,
+    Typography
+} from '@mui/material'
 
 import { useAuthContext } from '../../shared/contexts'
 
 import { BasePageLayout } from '../../shared/layouts'
 import { DetailTools } from '../../shared/components'
-import { VTextField, VForm, useVForm, VSelect } from '../../shared/forms'
+import {
+    VTextField,
+    VForm,
+    useVForm,
+    VSelect,
+    VTextFieldPassword
+} from '../../shared/forms'
 
 //Hooks personalizados
 import {
@@ -24,13 +38,15 @@ export const AdministratorDetails: React.FC = () => {
     const [name, setName] = useState('')
 
     const [isAlterPassword, setIsAlterPassword] = useState(false)
+    const [showPassword, setShowPassword] = useState(false)
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
     const { idUser, accessLevel } = useAuthContext()
 
     //Hooks personalizados de Customer
-    UseFetchAdministratorData({setIsLoading, setName, formRef, id})
+    UseFetchAdministratorData({ setIsLoading, setName, formRef, id })
 
-    const { handleSave, handleDelete } = UseHandleAdministrator({setIsLoading, setIsAlterPassword, setName, isAlterPassword, formRef, id})
+    const { handleSave, handleDelete } = UseHandleAdministrator({ setIsLoading, setIsAlterPassword, setName, isAlterPassword, formRef, id })
 
     return (
         <BasePageLayout
@@ -103,11 +119,25 @@ export const AdministratorDetails: React.FC = () => {
                             <Grid container item direction='row' spacing={2}>
 
                                 <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
-                                    <VTextField fullWidth label='Senha' name='password' type='password' disabled={isLoading} />
+                                    <VTextFieldPassword
+                                        fullWidth
+                                        name='password'
+                                        label='Senha'
+                                        disabled={isLoading}
+                                        showPassword={showPassword}
+                                        handleClickShowPassword={setShowPassword}
+                                        size='small' />
                                 </Grid>
 
                                 <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
-                                    <VTextField fullWidth label='Confirmar Senha' name='confirmPassword' type='password' disabled={isLoading} />
+                                    <VTextFieldPassword
+                                        fullWidth
+                                        name='confirmPassword'
+                                        label='Confirmar Senha'
+                                        disabled={isLoading}
+                                        showPassword={showConfirmPassword}
+                                        handleClickShowPassword={setShowConfirmPassword}
+                                        size='small' />
                                 </Grid>
 
                             </Grid>

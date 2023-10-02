@@ -12,7 +12,12 @@ import {
 } from '@mui/material'
 import { CircularProgress } from '@mui/material'
 
-import { VForm, VTextField, useVForm  } from '../../shared/forms'
+import { 
+    VForm, 
+    VTextField, 
+    VTextFieldPassword,
+    useVForm  
+} from '../../shared/forms'
 
 //Hooks personalizados
 import {
@@ -21,6 +26,8 @@ import {
 
 export const LoginAdmin = () => {
     const [isLoading, setIsLoading] = useState(false)
+    const [showPassword, setShowPassword] = useState(false)
+
     const { formRef } = useVForm('formRef')
 
     const navigate = useNavigate()
@@ -41,9 +48,22 @@ export const LoginAdmin = () => {
                                 LOGIN
                             </Typography>
 
-                            <VTextField fullWidth type='email' label='Email' name='email' disabled={isLoading} size='small' />
+                            <VTextField 
+                                fullWidth 
+                                type='email' 
+                                label='Email' 
+                                name='email' 
+                                disabled={isLoading} 
+                                size='small' />
 
-                            <VTextField fullWidth type='password' label='Senha' name='password' disabled={isLoading} size='small' />
+                            <VTextFieldPassword 
+                                fullWidth 
+                                name='password' 
+                                label='Senha'
+                                disabled={isLoading} 
+                                showPassword={showPassword} 
+                                handleClickShowPassword={setShowPassword} 
+                                size='small' />
 
                         </Box>
                     </CardContent>

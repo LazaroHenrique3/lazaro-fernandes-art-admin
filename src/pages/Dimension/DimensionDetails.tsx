@@ -69,7 +69,7 @@ export const DimensionDetails: React.FC = () => {
 
                         <Grid container item direction='row' spacing={2}>
                             <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
-                                <VTextField fullWidth label='Nome' name='dimension' disabled={isLoading} />
+                                <VTextField fullWidth label='Nome 00 x 00 x 00' name='dimension' disabled={isLoading} />
                             </Grid>
                         </Grid>
 

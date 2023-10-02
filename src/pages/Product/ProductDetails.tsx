@@ -1,17 +1,17 @@
 import { useNavigate, useParams } from 'react-router-dom'
 import { useState } from 'react'
-import { 
-    Box, 
-    Grid, 
-    LinearProgress, 
-    Paper, 
-    Typography 
+import {
+    Box,
+    Grid,
+    LinearProgress,
+    Paper,
+    Typography
 } from '@mui/material'
 
 import { BasePageLayout } from '../../shared/layouts'
-import { 
-    DetailTools, 
-    ImageHandler 
+import {
+    DetailTools,
+    ImageHandler
 } from '../../shared/components'
 import { IImageProductList } from '../../shared/services/api/product/ProductService'
 import {
@@ -165,7 +165,7 @@ export const ProductDetails: React.FC = () => {
                                         name='status'
                                         options={[
                                             { value: 'Ativo', label: 'Ativo' },
-                                            { value: 'Vendido', label: 'Vendido'},
+                                            { value: 'Vendido', label: 'Vendido' },
                                             { value: 'Inativo', label: 'Inativo' }
                                         ]}
                                         disabled={isLoading} />
