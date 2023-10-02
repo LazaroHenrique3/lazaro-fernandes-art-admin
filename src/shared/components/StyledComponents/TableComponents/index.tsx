@@ -1,18 +1,24 @@
-import { TableCell, TableRow } from '@mui/material'
+import {
+    Box,
+    TableCell,
+    TableRow
+} from '@mui/material'
 import { styled } from '@mui/material/styles'
 import { tableCellClasses } from '@mui/material/TableCell'
+
+import { EnvironmentStatusColors } from '../../../environment'
 
 export const StyledTableCell = styled(TableCell)(({ theme }) => ({
     // Estilo para o cabeçalho da tabela
     [`&.${tableCellClasses.head}`]: {
         backgroundColor: theme.palette.common.black,
-        color: theme.palette.primary.light,  
+        color: theme.palette.primary.light,
         fontSize: 16,
     },
     // Estilo para as células do corpo da tabela
     [`&.${tableCellClasses.body}`]: {
         fontSize: 14,
-    }       
+    }
 }))
 
 export const StyledTableRow = styled(TableRow)(({ theme }) => ({
@@ -29,3 +35,28 @@ export const StyledTableRow = styled(TableRow)(({ theme }) => ({
         border: 0,
     },
 }))
+
+interface ColorDotStatusProps {
+    status: string; 
+    size?: 'small'
+}
+
+const ColorDotStatus = styled('div')<ColorDotStatusProps>(({ theme, status }) => ({
+    width: 10,
+    height: 10,
+    borderRadius: '50%',
+    marginRight: theme.spacing(1),
+    backgroundColor: EnvironmentStatusColors[status],
+}))
+
+export const StyledTableCellStatus: React.FC<ColorDotStatusProps> = ({ status, size }) => {
+    return (
+        <TableCell size={size}>
+            <Box display="flex" alignItems="center">
+                <ColorDotStatus status={status} />
+                {status}
+            </Box>
+        </TableCell>
+    )
+}
+

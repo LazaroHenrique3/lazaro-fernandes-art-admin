@@ -20,7 +20,8 @@ import { ListTools } from '../../shared/components'
 
 import { Environment } from '../../shared/environment'
 
-import { 
+import {
+    StyledTableCellStatus,
     StyledTableCell,
     StyledTableRow
 } from '../../shared/components/StyledComponents/TableComponents'
@@ -92,7 +93,7 @@ export const SaleList = () => {
                         {rows.map((row) => (
                             <StyledTableRow key={row.id}>
                                 <StyledTableCell size='small'>
-                                    {(row.status === 'Ag. Pagamento' || row.status === 'Em preparação' ) &&
+                                    {(row.status === 'Ag. Pagamento' || row.status === 'Em preparação') &&
                                         <IconButton color='error' onClick={() => handleCancelSale(row.id, row.customer_id)}>
                                             <Icon>cancel</Icon>
                                         </IconButton>
@@ -104,7 +105,7 @@ export const SaleList = () => {
                                 </StyledTableCell>
 
                                 <StyledTableCell size='small'>{`#${row.id}`}</StyledTableCell>
-                                <StyledTableCell size='small'>{row.status}</StyledTableCell>
+                                <StyledTableCellStatus size='small' status={row.status}/>
                                 <StyledTableCell size='small'>{row.customer_name}</StyledTableCell>
                                 <StyledTableCell size='small'>{formattedDateBR(row.order_date)}</StyledTableCell>
                                 <StyledTableCell size='small'>{formattedDateBR(row.payment_due_date)}</StyledTableCell>

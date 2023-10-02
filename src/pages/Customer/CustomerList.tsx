@@ -21,6 +21,7 @@ import { Environment } from '../../shared/environment'
 
 import { 
     StyledTableCell, 
+    StyledTableCellStatus, 
     StyledTableRow 
 } from '../../shared/components/StyledComponents/TableComponents'
 
@@ -104,7 +105,7 @@ export const CustomerList: React.FC = () => {
                                         <Icon>edit</Icon>
                                     </IconButton>
                                 </StyledTableCell>
-                                <StyledTableCell size='small'>{row.status}</StyledTableCell>
+                                <StyledTableCellStatus size='small' status={row.status}/>
                                 <StyledTableCell size='small'>{row.name}</StyledTableCell>
                                 <StyledTableCell size='small'>{row.email}</StyledTableCell>
                                 <StyledTableCell size='small'>{formatPhoneNumber(row.cell_phone)}</StyledTableCell>

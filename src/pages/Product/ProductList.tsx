@@ -26,6 +26,7 @@ import {
 
 import { 
     StyledTableCell, 
+    StyledTableCellStatus, 
     StyledTableRow 
 } from '../../shared/components/StyledComponents/TableComponents'
 
@@ -108,7 +109,7 @@ export const ProductList: React.FC = () => {
                                     </IconButton>
                                 </StyledTableCell>
                                 <StyledTableCell size='small'>{row.title}</StyledTableCell>
-                                <StyledTableCell size='small'>{row.status}</StyledTableCell>
+                                <StyledTableCellStatus size='small' status={row.status}/>
                                 <StyledTableCell size='small'>{row.orientation}</StyledTableCell>
                                 <StyledTableCell size='small'>{row.category_name}</StyledTableCell>
                                 <StyledTableCell size='small'>{row.technique_name}</StyledTableCell>
