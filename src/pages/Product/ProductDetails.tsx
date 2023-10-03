@@ -205,15 +205,47 @@ export const ProductDetails: React.FC = () => {
                             </Grid>
 
                             <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
-                                <VTextField fullWidth type='number' label='Quantidade' name='quantity' disabled={isLoading} />
+                                <VTextField 
+                                    fullWidth 
+                                    type='number' 
+                                    label='Quantidade' 
+                                    name='quantity' 
+                                    InputProps={{
+                                        inputProps: {
+                                            min: 0,
+                                            max: 1000
+                                        },
+                                    }} 
+                                    disabled={isLoading} />
                             </Grid>
 
                             <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
-                                <VTextField fullWidth type='number' label='Peso(g)' name='weight' disabled={isLoading} />
+                                <VTextField
+                                    fullWidth type='number'
+                                    label='Peso(g)'
+                                    name='weight'
+                                    InputProps={{
+                                        inputProps: {
+                                            min: 5,
+                                            max: 5000
+                                        },
+                                    }} 
+                                    disabled={isLoading} />
                             </Grid>
 
                             <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
-                                <VTextField fullWidth type='number' label='Preço' name='price' disabled={isLoading} />
+                                <VTextField 
+                                    fullWidth 
+                                    type='number' 
+                                    label='Preço' 
+                                    name='price' 
+                                    InputProps={{
+                                        inputProps: {
+                                            min: 0,
+                                            max: 1000000
+                                        },
+                                    }} 
+                                    disabled={isLoading} />
                             </Grid>
 
                             <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>

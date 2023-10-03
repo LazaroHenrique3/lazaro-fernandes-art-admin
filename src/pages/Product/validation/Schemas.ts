@@ -134,9 +134,9 @@ export const formatValidationSchema: yup.Schema<IFormData> = yup.object().shape(
     dimension_id: yup.number().moreThan(0).required(),
     technique_id: yup.number().moreThan(0).required(),
     category_id: yup.number().moreThan(0).required(),
-    quantity: yup.number().moreThan(0).required(),
-    price: yup.number().moreThan(0).required(),
-    weight: yup.number().moreThan(0).required(),
+    quantity: yup.number().moreThan(0).max(1000).required(),
+    price: yup.number().moreThan(0).max(1000000, 'Valor max: 1.000.000').required(),
+    weight: yup.number().moreThan(0).min(5, 'Peso min: 5(g) = 0,005(kg)').max(5000, 'Peso max: 5000(g) = 5(kg)').required(),
 })
 
 //Definindo o schema para validação default com as informações de venda(price, weight, quantity), além disso na alteração eu não envio as imagens
@@ -181,6 +181,14 @@ export const formatValidationSchemaUpdate: yup.Schema<IFormDataUpdate> = yup.obj
     technique_id: yup.number().moreThan(0).required(),
     category_id: yup.number().moreThan(0).required(),
     quantity: yup.number().test('quantity-conditional-validation', 'A quantidade deve ser maior que zero!', function (value) {
+        console.log('Teste: ', value)
+        if (typeof value === 'number' && value > 1000) {
+            return this.createError({
+                path: this.path,
+                message: 'Quantiddade max: 1000!',
+            })
+        }
+
         const status = this.resolve(yup.ref('status'))
         if (status === 'Ativo') {
             if (typeof value === 'number' && value > 0) {
@@ -201,6 +209,6 @@ export const formatValidationSchemaUpdate: yup.Schema<IFormDataUpdate> = yup.obj
         }
         return true
     }).required(),
-    price: yup.number().moreThan(0).required(),
-    weight: yup.number().moreThan(0).required(),
+    price: yup.number().moreThan(0).max(1000000, 'Valor max: 1.000.000').required(),
+    weight: yup.number().moreThan(0).min(5, 'Peso min: 5(g) = 0,005(kg)').max(5000, 'Peso max: 5000(g) = 5(kg)').required(),
 })

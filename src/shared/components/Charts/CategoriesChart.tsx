@@ -67,7 +67,6 @@ export const CategoriesChart: React.FC<ICategoriesChartProps> = ({ dataChart }) 
 
     const labelsCategory = dataChart.map((category) => category.name)
     const dataCategory = dataChart.map((category) => category.total_sales)
-    console.log('Labels: ', labelsCategory)
     const data = {
         labels: labelsCategory,
         datasets: [{

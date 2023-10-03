@@ -33,7 +33,6 @@ export const UseHandleSale = ({ idSale, idCustomer, formRef, setSaleStatus, setI
         try {
             const validateData = await formatValidationSchema.validate(data, { abortEarly: false })
             setIsLoading(true)
-            console.log('idSale: ', Number(idSale), 'idCustomer: ',  Number(idCustomer))
             const result = await SaleService.updateTrackingCode(Number(idSale), Number(idCustomer), validateData.tracking_code)
             setIsLoading(false)
 
