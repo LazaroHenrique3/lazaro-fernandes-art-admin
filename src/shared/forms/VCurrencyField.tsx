@@ -1,34 +1,52 @@
 import * as React from 'react'
 import { useEffect, useState } from 'react'
 import { useField } from '@unform/core'
-import { IMaskInput } from 'react-imask'
-import { TextField, TextFieldProps } from '@mui/material'
+
+import { 
+    TextField, 
+    TextFieldProps 
+} from '@mui/material'
+
+import {
+    NumericFormat,
+    NumericFormatProps,
+} from 'react-number-format'
 
 interface CustomProps {
     onChange: (event: { target: { name: string; value: string } }) => void;
     name: string;
 }
 
-const TextMaskCustom = React.forwardRef<HTMLInputElement, CustomProps>(
-    function TextMaskCustom(props, ref) {
+const NumericFormatCustom = React.forwardRef<NumericFormatProps, CustomProps>(
+    function NumericFormatCustom(props, ref) {
         const { onChange, ...other } = props
+
         return (
-            <IMaskInput
+            <NumericFormat
                 {...other}
-                mask="000.000.000-00"
-                definitions={{
-                    '#': /[1-9]/,
+                getInputRef={ref}
+                onValueChange={(values) => {
+                    onChange({
+                        target: {
+                            name: props.name,
+                            value: values.value,
+                        },
+                    })
                 }}
-                inputRef={ref}
-                onAccept={(value: any) => onChange({ target: { name: props.name, value } })}
-                overwrite
+                thousandSeparator
+                valueIsNumericString
+                prefix="R$"
             />
         )
     },
 )
 
-export const VTextFieldCPF: React.FC<TextFieldProps> = ({ ...rest }) => {
-    const { fieldName, registerField, defaultValue, error, clearError } = useField('cpf')
+type TCurrencyFieldTest = TextFieldProps & {
+    name: string
+}
+
+export const VCurrencyField: React.FC<TCurrencyFieldTest> = ({ name, ...rest }) => {
+    const { fieldName, registerField, defaultValue, error, clearError } = useField(name)
     const [value, setValue] = useState(defaultValue || '')
 
     useEffect(() => {
@@ -44,7 +62,6 @@ export const VTextFieldCPF: React.FC<TextFieldProps> = ({ ...rest }) => {
             {...rest}
 
             fullWidth
-            label="CPF"
 
             error={!!error}
             helperText={error}
@@ -56,23 +73,10 @@ export const VTextFieldCPF: React.FC<TextFieldProps> = ({ ...rest }) => {
             onKeyDown={(e) => { error && clearError(); rest.onKeyDown?.(e)}}
 
             InputProps={{
-                inputComponent: TextMaskCustom as any,
+                inputComponent: NumericFormatCustom as any,
             }}
             variant="outlined"
         />
     )
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

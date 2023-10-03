@@ -16,6 +16,7 @@ import {
 import { IImageProductList } from '../../shared/services/api/product/ProductService'
 import {
     VTextField,
+    VCurrencyField,
     VSelect,
     VInputFile,
     VForm,
@@ -234,17 +235,10 @@ export const ProductDetails: React.FC = () => {
                             </Grid>
 
                             <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
-                                <VTextField 
+                                <VCurrencyField
                                     fullWidth 
-                                    type='number' 
                                     label='Preço' 
                                     name='price' 
-                                    InputProps={{
-                                        inputProps: {
-                                            min: 0,
-                                            max: 1000000
-                                        },
-                                    }} 
                                     disabled={isLoading} />
                             </Grid>
 
