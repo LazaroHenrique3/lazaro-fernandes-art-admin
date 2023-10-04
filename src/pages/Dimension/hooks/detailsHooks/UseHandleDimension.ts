@@ -27,11 +27,12 @@ export const UseHandleDimension = ({setIsLoading, setDimension, formRef, id}: IU
     const handleSave = async (data: IFormData) => {
         try {
             const validateData = await formatValidationSchema.validate(data, { abortEarly: false })
+            const dimension = `${validateData.width} x ${validateData.height} x ${validateData.thickness}` 
     
             setIsLoading(true)
     
             if (id === 'new') {
-                const result = await DimensionService.create(validateData)
+                const result = await DimensionService.create({dimension})
                 setIsLoading(false)
     
                 if (result instanceof Error) {
@@ -41,7 +42,7 @@ export const UseHandleDimension = ({setIsLoading, setDimension, formRef, id}: IU
                     navigate(`/admin/dimension/details/${result}`)
                 }
             } else {
-                const result = await DimensionService.updateById(Number(id), { id: Number(id), ...validateData })
+                const result = await DimensionService.updateById(Number(id), { id: Number(id), dimension })
                 setIsLoading(false)
     
                 if (result instanceof Error) {
@@ -50,7 +51,7 @@ export const UseHandleDimension = ({setIsLoading, setDimension, formRef, id}: IU
                 }
     
                 toast.success('Registro salvo com sucesso!')
-                setDimension(data.dimension)
+                setDimension(dimension)
             }
         } catch (errors) {
     

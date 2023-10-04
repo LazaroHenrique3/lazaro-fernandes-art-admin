@@ -1,11 +1,14 @@
 import * as yup from 'yup'
 
 export interface IFormData {
-    dimension: string
+    width: number
+    height: number
+    thickness: number
 }
 
 //Definindo o schema para validação
 export const formatValidationSchema: yup.Schema<IFormData> = yup.object().shape({
-    dimension: yup.string().required().min(3).max(20)
-        .matches(/^\d+ x \d+ x \d+$/, 'Formato inválido. Use o formato: "20 x 30 x 3"')
+    width: yup.number().required().moreThan(0).max(500),
+    height: yup.number().required().moreThan(0).max(500),
+    thickness: yup.number().required().moreThan(0).max(10)
 })

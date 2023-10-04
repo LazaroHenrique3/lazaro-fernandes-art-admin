@@ -14,38 +14,48 @@ interface IUseFetchDimensionDataProps {
     id: string
 }
 
-export const UseFetchDimensionData = ({setIsLoading, setDimension, formRef, id}: IUseFetchDimensionDataProps ) => {
+export const UseFetchDimensionData = ({ setIsLoading, setDimension, formRef, id }: IUseFetchDimensionDataProps) => {
     const navigate = useNavigate()
 
     useEffect(() => {
 
         const fetchData = async () => {
-    
+
             if (id !== 'new') {
                 setIsLoading(true)
                 const result = await DimensionService.getById(Number(id))
-    
+
                 setIsLoading(false)
-    
+
                 if (result instanceof Error) {
                     toast.error(result.message)
                     navigate('/admin/dimension')
                     return
                 }
-    
+
                 setDimension(result.dimension)
-                formRef.current?.setData(result)
+
+                //Pegando cada uma das propriedades separadamente
+                const dimension = result.dimension.split('x').map(part => part.trim())
+
+                formRef.current?.setData({
+                    width: Number(dimension[0]),
+                    height: Number(dimension[1]),
+                    thickness: Number(dimension[2])
+                })
             } else {
                 formRef.current?.setData({
-                    name: ''
+                    width: '',
+                    height: '',
+                    thickness: ''
                 })
             }
-    
+
             return
         }
-    
+
         fetchData()
-    
+
     }, [id])
 
 }
