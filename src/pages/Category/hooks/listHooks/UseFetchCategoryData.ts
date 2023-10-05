@@ -24,7 +24,7 @@ export const UseFetchCategoryData = ({setIsLoading, setRows, setTotalCount, sear
     
         const fetchData = () => {
             debounce(async () => {
-                const result = await CategoryService.getAll(page, search)
+                const result = await CategoryService.getAll(page, search, true)
                 setIsLoading(false)
     
                 if (result instanceof Error) {

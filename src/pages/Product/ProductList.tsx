@@ -84,8 +84,8 @@ export const ProductList: React.FC = () => {
                     <TableHead>
                         <TableRow>
                             <StyledTableCell width={100} size='small' sx={{ fontWeight: 600 }}>Ações</StyledTableCell>
-                            <StyledTableCell size='small' sx={{ fontWeight: 600 }}>Título</StyledTableCell>
                             <StyledTableCell size='small' sx={{ fontWeight: 600 }}>Status</StyledTableCell>
+                            <StyledTableCell size='small' sx={{ fontWeight: 600 }}>Título</StyledTableCell>
                             <StyledTableCell size='small' sx={{ fontWeight: 600 }}>Orientação</StyledTableCell>
                             <StyledTableCell size='small' sx={{ fontWeight: 600 }}>Categoria</StyledTableCell>
                             <StyledTableCell size='small' sx={{ fontWeight: 600 }}>Técnica</StyledTableCell>
@@ -108,8 +108,8 @@ export const ProductList: React.FC = () => {
                                         <Icon>edit</Icon>
                                     </IconButton>
                                 </StyledTableCell>
-                                <StyledTableCell size='small'>{row.title}</StyledTableCell>
                                 <StyledTableCellStatus size='small' status={row.status}/>
+                                <StyledTableCell size='small'>{row.title}</StyledTableCell>
                                 <StyledTableCell size='small'>{row.orientation}</StyledTableCell>
                                 <StyledTableCell size='small'>{row.category_name}</StyledTableCell>
                                 <StyledTableCell size='small'>{row.technique_name}</StyledTableCell>

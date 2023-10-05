@@ -19,7 +19,7 @@ import { BasePageLayout } from '../../shared/layouts'
 import { ListTools } from '../../shared/components'
 import { Environment } from '../../shared/environment'
 
-import { StyledTableCell, StyledTableRow } from '../../shared/components/StyledComponents/TableComponents'
+import { StyledTableCell, StyledTableCellStatus, StyledTableRow } from '../../shared/components/StyledComponents/TableComponents'
 
 //Hooks personalizados
 import {
@@ -76,6 +76,7 @@ export const TechniqueList: React.FC = () => {
                     <TableHead>
                         <TableRow>
                             <StyledTableCell width={100} size='small' sx={{ fontWeight: 600 }}>Ações</StyledTableCell>
+                            <StyledTableCell width={100} size='small' sx={{ fontWeight: 600 }}>Status</StyledTableCell>
                             <StyledTableCell size='small' sx={{ fontWeight: 600 }}>Nome</StyledTableCell>
                         </TableRow>
                     </TableHead>
@@ -91,6 +92,7 @@ export const TechniqueList: React.FC = () => {
                                         <Icon>edit</Icon>
                                     </IconButton>
                                 </StyledTableCell>
+                                <StyledTableCellStatus size='small' status={row.status}/>
                                 <StyledTableCell size='small'>{row.name}</StyledTableCell>
                             </StyledTableRow>
                         ))}

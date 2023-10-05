@@ -2,13 +2,17 @@ import { AxiosResponse } from 'axios'
 import { Environment } from '../../../environment'
 import { api } from '../axiosConfig'
 
+export type TTechniqueStatus = 'Ativo' | 'Inativo';
+
 export interface IListTechnique {
     id: number
+    status: TTechniqueStatus
     name: string
 }
 
 export interface IDetailTechnique {
     id: number
+    status: TTechniqueStatus
     name: string
 }
 
@@ -27,13 +31,13 @@ interface ErrorResponse {
     }
 }
 
-const getAll = async (page = 1, filter = '', id?: number): Promise<ITechniqueTotalCount | Error> => {
+const getAll = async (page = 1, filter = '', showInative = false, id?: number): Promise<ITechniqueTotalCount | Error> => {
     let relativeUrl = ''
 
     if (id) {
-        relativeUrl = `/technique?id=${id}&page=${page}&limit=${Environment.LINE_LIMIT}&filter=${filter}`
+        relativeUrl = `/technique?id=${id}&page=${page}&limit=${Environment.LINE_LIMIT}&showInative=${showInative}&filter=${filter}`
     } else {
-        relativeUrl = `/technique?page=${page}&limit=${Environment.LINE_LIMIT}&filter=${filter}`
+        relativeUrl = `/technique?page=${page}&limit=${Environment.LINE_LIMIT}&showInative=${showInative}&filter=${filter}`
     }
 
     try {

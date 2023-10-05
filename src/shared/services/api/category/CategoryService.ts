@@ -2,13 +2,17 @@ import { AxiosResponse } from 'axios'
 import { Environment } from '../../../environment'
 import { api } from '../axiosConfig'
 
+export type TCategoryStatus = 'Ativo' | 'Inativo';
+
 export interface IListCategory {
     id: number
+    status: TCategoryStatus
     name: string
 }
 
 export interface IDetailCategory {
     id: number
+    status: TCategoryStatus
     name: string
 }
 
@@ -27,13 +31,13 @@ interface ErrorResponse {
     }
 }
 
-const getAll = async (page = 1, filter = '', id?: number): Promise<ICategoryTotalCount | Error> => {
+const getAll = async (page = 1, filter = '', showInative = false, id?: number): Promise<ICategoryTotalCount | Error> => {
     let relativeUrl = ''
 
     if (id) {
-        relativeUrl = `/category?id=${id}&page=${page}&limit=${Environment.LINE_LIMIT}&filter=${filter}`
+        relativeUrl = `/category?id=${id}&page=${page}&limit=${Environment.LINE_LIMIT}&showInative=${showInative}&filter=${filter}`
     } else {
-        relativeUrl = `/category?page=${page}&limit=${Environment.LINE_LIMIT}&filter=${filter}`
+        relativeUrl = `/category?page=${page}&limit=${Environment.LINE_LIMIT}&showInative=${showInative}&filter=${filter}`
     }
 
     try {

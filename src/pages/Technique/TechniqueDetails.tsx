@@ -4,7 +4,7 @@ import { Box, Grid, LinearProgress, Paper, Typography } from '@mui/material'
 
 import { BasePageLayout } from '../../shared/layouts'
 import { DetailTools } from '../../shared/components'
-import { VTextField, VForm, useVForm } from '../../shared/forms'
+import { VTextField, VForm, useVForm, VSelect } from '../../shared/forms'
 
 //Hooks personalizados
 import {
@@ -20,7 +20,7 @@ export const TechniqueDetails: React.FC = () => {
 
     const [isLoading, setIsLoading] = useState(false)
     const [name, setName] = useState('')
-    
+
     //Hooks personalizados
     UseFetchTechniqueData({ setIsLoading, setName, formRef, id })
 
@@ -58,6 +58,20 @@ export const TechniqueDetails: React.FC = () => {
                         </Grid>
 
                         <Grid container item direction='row' spacing={2}>
+                            {(id !== 'new') && (
+                                <Grid item xs={12} sm={12} md={6} lg={3} xl={3}>
+                                    <VSelect
+                                        fullWidth
+                                        label='Status'
+                                        name='status'
+                                        options={[
+                                            { value: 'Ativo', label: 'Ativo' },
+                                            { value: 'Inativo', label: 'Inativo' },
+                                        ]}
+                                        disabled={isLoading} />
+                                </Grid>
+                            )}
+
                             <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
                                 <VTextField fullWidth label='Nome' name='name' disabled={isLoading} />
                             </Grid>

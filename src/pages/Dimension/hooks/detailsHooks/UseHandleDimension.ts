@@ -27,12 +27,14 @@ export const UseHandleDimension = ({setIsLoading, setDimension, formRef, id}: IU
     const handleSave = async (data: IFormData) => {
         try {
             const validateData = await formatValidationSchema.validate(data, { abortEarly: false })
+
             const dimension = `${validateData.width} x ${validateData.height} x ${validateData.thickness}` 
+            const status =  validateData.status
     
             setIsLoading(true)
     
             if (id === 'new') {
-                const result = await DimensionService.create({dimension})
+                const result = await DimensionService.create({status, dimension})
                 setIsLoading(false)
     
                 if (result instanceof Error) {
@@ -42,7 +44,7 @@ export const UseHandleDimension = ({setIsLoading, setDimension, formRef, id}: IU
                     navigate(`/admin/dimension/details/${result}`)
                 }
             } else {
-                const result = await DimensionService.updateById(Number(id), { id: Number(id), dimension })
+                const result = await DimensionService.updateById(Number(id), { id: Number(id), status, dimension })
                 setIsLoading(false)
     
                 if (result instanceof Error) {

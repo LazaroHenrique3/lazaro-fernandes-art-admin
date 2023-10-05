@@ -2,13 +2,17 @@ import { AxiosResponse } from 'axios'
 import { Environment } from '../../../environment'
 import { api } from '../axiosConfig'
 
+export type TDimensionStatus = 'Ativo' | 'Inativo';
+
 export interface IListDimension {
     id: number
+    status: TDimensionStatus
     dimension: string
 }
 
 export interface IDetailDimension {
     id: number
+    status: TDimensionStatus
     dimension: string
 }
 
@@ -27,15 +31,15 @@ interface ErrorResponse {
     }
 }
 
-const getAll = async (page = 1, filter = '', id?: number[]): Promise<IDimensionTotalCount | Error> => {
+const getAll = async (page = 1, filter = '', showInative = false,  id?: number[]): Promise<IDimensionTotalCount | Error> => {
     let relativeUrl = ''
 
     if (id !== undefined && id.length !== 0) {
         const idParams = `${id.join(',')}`
 
-        relativeUrl = `/dimension?id=${idParams}&page=${page}&limit=${Environment.LINE_LIMIT}&filter=${filter}`
+        relativeUrl = `/dimension?id=${idParams}&page=${page}&limit=${Environment.LINE_LIMIT}&showInative=${showInative}&filter=${filter}`
     } else {
-        relativeUrl = `/dimension?page=${page}&limit=${Environment.LINE_LIMIT}&filter=${filter}`
+        relativeUrl = `/dimension?page=${page}&limit=${Environment.LINE_LIMIT}&showInative=${showInative}&filter=${filter}`
     }
 
     try {

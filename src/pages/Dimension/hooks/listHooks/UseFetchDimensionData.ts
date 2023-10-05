@@ -24,7 +24,7 @@ export const UseFetchDimensionData = ({setIsLoading, setRows, setTotalCount, sea
     
         const fetchData = () => {
             debounce(async () => {
-                const result = await DimensionService.getAll(page, search)
+                const result = await DimensionService.getAll(page, search, true)
                 setIsLoading(false)
     
                 if (result instanceof Error) {

@@ -13,7 +13,8 @@ import { DetailTools } from '../../shared/components'
 import {
     VTextField,
     VForm,
-    useVForm
+    useVForm,
+    VSelect
 } from '../../shared/forms'
 
 //Hooks personalizados
@@ -68,6 +69,20 @@ export const DimensionDetails: React.FC = () => {
                         </Grid>
 
                         <Grid container item direction='row' spacing={2}>
+                            {(id !== 'new') && (
+                                <Grid item xs={12} sm={12} md={6} lg={3} xl={3}>
+                                    <VSelect
+                                        fullWidth
+                                        label='Status'
+                                        name='status'
+                                        options={[
+                                            { value: 'Ativo', label: 'Ativo' },
+                                            { value: 'Inativo', label: 'Inativo' },
+                                        ]}
+                                        disabled={isLoading} />
+                                </Grid>
+                            )}
+
                             <Grid item xs={12} sm={12} lg={4} xl={2}>
                                 <VTextField fullWidth type='number' label='Largura(cm)' name='width' disabled={isLoading} />
                             </Grid>

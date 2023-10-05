@@ -42,7 +42,7 @@ export const VAutoCompleteDimension: React.FC<VAutoCompleteDimensionProps> = ({ 
 
         const fetchData = () => {
             debounce(async () => {
-                const result = await DimensionService.getAll(1, search, [Number(selectedId)])
+                const result = await DimensionService.getAll(1, search, false, [Number(selectedId)])
                 setIsLoading(false)
 
                 if (result instanceof Error) {

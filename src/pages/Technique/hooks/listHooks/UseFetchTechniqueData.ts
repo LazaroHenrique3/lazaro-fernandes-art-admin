@@ -24,7 +24,7 @@ export const UseFetchTechniqueData = ({setIsLoading, setRows, setTotalCount, sea
     
         const fetchData = () => {
             debounce(async () => {
-                const result = await TechniqueService.getAll(page, search)
+                const result = await TechniqueService.getAll(page, search, true)
                 setIsLoading(false)
     
                 if (result instanceof Error) {
