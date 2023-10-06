@@ -42,13 +42,13 @@ interface ErrorResponse {
     }
 }
 
-const getAll = async (page = 1, filter = '', idCustomer: number, id?: number): Promise<IAddressTotalCount | Error> => {
+const getAll = async (page = 1, filter = '', idCustomer: number, showInative = false, id?: number): Promise<IAddressTotalCount | Error> => {
     let relativeUrl = ''
 
     if (id) {
-        relativeUrl = `/address/${idCustomer}?id=${id}&page=${page}&limit=${Environment.LINE_LIMIT}&filter=${filter}`
+        relativeUrl = `/address/${idCustomer}?id=${id}&page=${page}&limit=${Environment.LINE_LIMIT}&showInative=${showInative}&filter=${filter}`
     } else {
-        relativeUrl = `/address/${idCustomer}?page=${page}&limit=${Environment.LINE_LIMIT}&filter=${filter}`
+        relativeUrl = `/address/${idCustomer}?page=${page}&limit=${Environment.LINE_LIMIT}&showInative=${showInative}&filter=${filter}`
     }
 
     try {

@@ -14,7 +14,8 @@ import {
     VTextField,
     VTextFieldCEP,
     VForm,
-    useVForm
+    useVForm,
+    VSelect
 } from '../../shared/forms'
 
 //Hooks personalizados
@@ -69,6 +70,20 @@ export const CustomerAddressDetails: React.FC = () => {
                         </Grid>
 
                         <Grid container item direction='row' spacing={2}>
+                            {(id !== 'new') && (
+                                <Grid item xs={12} sm={12} md={6} lg={3} xl={3}>
+                                    <VSelect
+                                        fullWidth
+                                        label='Status'
+                                        name='status'
+                                        options={[
+                                            { value: 'Ativo', label: 'Ativo' },
+                                            { value: 'Inativo', label: 'Inativo' },
+                                        ]}
+                                        disabled={isLoading} />
+                                </Grid>
+                            )}
+                            
                             <Grid item xs={12} sm={12} md={6} lg={4} xl={3}>
                                 <VTextFieldCEP label='CEP' disabled={isLoading} onBlur={(e) => handleGetInfoByCep(e.target.value)} />
                             </Grid>
@@ -93,7 +108,7 @@ export const CustomerAddressDetails: React.FC = () => {
                                 <VTextField fullWidth label='Logradouro' name='street' disabled={isLoading} />
                             </Grid>
 
-                            <Grid item xs={12} sm={12} md={6} lg={4} xl={6}>
+                            <Grid item xs={12} sm={12} md={6} lg={4} xl={(id === 'new') ? 6 : 3}>
                                 <VTextField fullWidth multiline minRows={3} label='Complemento' name='complement' disabled={isLoading} />
                             </Grid>
                         </Grid>

@@ -26,6 +26,7 @@ import { Environment } from '../../shared/environment'
 
 import {
     StyledTableCell,
+    StyledTableCellStatus,
     StyledTableRow
 } from '../.././shared/components/StyledComponents/TableComponents'
 import { formatCEP } from '../../shared/util'
@@ -88,6 +89,7 @@ export const CustomerAddressList = () => {
                     <TableHead>
                         <TableRow>
                             <StyledTableCell width={100} size='small' sx={{ fontWeight: 600 }}>Ações</StyledTableCell>
+                            <StyledTableCell size='small' sx={{ fontWeight: 600 }}>Status</StyledTableCell>
                             <StyledTableCell size='small' sx={{ fontWeight: 600 }}>Cidade</StyledTableCell>
                             <StyledTableCell size='small' sx={{ fontWeight: 600 }}>Estado</StyledTableCell>
                             <StyledTableCell size='small' sx={{ fontWeight: 600 }}>Número</StyledTableCell>
@@ -109,6 +111,7 @@ export const CustomerAddressList = () => {
                                         <Icon>edit</Icon>
                                     </IconButton>
                                 </StyledTableCell>
+                                <StyledTableCellStatus size='small' status={row.status}/>
                                 <StyledTableCell size='small'>{row.city}</StyledTableCell>
                                 <StyledTableCell size='small'>{row.state}</StyledTableCell>
                                 <StyledTableCell size='small'>{row.number}</StyledTableCell>

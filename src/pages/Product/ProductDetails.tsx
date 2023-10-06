@@ -205,7 +205,7 @@ export const ProductDetails: React.FC = () => {
                                 <VDateInput label='Data de produção' name='production_date' disabled={isLoading} />
                             </Grid>
 
-                            <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
+                            <Grid item xs={12} sm={12} md={6} lg={4} xl={(id === 'new') ? 2 : 3}>
                                 <VTextField 
                                     fullWidth 
                                     type='number' 
@@ -242,7 +242,7 @@ export const ProductDetails: React.FC = () => {
                                     disabled={isLoading} />
                             </Grid>
 
-                            <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
+                            <Grid item xs={12} sm={12} md={6} lg={6} xl={(id === 'new') ? 6 : 8}>
                                 <VTextField fullWidth multiline minRows={3} label='Descrição' name='description' disabled={isLoading} />
                             </Grid>
                         </Grid>
