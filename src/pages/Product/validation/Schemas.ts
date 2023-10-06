@@ -2,11 +2,13 @@ import * as yup from 'yup'
 
 import {
     TProductOrientation,
-    TProductStatus
+    TProductStatus,
+    TProductType
 } from '../../../shared/services/api/product/ProductService'
 
 export interface IFormData {
     status: TProductStatus
+    type: TProductType
     title: string
     orientation: TProductOrientation
     quantity: number
@@ -23,6 +25,7 @@ export interface IFormData {
 
 export interface IFormDataUpdate {
     status: TProductStatus
+    type: TProductType
     title: string
     orientation: TProductOrientation
     quantity: number
@@ -40,6 +43,7 @@ const MAX_PRODUCT_IMAGES = 4
 //Definindo o schema para validação default com as informações de venda(price, weight, quantity)
 export const formatValidationSchema: yup.Schema<IFormData> = yup.object().shape({
     status: yup.string().oneOf(['Ativo', 'Vendido', 'Inativo']).default('Ativo').required(),
+    type: yup.string().oneOf(['Original', 'Print']).required(),
     title: yup.string().required().min(1).max(100),
     orientation: yup.string().oneOf(['Retrato', 'Paisagem']).required(),
     production_date: yup.date()
@@ -134,7 +138,46 @@ export const formatValidationSchema: yup.Schema<IFormData> = yup.object().shape(
     dimension_id: yup.number().moreThan(0).required(),
     technique_id: yup.number().moreThan(0).required(),
     category_id: yup.number().moreThan(0).required(),
-    quantity: yup.number().moreThan(0).max(1000).required(),
+    quantity: yup.number().test('quantity-conditional-validation', 'A quantidade deve ser maior que zero!', function (value) {
+
+        if (typeof value === 'number' && value > 1000) {
+            return this.createError({
+                path: this.path,
+                message: 'Quantiddade max: 1000!',
+            })
+        }
+
+        const status = this.resolve(yup.ref('status'))
+        const type = this.resolve(yup.ref('type'))
+
+        if (status === 'Ativo') {
+            if (typeof value === 'number' && value > 0) {
+
+                //Se for do tipo Original só pode ter uma unidade
+                if (type === 'Original' && value > 1) {
+                    return this.createError({
+                        path: this.path,
+                        message: 'Originais podem ter apenas 1 und!',
+                    })
+                }
+
+                return true
+            } else {
+                return this.createError({
+                    path: this.path,
+                    message: 'A quantidade deve ser maior que zero!',
+                })
+            }
+        } else if (status === 'Vendido') {
+            if (typeof value === 'number' && value > 0) {
+                return this.createError({
+                    path: this.path,
+                    message: 'Produtos vendidos precisam ter 0 und!',
+                })
+            }
+        }
+        return true
+    }).required(),
     price: yup.number().moreThan(0).max(1000000, 'Valor max: 1.000.000').required(),
     weight: yup.number().moreThan(0).min(5, 'Peso min: 5(g) = 0,005(kg)').max(5000, 'Peso max: 5000(g) = 5(kg)').required(),
 })
@@ -142,6 +185,7 @@ export const formatValidationSchema: yup.Schema<IFormData> = yup.object().shape(
 //Definindo o schema para validação default com as informações de venda(price, weight, quantity), além disso na alteração eu não envio as imagens
 export const formatValidationSchemaUpdate: yup.Schema<IFormDataUpdate> = yup.object().shape({
     status: yup.string().oneOf(['Ativo', 'Vendido', 'Inativo']).default('Ativo').required(),
+    type: yup.string().oneOf(['Original', 'Print']).required(),
     title: yup.string().required().min(1).max(100),
     orientation: yup.string().oneOf(['Retrato', 'Paisagem']).required(),
     production_date: yup.date()
@@ -181,7 +225,7 @@ export const formatValidationSchemaUpdate: yup.Schema<IFormDataUpdate> = yup.obj
     technique_id: yup.number().moreThan(0).required(),
     category_id: yup.number().moreThan(0).required(),
     quantity: yup.number().test('quantity-conditional-validation', 'A quantidade deve ser maior que zero!', function (value) {
-        console.log('Teste: ', value)
+
         if (typeof value === 'number' && value > 1000) {
             return this.createError({
                 path: this.path,
@@ -190,8 +234,19 @@ export const formatValidationSchemaUpdate: yup.Schema<IFormDataUpdate> = yup.obj
         }
 
         const status = this.resolve(yup.ref('status'))
+        const type = this.resolve(yup.ref('type'))
+
         if (status === 'Ativo') {
             if (typeof value === 'number' && value > 0) {
+
+                //Se for do tipo Original só pode ter uma unidade
+                if (type === 'Original' && value > 1) {
+                    return this.createError({
+                        path: this.path,
+                        message: 'Originais podem ter apenas 1 und!',
+                    })
+                }
+
                 return true
             } else {
                 return this.createError({

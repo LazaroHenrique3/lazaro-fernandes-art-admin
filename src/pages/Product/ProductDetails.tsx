@@ -174,6 +174,18 @@ export const ProductDetails: React.FC = () => {
                             )}
 
                             <Grid item xs={12} sm={12} md={6} lg={3} xl={3}>
+                                <VSelect
+                                    fullWidth
+                                    label='Tipo'
+                                    name='type'
+                                    options={[
+                                        { value: 'Original', label: 'Original' },
+                                        { value: 'Print', label: 'Print' },
+                                    ]}
+                                    disabled={isLoading} />
+                            </Grid>
+
+                            <Grid item xs={12} sm={12} md={6} lg={3} xl={3}>
                                 <VTextField fullWidth label='Título' name='title' disabled={isLoading} />
                             </Grid>
 
@@ -205,22 +217,22 @@ export const ProductDetails: React.FC = () => {
                                 <VDateInput label='Data de produção' name='production_date' disabled={isLoading} />
                             </Grid>
 
-                            <Grid item xs={12} sm={12} md={6} lg={4} xl={(id === 'new') ? 2 : 3}>
-                                <VTextField 
-                                    fullWidth 
-                                    type='number' 
-                                    label='Quantidade' 
-                                    name='quantity' 
+                            <Grid item xs={12} sm={12} md={6} lg={4} xl={(id === 'new') ? 3 : 2}>
+                                <VTextField
+                                    fullWidth
+                                    type='number'
+                                    label='Quantidade'
+                                    name='quantity'
                                     InputProps={{
                                         inputProps: {
                                             min: 0,
                                             max: 1000
                                         },
-                                    }} 
+                                    }}
                                     disabled={isLoading} />
                             </Grid>
 
-                            <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
+                            <Grid item xs={12} sm={12} md={6} lg={4} xl={(id === 'new') ? 3 : 2}>
                                 <VTextField
                                     fullWidth type='number'
                                     label='Peso(g)'
@@ -230,19 +242,19 @@ export const ProductDetails: React.FC = () => {
                                             min: 5,
                                             max: 5000
                                         },
-                                    }} 
+                                    }}
                                     disabled={isLoading} />
                             </Grid>
 
-                            <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
+                            <Grid item xs={12} sm={12} md={6} lg={4} xl={(id === 'new') ? 3 : 2}>
                                 <VCurrencyField
-                                    fullWidth 
-                                    label='Preço' 
-                                    name='price' 
+                                    fullWidth
+                                    label='Preço'
+                                    name='price'
                                     disabled={isLoading} />
                             </Grid>
 
-                            <Grid item xs={12} sm={12} md={6} lg={6} xl={(id === 'new') ? 6 : 8}>
+                            <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
                                 <VTextField fullWidth multiline minRows={3} label='Descrição' name='description' disabled={isLoading} />
                             </Grid>
                         </Grid>

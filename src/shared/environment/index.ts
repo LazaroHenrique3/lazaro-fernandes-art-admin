@@ -28,7 +28,7 @@ export const EnvironmentStatusColors: EnvironmentStatusColorsType = {
     'Vendido': '#FFA500',
     'Ag. Pagamento': '#FFA500',
     'Em preparação': '#87CEEB',
-    'Enviado': '#008000',
+    'Enviado': '#D8BFD8',
     'Concluída': '#6B8E23',
     'Cancelada': '#FF0000'
 }

@@ -38,9 +38,10 @@ export const UseHandleProduct = ({setIsLoading, setName, formRef, id}: IUseHandl
             }
     
             setIsLoading(true)
-    
+            console.log('Aoooba: ', validateData)
             const formData = new FormData()
             formData.append('status', validateData.status)
+            formData.append('type', validateData.type)
             formData.append('title', validateData.title)
             formData.append('orientation', validateData.orientation)
             formData.append('production_date', String(validateData.production_date))

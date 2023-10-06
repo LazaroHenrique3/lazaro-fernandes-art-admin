@@ -9,10 +9,12 @@ export interface IImageProductList {
 
 export type TProductStatus = 'Ativo' | 'Vendido' | 'Inativo' 
 export type TProductOrientation = 'Retrato' | 'Paisagem'
+export type TProductType = 'Original' | 'Print'
 
 export interface IListProduct {
     id: number
     status: TProductStatus
+    type: TProductType 
     title: string
     orientation: TProductOrientation
     quantity?: number
@@ -33,6 +35,7 @@ export interface IListProduct {
 export interface IDetailProduct {
     id: number
     status: TProductStatus
+    type: TProductType 
     title: string
     orientation: TProductOrientation
     quantity: number
@@ -53,6 +56,7 @@ export interface IDetailProduct {
 export interface IDetailProductUpdate {
     id: number
     status: TProductStatus
+    type: TProductType 
     title: string
     orientation: TProductOrientation
     quantity: number

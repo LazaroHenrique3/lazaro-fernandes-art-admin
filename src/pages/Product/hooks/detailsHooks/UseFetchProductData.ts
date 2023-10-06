@@ -11,6 +11,8 @@ import {
 } from '../../../../shared/services/api/product/ProductService'
 
 const INITIAL_FORM_VALUES = {
+    status: '',
+    type: '',
     title: '',
     orientation: '',
     main_image: '',
