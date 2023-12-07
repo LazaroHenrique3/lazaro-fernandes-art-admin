@@ -89,11 +89,11 @@ export const CustomerAddressDetails: React.FC = () => {
                             </Grid>
 
                             <Grid item xs={12} sm={12} md={6} lg={4} xl={3}>
-                                <VTextField fullWidth label='Cidade' name='city' InputProps={{ readOnly: true }} disabled={isLoading} />
+                                <VTextField fullWidth label='Cidade 🚫' name='city' InputProps={{ readOnly: true }} disabled={isLoading} />
                             </Grid>
 
                             <Grid item xs={12} sm={12} md={6} lg={4} xl={3}>
-                                <VTextField fullWidth label='Estado' name='state' InputProps={{ readOnly: true }} disabled={isLoading} />
+                                <VTextField fullWidth label='Estado 🚫' name='state' InputProps={{ readOnly: true }} disabled={isLoading} />
                             </Grid>
 
                             <Grid item xs={12} sm={12} md={6} lg={4} xl={3}>
