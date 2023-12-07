@@ -3,8 +3,11 @@ import { useState } from 'react'
 import {
     Box,
     Grid,
+    IconButton,
+    Icon,
     LinearProgress,
     Paper,
+    Tooltip,
     Typography
 } from '@mui/material'
 
@@ -89,7 +92,15 @@ export const ProductDetails: React.FC = () => {
                         {id === 'new' ? (
                             <>
                                 <Grid item>
-                                    <Typography variant='h6'>Imagens</Typography>
+                                    <Typography variant='h6'>
+                                        Imagens
+
+                                        <Tooltip title="Dimensões recomendadas: Imagem Principal(715px X 1080px) | Imagens do Produto(700px X 730px)">
+                                            <IconButton>
+                                                <Icon>info_icon</Icon>
+                                            </IconButton>
+                                        </Tooltip>
+                                    </Typography>
                                 </Grid>
 
                                 <Grid container item direction='row' spacing={2}>
@@ -135,7 +146,7 @@ export const ProductDetails: React.FC = () => {
                         {(productImages.length < 4 && id !== 'new') && (
                             <>
                                 <Grid item>
-                                    <Typography variant='h6'>Imagem</Typography>
+                                    <Typography variant='h6'> Imagem </Typography>
                                 </Grid>
 
                                 <Grid key={productImages.length} container item direction='row' spacing={2}>
