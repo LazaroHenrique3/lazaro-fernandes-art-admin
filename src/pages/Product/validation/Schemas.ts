@@ -5,6 +5,8 @@ import {
     TProductStatus,
     TProductType
 } from '../../../shared/services/api/product/ProductService'
+import { isValidDimensions, MAX_PRODUCT_IMAGES, PRODUCT_IMAGE } from '../../../shared/util/validationUtils'
+
 
 export interface IFormData {
     status: TProductStatus
@@ -37,20 +39,6 @@ export interface IFormDataUpdate {
     technique_id: number
     category_id: number
 }
-
-const MAX_PRODUCT_IMAGES = 4
-
-//Tamanhos recomendados em pixels
-const MIN_HEIGHT_MAIN_IMAGE = 1070
-const MAX_HEIGHT_MAIN_IMAGE = 1090
-const MIN_WIDTH_MAIN_IMAGE = 705
-const MAX_WIDTH_MAIN_IMAGE = 725
-
-const MIN_HEIGHT_PRODUCT_IMAGES = 720
-const MAX_HEIGHT_PRODUCT_IMAGES = 740
-const MIN_WIDTH_PRODUCT_IMAGES = 690
-const MAX_WIDTH_PRODUCT_IMAGES = 710
-
 
 //Definindo o schema para validação default com as informações de venda(price, weight, quantity)
 export const formatValidationSchema: yup.Schema<IFormData> = yup.object().shape({
@@ -126,7 +114,13 @@ export const formatValidationSchema: yup.Schema<IFormData> = yup.object().shape(
 
                 img.onload = () => {
                     // Dimensões estão corretas
-                    if (isValidDimensions(MAX_WIDTH_MAIN_IMAGE, MAX_HEIGHT_MAIN_IMAGE, MIN_WIDTH_MAIN_IMAGE, MIN_HEIGHT_MAIN_IMAGE, img.height, img.width)) {
+                    if (isValidDimensions(
+                        PRODUCT_IMAGE.MAX_W_MAIN_IMAGE, 
+                        PRODUCT_IMAGE.MAX_H_MAIN_IMAGE, 
+                        PRODUCT_IMAGE.MIN_W_MAIN_IMAGE, 
+                        PRODUCT_IMAGE.MIN_H_MAIN_IMAGE, 
+                        img.height, 
+                        img.width)) {
                         resolve(true)
                     } else {
                         // Dimensões não correspondem às recomendadas
@@ -188,7 +182,13 @@ export const formatValidationSchema: yup.Schema<IFormData> = yup.object().shape(
 
                     img.onload = () => {
                         // Dimensões estão corretas
-                        if (isValidDimensions(MAX_WIDTH_PRODUCT_IMAGES, MAX_HEIGHT_PRODUCT_IMAGES, MIN_WIDTH_PRODUCT_IMAGES, MIN_HEIGHT_PRODUCT_IMAGES, img.height, img.width)) {
+                        if (isValidDimensions(  
+                            PRODUCT_IMAGE.MAX_W_MAIN_IMAGE, 
+                            PRODUCT_IMAGE.MAX_H_MAIN_IMAGE, 
+                            PRODUCT_IMAGE.MIN_W_MAIN_IMAGE, 
+                            PRODUCT_IMAGE.MIN_H_MAIN_IMAGE, 
+                            img.height, 
+                            img.width)) {
                             resolve(true)
                         } else {
                             // Dimensões não correspondem às recomendadas
@@ -348,11 +348,5 @@ export const formatValidationSchemaUpdate: yup.Schema<IFormDataUpdate> = yup.obj
     weight: yup.number().moreThan(0).min(5, 'Peso min: 5(g) = 0,005(kg)').max(5000, 'Peso max: 5000(g) = 5(kg)').required(),
 })
 
-//Funções auxiliares
 
-//Verifica se as dimensões estão dentro do esperado
-const isValidDimensions = (maxWidth: number, maxHeight: number, minWidth: number, minHeight: number, imageHeight: number, imageWidth: number): boolean => {
-    console.log('imageHeight: ', imageHeight, 'imageWidth: ', imageWidth, 'TrueOrFalse: ', (imageWidth >= minWidth && imageWidth <= maxWidth))
-    return (imageHeight >= minHeight && imageHeight <= maxHeight) && (imageWidth >= minWidth && imageWidth <= maxWidth)
-}
 
