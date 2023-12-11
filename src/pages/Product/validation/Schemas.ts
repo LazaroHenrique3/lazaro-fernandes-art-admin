@@ -40,6 +40,18 @@ export interface IFormDataUpdate {
 
 const MAX_PRODUCT_IMAGES = 4
 
+//Tamanhos recomendados em pixels
+const MIN_HEIGHT_MAIN_IMAGE = 1070
+const MAX_HEIGHT_MAIN_IMAGE = 1090
+const MIN_WIDTH_MAIN_IMAGE = 705
+const MAX_WIDTH_MAIN_IMAGE = 725
+
+const MIN_HEIGHT_PRODUCT_IMAGES = 720
+const MAX_HEIGHT_PRODUCT_IMAGES = 740
+const MIN_WIDTH_PRODUCT_IMAGES = 690
+const MAX_WIDTH_PRODUCT_IMAGES = 710
+
+
 //Definindo o schema para validação default com as informações de venda(price, weight, quantity)
 export const formatValidationSchema: yup.Schema<IFormData> = yup.object().shape({
     status: yup.string().oneOf(['Ativo', 'Vendido', 'Inativo']).default('Ativo').required(),
@@ -83,6 +95,9 @@ export const formatValidationSchema: yup.Schema<IFormData> = yup.object().shape(
         .test('isImage', (value) => {
             const mainImage: FileList = value as FileList
 
+            // Obtendo a primeira imagem do FileList
+            const image = mainImage[0]
+
             //Verificando se foi passado imagem
             if (mainImage.length === 0) {
                 throw new yup.ValidationError('A imagem é obrigatória!', value, 'main_image')
@@ -90,21 +105,48 @@ export const formatValidationSchema: yup.Schema<IFormData> = yup.object().shape(
 
             //Verificando o formato das imagens
             const supportedFormats = ['image/jpeg', 'image/png', 'image/jpg']
-            if (!supportedFormats.includes(mainImage[0].type)) {
+            if (!supportedFormats.includes(image.type)) {
                 throw new yup.ValidationError('Formato de imagem inválido!', value, 'main_image')
             }
 
             // Verifica se o tamanho da imagem é maior que 2MB (em bytes)
             const maxSize = 2 * 1024 * 1024 // 2MB
-            if (Number(mainImage[0].size) > maxSize) {
+            if (Number(image.size) > maxSize) {
                 throw new yup.ValidationError('Tamanho de imagem excede 2MB!', value, 'main_image')
             }
 
-            return true
+            //Verificando as dimensões recomendadaas
+            // Criando um URL temporário para a imagem
+            const imageUrl = URL.createObjectURL(image)
+
+            // Criando uma promessa para lidar com a carga da imagem
+            return new Promise((resolve, reject) => {
+                const img = new Image()
+                img.src = imageUrl
+
+                img.onload = () => {
+                    // Dimensões estão corretas
+                    if (isValidDimensions(MAX_WIDTH_MAIN_IMAGE, MAX_HEIGHT_MAIN_IMAGE, MIN_WIDTH_MAIN_IMAGE, MIN_HEIGHT_MAIN_IMAGE, img.height, img.width)) {
+                        resolve(true)
+                    } else {
+                        // Dimensões não correspondem às recomendadas
+                        reject(
+                            new yup.ValidationError(
+                                'Ás dimensões deve ser entre (1070 a 1090 X 705 a 725)pixels.', value, 'main_image'
+                            )
+                        )
+                    }
+
+                    // Liberar o URL temporário após o uso
+                    URL.revokeObjectURL(imageUrl)
+                }
+
+                return true
+            })
         })
         .required() as yup.Schema<FileList>,
     product_images: yup.mixed()
-        .test('isImage', (value) => {
+        .test('isImage', async (value) => {
             const product_images: FileList = value as FileList
 
             //Verificando se foi passado imagem e se é mais que  o permitido
@@ -132,6 +174,44 @@ export const formatValidationSchema: yup.Schema<IFormData> = yup.object().shape(
                 }
             }
 
+            const validationPromises = []
+
+            //Verificando as dimensões recomendadaas
+            for (let i = 0; i < product_images.length; i++) {
+                // Criando um URL temporário para a imagem
+                const imageUrl = URL.createObjectURL(product_images[i])
+
+                // Criando uma promessa para lidar com a carga da imagem
+                const validationPromise = new Promise((resolve, reject) => {
+                    const img = new Image()
+                    img.src = imageUrl
+
+                    img.onload = () => {
+                        // Dimensões estão corretas
+                        if (isValidDimensions(MAX_WIDTH_PRODUCT_IMAGES, MAX_HEIGHT_PRODUCT_IMAGES, MIN_WIDTH_PRODUCT_IMAGES, MIN_HEIGHT_PRODUCT_IMAGES, img.height, img.width)) {
+                            resolve(true)
+                        } else {
+                            // Dimensões não correspondem às recomendadas
+                            reject(
+                                new yup.ValidationError(
+                                    'Ás dimensões deve ser entre (690 a 710 X 720 a 740)pixels.', value, 'product_images'
+                                )
+                            )
+                        }
+
+                        // Liberar o URL temporário após o uso
+                        URL.revokeObjectURL(imageUrl)
+                    }
+                })
+
+                //Adicionando ao array que esta armazenando todas as promisses
+                validationPromises.push(validationPromise)
+            }
+
+            //Executando todas as promisses que vai validar cada uma das imagens
+            await Promise.all(validationPromises)
+
+            // Todas as imagens passaram nas validações
             return true
         })
         .required() as yup.Schema<FileList>,
@@ -267,3 +347,12 @@ export const formatValidationSchemaUpdate: yup.Schema<IFormDataUpdate> = yup.obj
     price: yup.number().moreThan(0).max(1000000, 'Valor max: 1.000.000').required(),
     weight: yup.number().moreThan(0).min(5, 'Peso min: 5(g) = 0,005(kg)').max(5000, 'Peso max: 5000(g) = 5(kg)').required(),
 })
+
+//Funções auxiliares
+
+//Verifica se as dimensões estão dentro do esperado
+const isValidDimensions = (maxWidth: number, maxHeight: number, minWidth: number, minHeight: number, imageHeight: number, imageWidth: number): boolean => {
+    console.log('imageHeight: ', imageHeight, 'imageWidth: ', imageWidth, 'TrueOrFalse: ', (imageWidth >= minWidth && imageWidth <= maxWidth))
+    return (imageHeight >= minHeight && imageHeight <= maxHeight) && (imageWidth >= minWidth && imageWidth <= maxWidth)
+}
+
