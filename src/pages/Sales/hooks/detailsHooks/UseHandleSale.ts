@@ -33,7 +33,7 @@ export const UseHandleSale = ({ idSale, idCustomer, formRef, setSaleStatus, setI
         try {
             const validateData = await formatValidationSchema.validate(data, { abortEarly: false })
             setIsLoading(true)
-            const result = await SaleService.updateTrackingCode(Number(idSale), Number(idCustomer), validateData.tracking_code)
+            const result = await SaleService.updateTrackingCode(Number(idCustomer), Number(idSale), validateData.tracking_code)
             setIsLoading(false)
 
             if (result instanceof Error) {
@@ -72,6 +72,7 @@ export const UseHandleSale = ({ idSale, idCustomer, formRef, setSaleStatus, setI
             }
 
             setSaleStatus('Concluída')
+            toast.success('Venda concluída com sucesso!')
 
             //Adicionando as informações atualizadas
             formRef.current?.setFieldValue('status', 'Concluída')
