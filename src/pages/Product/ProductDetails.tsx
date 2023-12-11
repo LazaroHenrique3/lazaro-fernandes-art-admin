@@ -89,30 +89,29 @@ export const ProductDetails: React.FC = () => {
                             </Grid>
                         )}
 
+                        <Grid item>
+                            <Typography variant='h6'>
+                                Imagens
+
+                                <Tooltip title="Dimensões recomendadas: Imagem Principal(705 X 1070 | 715px X 1080px | 725px X 1090x) 
+                                - Imagens do Produto(700px X 730px)">
+                                    <IconButton>
+                                        <Icon>info_icon</Icon>
+                                    </IconButton>
+                                </Tooltip>
+                            </Typography>
+                        </Grid>
+
                         {id === 'new' ? (
-                            <>
-                                <Grid item>
-                                    <Typography variant='h6'>
-                                        Imagens
-
-                                        <Tooltip title="Dimensões recomendadas: Imagem Principal(715px X 1080px) | Imagens do Produto(700px X 730px)">
-                                            <IconButton>
-                                                <Icon>info_icon</Icon>
-                                            </IconButton>
-                                        </Tooltip>
-                                    </Typography>
+                            <Grid container item direction='row' spacing={2}>
+                                <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
+                                    <VInputFile label='Principal' name='main_image' isExternalLoading={isLoading} />
                                 </Grid>
 
-                                <Grid container item direction='row' spacing={2}>
-                                    <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
-                                        <VInputFile label='Principal' name='main_image' isExternalLoading={isLoading} />
-                                    </Grid>
-
-                                    <Grid item xs={12} sm={12} md={12} lg={6} xl={6}>
-                                        <VInputFile label='Imagens do Produto' name='product_images' multiple isExternalLoading={isLoading} />
-                                    </Grid>
+                                <Grid item xs={12} sm={12} md={12} lg={6} xl={6}>
+                                    <VInputFile label='Imagens do Produto' name='product_images' multiple isExternalLoading={isLoading} />
                                 </Grid>
-                            </>
+                            </Grid>
                         ) : (
                             <Grid container item direction='row' spacing={2}>
                                 <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
