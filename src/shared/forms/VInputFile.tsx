@@ -52,7 +52,7 @@ export const VInputFile: React.FC<InputProps> = ({ name, label, isExternalLoadin
     const handlePreview = useCallback((e: ChangeEvent<HTMLInputElement>) => {
         const files = e.target.files
 
-        if (!files) {
+        if (!files || files.length === 0) {
             setPreview([{ url: '', name: '' }])
             return
         }
