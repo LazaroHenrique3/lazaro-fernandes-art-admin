@@ -1,4 +1,5 @@
 import * as yup from 'yup'
+import { isValidDimensions, PRODUCT_IMAGE } from '../../../util/validationUtils'
 
 interface IFormDataUpdateImage {
     image: FileList
@@ -9,6 +10,9 @@ export const formatValidationSchemaUpdateImage: yup.Schema<IFormDataUpdateImage>
     image: yup.mixed()
         .test('isImage', (value) => {
             const mainImage: FileList = value as FileList
+
+            // Obtendo a primeira imagem do FileList
+            const image = mainImage[0]
 
             //Verificando se foi passado imagem
             if (mainImage.length === 0) {
@@ -27,7 +31,40 @@ export const formatValidationSchemaUpdateImage: yup.Schema<IFormDataUpdateImage>
                 throw new yup.ValidationError('Tamanho de imagem excede 2MB!', value, 'image')
             }
 
-            return true
+            //Verificando as dimensões recomendadaas
+            // Criando um URL temporário para a imagem
+            const imageUrl = URL.createObjectURL(image)
+
+            // Criando uma promessa para lidar com a carga da imagem
+            return new Promise((resolve, reject) => {
+                const img = new Image()
+                img.src = imageUrl
+
+                img.onload = () => {
+                    // Dimensões estão corretas
+                    if (isValidDimensions( 
+                        PRODUCT_IMAGE.MAX_W_MAIN_IMAGE, 
+                        PRODUCT_IMAGE.MAX_H_MAIN_IMAGE, 
+                        PRODUCT_IMAGE.MIN_W_MAIN_IMAGE, 
+                        PRODUCT_IMAGE.MIN_H_MAIN_IMAGE, 
+                        img.height, 
+                        img.width)) {
+                        resolve(true)
+                    } else {
+                        // Dimensões não correspondem às recomendadas
+                        reject(
+                            new yup.ValidationError(
+                                'Ás dimensões deve ser entre (1070 a 1090 X 705 a 725)pixels.', value, 'image'
+                            )
+                        )
+                    }
+
+                    // Liberar o URL temporário após o uso
+                    URL.revokeObjectURL(imageUrl)
+                }
+
+                return true
+            })
         })
         .required() as yup.Schema<FileList>,
 })
