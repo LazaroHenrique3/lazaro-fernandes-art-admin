@@ -93,8 +93,8 @@ export const ProductDetails: React.FC = () => {
                             <Typography variant='h6'>
                                 Imagens
 
-                                <Tooltip title="Dimensões recomendadas: Imagem Principal(705 X 1070 | 715px X 1080px | 725px X 1090x) 
-                                - Imagens do Produto(700px X 730px)">
+                                <Tooltip title="Dimensões recomendadas: Imagem Principal(705px X 1070px | 715px X 1080px | 725px X 1090x) 
+                                - Imagens do Produto(690px X 720px | 700px X 730px | 720px X 740px)">
                                     <IconButton>
                                         <Icon>info_icon</Icon>
                                     </IconButton>
