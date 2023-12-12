@@ -5,7 +5,15 @@ import {
     TProductStatus,
     TProductType
 } from '../../../shared/services/api/product/ProductService'
-import { isValidDimensions, MAX_PRODUCT_IMAGES, PRODUCT_IMAGE } from '../../../shared/util/validationUtils'
+//Relacionado as validações
+import {
+    existsImage,
+    isValidType,
+    isValidSize,
+    isValidMainImageDimensions,
+    isValidProductImagesDimensions,
+    existsImagesAndIsSmallerThanMax
+} from '../../../shared/util/validationUtils/product'
 
 
 export interface IFormData {
@@ -80,63 +88,25 @@ export const formatValidationSchema: yup.Schema<IFormData> = yup.object().shape(
         .required(),
     description: yup.string().optional(),
     main_image: yup.mixed()
-        .test('isImage', (value) => {
+        .test('isImage', async (value) => {
             const mainImage: FileList = value as FileList
 
             // Obtendo a primeira imagem do FileList
             const image = mainImage[0]
 
             //Verificando se foi passado imagem
-            if (mainImage.length === 0) {
-                throw new yup.ValidationError('A imagem é obrigatória!', value, 'main_image')
-            }
-
+            existsImage(mainImage.length, value)
+           
             //Verificando o formato das imagens
-            const supportedFormats = ['image/jpeg', 'image/png', 'image/jpg']
-            if (!supportedFormats.includes(image.type)) {
-                throw new yup.ValidationError('Formato de imagem inválido!', value, 'main_image')
-            }
-
+            isValidType(image.type, value)
+          
             // Verifica se o tamanho da imagem é maior que 2MB (em bytes)
-            const maxSize = 2 * 1024 * 1024 // 2MB
-            if (Number(image.size) > maxSize) {
-                throw new yup.ValidationError('Tamanho de imagem excede 2MB!', value, 'main_image')
-            }
-
+            isValidSize(image.size, value)
+         
             //Verificando as dimensões recomendadaas
-            // Criando um URL temporário para a imagem
-            const imageUrl = URL.createObjectURL(image)
+            await isValidMainImageDimensions(image, value)
 
-            // Criando uma promessa para lidar com a carga da imagem
-            return new Promise((resolve, reject) => {
-                const img = new Image()
-                img.src = imageUrl
-
-                img.onload = () => {
-                    // Dimensões estão corretas
-                    if (isValidDimensions(
-                        PRODUCT_IMAGE.MAX_W_MAIN_IMAGE, 
-                        PRODUCT_IMAGE.MAX_H_MAIN_IMAGE, 
-                        PRODUCT_IMAGE.MIN_W_MAIN_IMAGE, 
-                        PRODUCT_IMAGE.MIN_H_MAIN_IMAGE, 
-                        img.height, 
-                        img.width)) {
-                        resolve(true)
-                    } else {
-                        // Dimensões não correspondem às recomendadas
-                        reject(
-                            new yup.ValidationError(
-                                'Ás dimensões deve ser entre (1070 a 1090 X 705 a 725)pixels.', value, 'main_image'
-                            )
-                        )
-                    }
-
-                    // Liberar o URL temporário após o uso
-                    URL.revokeObjectURL(imageUrl)
-                }
-
-                return true
-            })
+            return true
         })
         .required() as yup.Schema<FileList>,
     product_images: yup.mixed()
@@ -144,72 +114,16 @@ export const formatValidationSchema: yup.Schema<IFormData> = yup.object().shape(
             const product_images: FileList = value as FileList
 
             //Verificando se foi passado imagem e se é mais que  o permitido
-            if (product_images.length === 0) {
-                throw new yup.ValidationError('As imagens são obrigatórias!', value, 'product_images')
-            } else if (product_images.length > MAX_PRODUCT_IMAGES) {
-                throw new yup.ValidationError(`É permitido o upload de até ${MAX_PRODUCT_IMAGES} imagens!`, value, 'product_images')
-            }
-
+            existsImagesAndIsSmallerThanMax(product_images.length, value)
+           
             //Verificando o formato das imagens
-            const supportedFormats = ['image/jpeg', 'image/png', 'image/jpg']
-            for (let i = 0; i < product_images.length; i++) {
-                const image = product_images[i]
-                if (!supportedFormats.includes(image.type)) {
-                    throw new yup.ValidationError('Formato de imagem inválido!', value, 'product_images')
-                }
-            }
-
+            isValidType(product_images, value)
+          
             // Verifica se o tamanho da imagem é maior que 2MB (em bytes)
-            const maxSize = 2 * 1024 * 1024 // 2MB
-            for (let i = 0; i < product_images.length; i++) {
-                const image = product_images[i]
-                if (Number(image.size) > maxSize) {
-                    throw new yup.ValidationError('Tamanho de imagem excede 2MB!', value, 'product_images')
-                }
-            }
-
-            const validationPromises = []
-
-            //Verificando as dimensões recomendadaas
-            for (let i = 0; i < product_images.length; i++) {
-                // Criando um URL temporário para a imagem
-                const imageUrl = URL.createObjectURL(product_images[i])
-
-                // Criando uma promessa para lidar com a carga da imagem
-                const validationPromise = new Promise((resolve, reject) => {
-                    const img = new Image()
-                    img.src = imageUrl
-
-                    img.onload = () => {
-                        // Dimensões estão corretas
-                        if (isValidDimensions(  
-                            PRODUCT_IMAGE.MAX_W_MAIN_IMAGE, 
-                            PRODUCT_IMAGE.MAX_H_MAIN_IMAGE, 
-                            PRODUCT_IMAGE.MIN_W_MAIN_IMAGE, 
-                            PRODUCT_IMAGE.MIN_H_MAIN_IMAGE, 
-                            img.height, 
-                            img.width)) {
-                            resolve(true)
-                        } else {
-                            // Dimensões não correspondem às recomendadas
-                            reject(
-                                new yup.ValidationError(
-                                    'Ás dimensões deve ser entre (690 a 710 X 720 a 740)pixels.', value, 'product_images'
-                                )
-                            )
-                        }
-
-                        // Liberar o URL temporário após o uso
-                        URL.revokeObjectURL(imageUrl)
-                    }
-                })
-
-                //Adicionando ao array que esta armazenando todas as promisses
-                validationPromises.push(validationPromise)
-            }
-
-            //Executando todas as promisses que vai validar cada uma das imagens
-            await Promise.all(validationPromises)
+            isValidSize(product_images, value)
+           
+            //Validando as dimensões das imagens
+            await isValidProductImagesDimensions(product_images, value)
 
             // Todas as imagens passaram nas validações
             return true
@@ -347,6 +261,5 @@ export const formatValidationSchemaUpdate: yup.Schema<IFormDataUpdate> = yup.obj
     price: yup.number().moreThan(0).max(1000000, 'Valor max: 1.000.000').required(),
     weight: yup.number().moreThan(0).min(5, 'Peso min: 5(g) = 0,005(kg)').max(5000, 'Peso max: 5000(g) = 5(kg)').required(),
 })
-
 
 
