@@ -89,6 +89,7 @@ export const CustomerDetails: React.FC = () => {
                             <Grid container item direction='row' spacing={2}>
                                 <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
                                     <ImageHandler
+                                        imageOf='customer'
                                         handleDeleteImage={handleDeleteImage}
                                         handleUpdateImage={handleUpdateImage}
                                         isExternalLoading={isLoading}
@@ -110,6 +111,7 @@ export const CustomerDetails: React.FC = () => {
                                 <Grid key={image} container item direction='row' spacing={2}>
                                     <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
                                         <ImageHandler
+                                            imageOf='customer'
                                             handleInsertImage={handleInsertImage}
                                             isExternalLoading={isLoading}
                                             isInsertImage={true}
