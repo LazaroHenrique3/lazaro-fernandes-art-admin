@@ -5,9 +5,13 @@ import * as yup from 'yup'
 import {
     IVFormErrors,
 } from '../../../shared/forms'
-import { formatValidationSchemaUpdateImage } from './validation/Schemas'
+import { 
+    formatValidationSchemaUpdateCustomerImage, 
+    formatValidationSchemaUpdateImage 
+} from './validation/Schemas'
 
 interface Props {
+    imageOf?: 'customer' | 'product' //Para saber se estou lidando com imagens do Cliente ou Produto
     idImage: number
     urlImage: string
     showDeleteButton: boolean
@@ -21,6 +25,7 @@ interface Props {
 type InputProps = JSX.IntrinsicElements['input'] & Props
 
 export const ImageHandler: React.FC<InputProps> = ({
+    imageOf = 'product',
     urlImage,
     showDeleteButton,
     idImage,
@@ -29,7 +34,8 @@ export const ImageHandler: React.FC<InputProps> = ({
     handleDeleteImage,
     handleUpdateImage,
     handleInsertImage,
-    ...rest }) => {
+    ...rest
+}) => {
 
     const inputRef = useRef<HTMLInputElement>(null!)
 
@@ -106,7 +112,12 @@ export const ImageHandler: React.FC<InputProps> = ({
                         if (preview[0].url === '') return
 
                         try {
-                            await formatValidationSchemaUpdateImage.validate({ image: inputRef.current?.files as FileList }, { abortEarly: false })
+                            //Dependendo do tipo de imagem que estou lidando uso Schemas diferentes
+                            if(imageOf === 'product'){
+                                await formatValidationSchemaUpdateImage.validate({ image: inputRef.current?.files as FileList }, { abortEarly: false })
+                            } else if (imageOf === 'customer') {
+                                await formatValidationSchemaUpdateCustomerImage.validate({ image: inputRef.current?.files as FileList }, { abortEarly: false })
+                            }
 
                             if (!isInsertImage && handleUpdateImage) {
                                 handleUpdateImage(idImage, inputRef.current?.files as FileList)
