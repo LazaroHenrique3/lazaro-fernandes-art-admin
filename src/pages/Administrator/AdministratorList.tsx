@@ -21,10 +21,10 @@ import { Environment } from '../../shared/environment'
 
 import { useAuthContext } from '../../shared/contexts'
 
-import { 
-    StyledTableCell, 
-    StyledTableCellStatus, 
-    StyledTableRow 
+import {
+    StyledTableCell,
+    StyledTableCellStatus,
+    StyledTableRow
 } from '../../shared/components/StyledComponents/TableComponents'
 
 //Hooks personalizados
@@ -42,6 +42,7 @@ export const AdministratorList: React.FC = () => {
 
     const navigate = useNavigate()
 
+    //Descobrindo o nível de acesso do usuaário logado
     const { accessLevel } = useAuthContext()
 
     //Fazer a pesquisa do input de pesquisa através da URL
@@ -105,7 +106,7 @@ export const AdministratorList: React.FC = () => {
                                     </StyledTableCell>
 
                                 )}
-                                <StyledTableCellStatus size='small' status={row.status}/>
+                                <StyledTableCellStatus size='small' status={row.status} />
                                 <StyledTableCell size='small'>{row.name}</StyledTableCell>
                                 <StyledTableCell size='small'>{row.email}</StyledTableCell>
                             </StyledTableRow>

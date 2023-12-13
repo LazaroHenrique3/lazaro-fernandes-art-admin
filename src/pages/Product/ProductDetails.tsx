@@ -12,6 +12,8 @@ import {
 } from '@mui/material'
 
 import { BasePageLayout } from '../../shared/layouts'
+import { useAuthContext } from '../../shared/contexts'
+
 import {
     DetailTools,
     ImageHandler
@@ -26,6 +28,7 @@ import {
     VDateInput,
     useVForm,
 } from '../../shared/forms'
+
 
 import { VAutoCompleteCategory } from './components/VAutoCompleteCategory'
 import { VAutoCompleteTechnique } from './components/VAutoCompleteTechnique'
@@ -50,6 +53,10 @@ export const ProductDetails: React.FC = () => {
     const [productId, setProductId] = useState(0)
     const [mainImage, setMainImage] = useState('')
     const [productImages, setProductImages] = useState<IImageProductList[]>([])
+
+    //Descobrindo o nível de acesso do usuaário logado
+    const { accessLevel } = useAuthContext()
+    const userIsRoot = (accessLevel !== undefined && accessLevel === 'Root') ? true : false
 
     //Hooks personalizados
     UseFetchProductData({ setIsLoading, setName, setProductId, setMainImage, setProductImages, formRef, id })
@@ -169,9 +176,11 @@ export const ProductDetails: React.FC = () => {
 
                         <Grid container item direction='row' spacing={2}>
                             {(id !== 'new') && (
+                            //Só pode ser alterado por usuários Root
                                 <Grid item xs={12} sm={12} md={6} lg={3} xl={3}>
                                     <VSelect
                                         fullWidth
+                                        readOnly={!userIsRoot}
                                         label='Status'
                                         name='status'
                                         options={[
@@ -183,9 +192,11 @@ export const ProductDetails: React.FC = () => {
                                 </Grid>
                             )}
 
+                            {/* Só pode ser alterado por usuários Root */}
                             <Grid item xs={12} sm={12} md={6} lg={3} xl={3}>
                                 <VSelect
                                     fullWidth
+                                    readOnly={(!userIsRoot && id !== 'new')}
                                     label='Tipo'
                                     name='type'
                                     options={[
