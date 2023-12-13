@@ -139,6 +139,11 @@ export const formatValidationSchema: yup.Schema<IFormData> = yup.object().shape(
                 path: this.path,
                 message: 'Quantiddade max: 1000!',
             })
+        } else if (typeof value === 'number' && value < 0) {
+            return this.createError({
+                path: this.path,
+                message: 'A quantidade não pode ser negativa!',
+            })
         }
 
         const status = this.resolve(yup.ref('status'))
@@ -224,6 +229,11 @@ export const formatValidationSchemaUpdate: yup.Schema<IFormDataUpdate> = yup.obj
             return this.createError({
                 path: this.path,
                 message: 'Quantiddade max: 1000!',
+            })
+        } else if (typeof value === 'number' && value < 0) {
+            return this.createError({
+                path: this.path,
+                message: 'A quantidade não pode ser negativa!',
             })
         }
 
