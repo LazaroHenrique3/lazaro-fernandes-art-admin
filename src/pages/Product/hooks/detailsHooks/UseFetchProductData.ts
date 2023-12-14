@@ -7,7 +7,8 @@ import 'react-toastify/dist/ReactToastify.css'
 
 import { 
     IImageProductList, 
-    ProductService,  
+    ProductService,
+    TProductStatus,  
 } from '../../../../shared/services/api/product/ProductService'
 
 const INITIAL_FORM_VALUES = {
@@ -33,6 +34,7 @@ interface IUseFetchProductDataProps {
     setProductId: (id: number) => void
     setMainImage: (image: string) => void
     setProductImages: (images: IImageProductList[]) => void
+    setProductStatus: (status: TProductStatus) => void
     formRef: React.RefObject<FormHandles>
     id: string
 }
@@ -43,6 +45,7 @@ export const UseFetchProductData = ({
     setProductId,
     setMainImage,
     setProductImages,
+    setProductStatus,
     formRef,
     id
 }: IUseFetchProductDataProps) => {
@@ -70,6 +73,7 @@ export const UseFetchProductData = ({
                 setProductId(result.id)
                 setMainImage(main_image)
                 setProductImages(product_images)
+                setProductStatus(result.status)
 
                 formRef.current?.setData(resultData)
             } else {

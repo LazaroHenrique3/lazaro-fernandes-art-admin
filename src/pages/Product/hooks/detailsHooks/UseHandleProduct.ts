@@ -14,16 +14,21 @@ import {
     formatValidationSchemaUpdate
 } from '../../validation/Schemas'
 
-import { IDetailProductUpdate, ProductService } from '../../../../shared/services/api/product/ProductService'
+import { 
+    IDetailProductUpdate, 
+    ProductService, 
+    TProductStatus 
+} from '../../../../shared/services/api/product/ProductService'
 
 interface IUseHandleProduct {
     setIsLoading: (status: boolean) => void
     setName: (name: string) => void
+    setProductStatus: (status: TProductStatus) => void
     formRef: React.RefObject<FormHandles>
     id: string
 }
 
-export const UseHandleProduct = ({setIsLoading, setName, formRef, id}: IUseHandleProduct) => {
+export const UseHandleProduct = ({setIsLoading, setName, setProductStatus, formRef, id}: IUseHandleProduct) => {
     const navigate = useNavigate()
 
     const handleSave = async (data: IFormData) => {
@@ -89,6 +94,7 @@ export const UseHandleProduct = ({setIsLoading, setName, formRef, id}: IUseHandl
     
                 toast.success('Registro salvo com sucesso!')
                 setName(validateData.title)
+                setProductStatus(validateData.status)
     
             }
     
