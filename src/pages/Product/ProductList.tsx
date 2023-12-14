@@ -1,33 +1,33 @@
 import { useMemo, useState } from 'react'
 
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { 
-    Icon, 
-    IconButton, 
-    LinearProgress, 
-    Pagination, 
-    Paper, 
-    Table, 
-    TableBody, 
-    TableContainer, 
-    TableFooter, 
-    TableHead, 
-    TableRow 
+import {
+    Icon,
+    IconButton,
+    LinearProgress,
+    Pagination,
+    Paper,
+    Table,
+    TableBody,
+    TableContainer,
+    TableFooter,
+    TableHead,
+    TableRow
 } from '@mui/material'
 
 import { IListProduct } from '../../shared/services/api/product/ProductService'
 import { BasePageLayout } from '../../shared/layouts'
 import { ListTools } from '../../shared/components'
 import { Environment } from '../../shared/environment'
-import { 
-    formattedDateBR, 
-    formattedPrice 
+import {
+    formattedDateBR,
+    formattedPrice
 } from '../../shared/util'
 
-import { 
-    StyledTableCell, 
-    StyledTableCellStatus, 
-    StyledTableRow 
+import {
+    StyledTableCell,
+    StyledTableCellStatus,
+    StyledTableRow
 } from '../../shared/components/StyledComponents/TableComponents'
 
 //Hooks personalizados
@@ -63,7 +63,7 @@ export const ProductList: React.FC = () => {
     //Hooks personalizados
     UseFetchProductData({ setIsLoading, setRows, setTotalCount, search, page })
 
-    const { handleDelete, handlePDF } = UseHandleProduct({setRows, rows, search})
+    const { handleDelete, handlePDF } = UseHandleProduct({ setRows, rows, search })
 
     return (
         <BasePageLayout
@@ -101,15 +101,18 @@ export const ProductList: React.FC = () => {
                         {rows.map((row) => (
                             <StyledTableRow key={row.id}>
                                 <StyledTableCell size='small'>
-                                    <IconButton color='error' onClick={() => handleDelete(row.id, row.title)}>
-                                        <Icon>delete</Icon>
-                                    </IconButton>
+                                    {/* Se estiver como vendido eu nem quero msotrar a opção de exclusão */}
+                                    {(row.status !== 'Vendido') && (
+                                        <IconButton color='error' onClick={() => handleDelete(row.id, row.title)}>
+                                            <Icon>delete</Icon>
+                                        </IconButton>
+                                    )}
 
                                     <IconButton color='primary' onClick={() => navigate(`/admin/product/details/${row.id}`)}>
                                         <Icon>edit</Icon>
                                     </IconButton>
                                 </StyledTableCell>
-                                <StyledTableCellStatus size='small' status={row.status}/>
+                                <StyledTableCellStatus size='small' status={row.status} />
                                 <StyledTableCell size='small'>{row.type}</StyledTableCell>
                                 <StyledTableCell size='small'>{row.title}</StyledTableCell>
                                 <StyledTableCell size='small'>{row.orientation}</StyledTableCell>
