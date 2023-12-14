@@ -18,7 +18,7 @@ import {
     DetailTools,
     ImageHandler
 } from '../../shared/components'
-import { IImageProductList } from '../../shared/services/api/product/ProductService'
+import { IImageProductList, TProductStatus } from '../../shared/services/api/product/ProductService'
 import {
     VTextField,
     VCurrencyField,
@@ -51,6 +51,7 @@ export const ProductDetails: React.FC = () => {
 
     const [name, setName] = useState('')
     const [productId, setProductId] = useState(0)
+    const [productStatus, setProductStatus] = useState<TProductStatus>('' as TProductStatus)
     const [mainImage, setMainImage] = useState('')
     const [productImages, setProductImages] = useState<IImageProductList[]>([])
 
@@ -59,9 +60,9 @@ export const ProductDetails: React.FC = () => {
     const userIsRoot = (accessLevel !== undefined && accessLevel === 'Root') ? true : false
 
     //Hooks personalizados
-    UseFetchProductData({ setIsLoading, setName, setProductId, setMainImage, setProductImages, formRef, id })
+    UseFetchProductData({ setIsLoading, setName, setProductId, setMainImage, setProductImages, setProductStatus, formRef, id })
 
-    const { handleDelete, handleSave } = UseHandleProduct({ setIsLoading, setName, formRef, id })
+    const { handleDelete, handleSave } = UseHandleProduct({ setIsLoading, setName, setProductStatus, formRef, id })
     const {
         handleInsertImage,
         handleUpdateProductImage,
@@ -77,7 +78,7 @@ export const ProductDetails: React.FC = () => {
                     showSaveButton
                     newButtonText='Novo'
                     showNewButton={id !== 'new'}
-                    showDeleteButton={id !== 'new'}
+                    showDeleteButton={id !== 'new' && productStatus !== 'Vendido'}
 
                     onClickSaveButton={() => formRef.current?.submitForm()}
                     onClickDeleteButton={() => handleDelete(Number(id), name)}
