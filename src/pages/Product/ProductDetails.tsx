@@ -182,7 +182,7 @@ export const ProductDetails: React.FC = () => {
                                     <VSelect
                                         fullWidth
                                         readOnly={!userIsRoot}
-                                        label='Status'
+                                        label={`Status ${!userIsRoot && '🚫'}`}
                                         name='status'
                                         options={[
                                             { value: 'Ativo', label: 'Ativo' },
@@ -198,7 +198,7 @@ export const ProductDetails: React.FC = () => {
                                 <VSelect
                                     fullWidth
                                     readOnly={(!userIsRoot && id !== 'new')}
-                                    label='Tipo'
+                                    label={`Tipo ${(!userIsRoot && id !== 'new') && '🚫'}`}
                                     name='type'
                                     options={[
                                         { value: 'Original', label: 'Original' },
