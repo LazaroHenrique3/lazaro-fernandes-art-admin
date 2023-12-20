@@ -93,7 +93,7 @@ export const SaleList = () => {
                         {rows.map((row) => (
                             <StyledTableRow key={row.id}>
                                 <StyledTableCell size='small'>
-                                    {(row.status === 'Ag. Pagamento' || row.status === 'Em preparação') &&
+                                    {(row.status !== 'Cancelada') &&
                                         <IconButton color='error' onClick={() => handleCancelSale(row.id, row.customer_id)}>
                                             <Icon>cancel</Icon>
                                         </IconButton>
