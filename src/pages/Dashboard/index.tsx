@@ -9,7 +9,7 @@ import {
     FormGroup,
     FormControlLabel,
     Switch,
-    Skeleton
+    Skeleton,
 } from '@mui/material'
 
 import { formattedPrice } from '../../shared/util'
@@ -27,6 +27,7 @@ import {
 import {
     UseFetchFinancialData
 } from './hooks/UseFetchFinancialData'
+import { ColorDotStatus } from '../../shared/components/StyledComponents/TableComponents'
 
 export const Dashboard = () => {
 
@@ -101,6 +102,18 @@ export const Dashboard = () => {
                                                     variant='h6'
                                                     color={isNegativeBalance ? 'red' : 'green'}>
                                                     {(formattedPrice(financialData.currentMonthBilling - financialData.lastMonthBilling))}
+                                                </Typography>
+                                            </Box>
+
+                                            <Box>
+                                                <Typography variant='h6' display="flex" alignItems="center">
+                                                    <ColorDotStatus status='Em preparação' />
+                                                    Pedidos Ag. Preparação: {financialData.totalSaleInPreparation}
+                                                </Typography>
+
+                                                <Typography variant='h6' display="flex" alignItems="center">
+                                                    <ColorDotStatus status='Ag. Pagamento' />
+                                                    Pedidos Ag.Pagamento: {financialData.totalSaleAwaitingPayment}
                                                 </Typography>
                                             </Box>
                                         </Box>

@@ -41,7 +41,7 @@ interface ColorDotStatusProps {
     size?: 'small'
 }
 
-const ColorDotStatus = styled('div')<ColorDotStatusProps>(({ theme, status }) => ({
+export const ColorDotStatus = styled('div')<ColorDotStatusProps>(({ theme, status }) => ({
     width: 10,
     height: 10,
     borderRadius: '50%',

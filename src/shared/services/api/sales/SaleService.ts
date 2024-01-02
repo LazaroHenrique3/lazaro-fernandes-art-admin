@@ -93,6 +93,8 @@ export interface IFinancialInformations {
     totalRevenue: number
     currentMonthBilling: number
     lastMonthBilling: number
+    totalSaleAwaitingPayment: number
+    totalSaleInPreparation: number
 }
 
 interface ErrorResponse {
