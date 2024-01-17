@@ -96,13 +96,13 @@ export const formatValidationSchema: yup.Schema<IFormData> = yup.object().shape(
 
             //Verificando se foi passado imagem
             existsImage(mainImage.length, value)
-           
+
             //Verificando o formato das imagens
             isValidType(image.type, value)
-          
+
             // Verifica se o tamanho da imagem é maior que 2MB (em bytes)
             isValidSize(image.size, value)
-         
+
             //Verificando as dimensões recomendadaas
             await isValidMainImageDimensions(image, value)
 
@@ -115,13 +115,13 @@ export const formatValidationSchema: yup.Schema<IFormData> = yup.object().shape(
 
             //Verificando se foi passado imagem e se é mais que  o permitido
             existsImagesAndIsSmallerThanMax(product_images.length, value)
-           
+
             //Verificando o formato das imagens
             isValidType(product_images, value)
-          
+
             // Verifica se o tamanho da imagem é maior que 2MB (em bytes)
             isValidSize(product_images, value)
-           
+
             //Validando as dimensões das imagens
             await isValidProductImagesDimensions(product_images, value)
 
@@ -174,7 +174,20 @@ export const formatValidationSchema: yup.Schema<IFormData> = yup.object().shape(
                     message: 'Produtos vendidos precisam ter 0 und!',
                 })
             }
+        } else if (status === 'Inativo') {
+            if (typeof value === 'number' && value > 0) {
+                //Se for do tipo Original só pode ter uma unidade
+                if (type === 'Original' && value > 1) {
+                    return this.createError({
+                        path: this.path,
+                        message: 'Originais podem ter apenas 1 und!',
+                    })
+                }
+
+                return true
+            }
         }
+
         return true
     }).required(),
     price: yup.number().moreThan(0).max(1000000, 'Valor max: 1.000.000').required(),
@@ -265,7 +278,20 @@ export const formatValidationSchemaUpdate: yup.Schema<IFormDataUpdate> = yup.obj
                     message: 'Produtos vendidos precisam ter 0 und!',
                 })
             }
+        } else if (status === 'Inativo') {
+            if (typeof value === 'number' && value > 0) {
+                //Se for do tipo Original só pode ter uma unidade
+                if (type === 'Original' && value > 1) {
+                    return this.createError({
+                        path: this.path,
+                        message: 'Originais podem ter apenas 1 und!',
+                    })
+                }
+
+                return true
+            }
         }
+        
         return true
     }).required(),
     price: yup.number().moreThan(0).max(1000000, 'Valor max: 1.000.000').required(),
