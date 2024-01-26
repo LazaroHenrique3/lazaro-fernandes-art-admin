@@ -1,6 +1,9 @@
 import { useMemo, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import {
+    Box,
+    Button,
+    Grid,
     Icon,
     IconButton,
     LinearProgress,
@@ -11,7 +14,8 @@ import {
     TableContainer,
     TableFooter,
     TableHead,
-    TableRow
+    TableRow,
+    Typography
 } from '@mui/material'
 
 import { IListDimension } from '../../shared/services/api/dimension/DimensionService'
@@ -26,9 +30,16 @@ import {
     UseFetchDimensionData,
     UseHandleDimension
 } from './hooks/listHooks'
+import { VForm, VSelect, useVForm } from '../../shared/forms'
+
+interface IFilterData {
+    status: string,
+}
 
 export const DimensionList: React.FC = () => {
     const [searchParams, setSearchParams] = useSearchParams()
+
+    const { formRef } = useVForm('formRef')
 
     const [rows, setRows] = useState<IListDimension[]>([])
     const [totalCount, setTotalCount] = useState(0)
@@ -50,11 +61,39 @@ export const DimensionList: React.FC = () => {
         //Pega o parâmetro na URL
         return Number(searchParams.get('page') || '1')
     }, [searchParams])
+
+    const status = useMemo(() => {
+        //Pega o parâmetro na URL
+        return searchParams.get('status') || ''
+    }, [searchParams])
+
     //Hooks personalizados
+    UseFetchDimensionData({ setIsLoading, setRows, setTotalCount, search, page, status })
 
-    UseFetchDimensionData({ setIsLoading, setRows, setTotalCount, search, page })
+    const { handleDelete, handlePDF } = UseHandleDimension({ setRows, rows, search, status })
 
-    const { handleDelete, handlePDF } = UseHandleDimension({ setRows, rows, search })
+    const handleSearchFilters = (data: IFilterData) => {
+        setSearchParams({
+            search: search,
+            page: '1',
+            status: data.status,
+        },
+        { replace: true })
+    }
+
+    const handleResetFilters = () => {
+        setSearchParams({
+            search: search,
+            page: '1',
+            status: '',
+        },
+        { replace: true })
+
+        formRef.current?.reset()
+        formRef.current?.setData({
+            status: '',
+        })
+    }
 
     return (
         <BasePageLayout
@@ -69,6 +108,49 @@ export const DimensionList: React.FC = () => {
                     onChangeSearchText={text => setSearchParams({ search: text, page: '1' }, { replace: true })}
                 />
             }>
+
+            <VForm ref={formRef} onSubmit={handleSearchFilters}>
+                <Box margin={1} display='flex' flexDirection='column' component={Paper} variant='outlined'>
+
+                    <Grid container direction='column' padding={2} spacing={2}>
+                        {isLoading && (
+                            <Grid item>
+                                <LinearProgress variant='indeterminate' />
+                            </Grid>
+                        )}
+
+                        <Grid item>
+                            <Typography variant='h6'>Filtros</Typography>
+                        </Grid>
+
+                        <Grid container item direction='row' spacing={2}>
+                            <Grid item xs={12} sm={12} md={6} lg={2} xl={2}>
+                                <VSelect
+                                    fullWidth
+                                    label='Status'
+                                    name='status'
+                                    options={[
+                                        { value: 'Ativo', label: 'Ativo' },
+                                        { value: 'Inativo', label: 'Inativo' },
+                                    ]}
+                                    disabled={isLoading} />
+                            </Grid>
+
+                            <Grid item xs={12} sm={12} md={6} lg={2} xl={2}>
+                                <Box display='flex' gap={2}>
+                                    <Button variant='contained' type='submit' sx={{ marginTop: 1 }} disabled={isLoading}>
+                                        <Icon>search</Icon>
+                                    </Button>
+
+                                    <Button variant='outlined' type='button' sx={{ marginTop: 1 }} onClick={handleResetFilters}>
+                                        <Icon>refresh</Icon>
+                                    </Button>
+                                </Box>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </Box>
+            </VForm>
 
             <TableContainer component={Paper} sx={{ m: 1, width: 'auto' }} >
                 <Table>
@@ -91,7 +173,7 @@ export const DimensionList: React.FC = () => {
                                         <Icon>edit</Icon>
                                     </IconButton>
                                 </StyledTableCell>
-                                <StyledTableCellStatus size='small' status={row.status}/>
+                                <StyledTableCellStatus size='small' status={row.status} />
                                 <StyledTableCell size='small'>{row.dimension}</StyledTableCell>
                             </StyledTableRow>
                         ))}

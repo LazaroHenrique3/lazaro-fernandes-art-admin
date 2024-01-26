@@ -7,9 +7,10 @@ interface IUseHandleDimensionProps {
     setRows: (dimensions: IListDimension[]) => void
     rows:  IListDimension[]
     search: string
+    status: string
 }
 
-export const UseHandleDimension = ({ setRows, rows, search }: IUseHandleDimensionProps) => {
+export const UseHandleDimension = ({ setRows, rows, search, status }: IUseHandleDimensionProps) => {
 
     const handleDelete = async (id: number, name: string) => {
 
@@ -29,7 +30,7 @@ export const UseHandleDimension = ({ setRows, rows, search }: IUseHandleDimensio
     }
 
     const handlePDF = async () => {
-        const result = await DimensionService.generatePdf(search)
+        const result = await DimensionService.generatePdf(search, status)
 
         if (result instanceof Error) {
             toast.error(result.message)

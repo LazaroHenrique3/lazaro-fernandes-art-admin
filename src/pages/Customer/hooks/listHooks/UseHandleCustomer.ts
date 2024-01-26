@@ -7,9 +7,12 @@ interface IUseHandleCustomer {
     setRows: (customers: IListCustomer[]) => void
     rows:  IListCustomer[]
     search: string
+    status: string
+    genre:  string
+    dateOfBirth: string
 }
 
-export const UseHandleCustomer = ({ setRows, rows, search }: IUseHandleCustomer) => {
+export const UseHandleCustomer = ({ setRows, rows, search, status, genre, dateOfBirth }: IUseHandleCustomer) => {
 
     const handleDelete = async (id: number, name: string) => {
 
@@ -29,7 +32,7 @@ export const UseHandleCustomer = ({ setRows, rows, search }: IUseHandleCustomer)
     }
 
     const handlePDF = async () => {
-        const result = await CustomerService.generatePdf(search)
+        const result = await CustomerService.generatePdf(search, status, genre, dateOfBirth)
 
         if (result instanceof Error) {
             toast.error(result.message)

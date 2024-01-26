@@ -13,9 +13,10 @@ interface IUseFetchDimensionDataProps {
     setTotalCount: (total: number) => void
     search: string
     page: number
+    status: string
 }
 
-export const UseFetchDimensionData = ({setIsLoading, setRows, setTotalCount, search, page}: IUseFetchDimensionDataProps) => {
+export const UseFetchDimensionData = ({setIsLoading, setRows, setTotalCount, search, page, status}: IUseFetchDimensionDataProps) => {
     //Para adicionar delay na pesquisa
     const { debounce } = useDebounce()
 
@@ -24,7 +25,7 @@ export const UseFetchDimensionData = ({setIsLoading, setRows, setTotalCount, sea
     
         const fetchData = () => {
             debounce(async () => {
-                const result = await DimensionService.getAll(page, search, true)
+                const result = await DimensionService.getAll(page, search, status, true)
                 setIsLoading(false)
     
                 if (result instanceof Error) {
@@ -39,6 +40,6 @@ export const UseFetchDimensionData = ({setIsLoading, setRows, setTotalCount, sea
     
         fetchData()
     
-    }, [search, page])
+    }, [search, page, status])
 }
 

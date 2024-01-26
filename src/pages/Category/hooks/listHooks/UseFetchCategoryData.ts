@@ -13,9 +13,10 @@ interface IUseFetchCategoryDataProps {
     setTotalCount: (total: number) => void
     search: string
     page: number
+    status: string
 }
 
-export const UseFetchCategoryData = ({setIsLoading, setRows, setTotalCount, search, page}: IUseFetchCategoryDataProps) => {
+export const UseFetchCategoryData = ({setIsLoading, setRows, setTotalCount, search, page, status}: IUseFetchCategoryDataProps) => {
     //Para adicionar delay na pesquisa
     const { debounce } = useDebounce()
 
@@ -24,7 +25,7 @@ export const UseFetchCategoryData = ({setIsLoading, setRows, setTotalCount, sear
     
         const fetchData = () => {
             debounce(async () => {
-                const result = await CategoryService.getAll(page, search, true)
+                const result = await CategoryService.getAll(page, search, status, true)
                 setIsLoading(false)
     
                 if (result instanceof Error) {
@@ -39,6 +40,6 @@ export const UseFetchCategoryData = ({setIsLoading, setRows, setTotalCount, sear
     
         fetchData()
     
-    }, [search, page])
+    }, [search, page, status])
 }
 

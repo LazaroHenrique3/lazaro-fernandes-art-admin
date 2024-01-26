@@ -13,9 +13,12 @@ interface IUseFetchCustomerDataProps {
     setTotalCount: (total: number) => void
     search: string
     page: number
+    status: string,
+    genre: string,
+    dateOfBirth: string
 }
 
-export const UseFetchCustomerData = ({setIsLoading, setRows, setTotalCount, search, page}: IUseFetchCustomerDataProps) => {
+export const UseFetchCustomerData = ({setIsLoading, setRows, setTotalCount, search, page, status, genre, dateOfBirth}: IUseFetchCustomerDataProps) => {
     //Para adicionar delay na pesquisa
     const { debounce } = useDebounce()
 
@@ -24,7 +27,7 @@ export const UseFetchCustomerData = ({setIsLoading, setRows, setTotalCount, sear
     
         const fetchData = () => {
             debounce(async () => {
-                const result = await CustomerService.getAll(page, search)
+                const result = await CustomerService.getAll(page, search, status, genre, dateOfBirth)
                 setIsLoading(false)
     
                 if (result instanceof Error) {
@@ -39,6 +42,6 @@ export const UseFetchCustomerData = ({setIsLoading, setRows, setTotalCount, sear
     
         fetchData()
     
-    }, [search, page])
+    }, [search, page, status, genre, dateOfBirth])
 }
 

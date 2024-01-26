@@ -1,6 +1,9 @@
 import { useMemo, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import {
+    Box,
+    Button,
+    Grid,
     Icon,
     IconButton,
     LinearProgress,
@@ -11,34 +14,45 @@ import {
     TableContainer,
     TableFooter,
     TableHead,
-    TableRow
+    TableRow,
+    Typography
 } from '@mui/material'
 
-import {  IListCustomer } from '../../shared/services/api/customer/CustomerService'
+import { IListCustomer } from '../../shared/services/api/customer/CustomerService'
 import { BasePageLayout } from '../../shared/layouts'
 import { ListTools } from '../../shared/components'
 import { Environment } from '../../shared/environment'
 
-import { 
-    StyledTableCell, 
-    StyledTableCellStatus, 
-    StyledTableRow 
+import {
+    StyledTableCell,
+    StyledTableCellStatus,
+    StyledTableRow
 } from '../../shared/components/StyledComponents/TableComponents'
 
-import { 
-    formatCPF, 
-    formatPhoneNumber, 
-    formattedDateBR
+import {
+    formatCPF,
+    formatPhoneNumber,
+    formattedDateBR,
+    formattedDateUS
 } from '../../shared/util'
 
 //Hooks personalizados
-import { 
+import {
     UseFetchCustomerData,
     UseHandleCustomer
 } from './hooks/listHooks'
+import { VDateInput, VForm, VSelect, useVForm } from '../../shared/forms'
+
+interface IFilterData {
+    status: string,
+    genre: string,
+    dateOfBirth: Date
+}
 
 export const CustomerList: React.FC = () => {
     const [searchParams, setSearchParams] = useSearchParams()
+
+    const { formRef } = useVForm('formRef')
 
     const [rows, setRows] = useState<IListCustomer[]>([])
     const [totalCount, setTotalCount] = useState(0)
@@ -61,10 +75,54 @@ export const CustomerList: React.FC = () => {
         return Number(searchParams.get('page') || '1')
     }, [searchParams])
 
+    const status = useMemo(() => {
+        //Pega o parâmetro na URL
+        return searchParams.get('status') || ''
+    }, [searchParams])
+
+    const genre = useMemo(() => {
+        //Pega o parâmetro na URL
+        return searchParams.get('genre') || ''
+    }, [searchParams])
+
+    const dateOfBirth = useMemo(() => {
+        //Pega o parâmetro na URL
+        return searchParams.get('dateOfBirth') || ''
+    }, [searchParams])
+
     //Hooks personalizados
-    UseFetchCustomerData({setIsLoading, setRows, setTotalCount, search, page})
-   
-    const { handleDelete, handlePDF } = UseHandleCustomer({setRows, rows, search})
+    UseFetchCustomerData({ setIsLoading, setRows, setTotalCount, search, page, status, genre, dateOfBirth })
+
+    const { handleDelete, handlePDF } = UseHandleCustomer({ setRows, rows, search, status, genre, dateOfBirth })
+
+    const handleSearchFilters = (data: IFilterData) => {
+        console.log(data)
+        setSearchParams({
+            search: search,
+            page: '1',
+            status: data.status,
+            genre: data.genre,
+            dateOfBirth: formattedDateUS(data.dateOfBirth),
+        },
+        { replace: true })
+    }
+
+    const handleResetFilters = () => {
+        setSearchParams({
+            search: search,
+            page: '1',
+            status: '',
+            genre: '',
+            dateOfBirth: '',
+        },
+        { replace: true })
+
+        formRef.current?.reset()
+        formRef.current?.setData({
+            status: '',
+            genre: ''
+        })
+    }
 
     return (
         <BasePageLayout
@@ -78,6 +136,67 @@ export const CustomerList: React.FC = () => {
                     onChangeSearchText={text => setSearchParams({ search: text, page: '1' }, { replace: true })}
                 />
             }>
+
+            <VForm ref={formRef} onSubmit={handleSearchFilters}>
+                <Box margin={1} display='flex' flexDirection='column' component={Paper} variant='outlined'>
+
+                    <Grid container direction='column' padding={2} spacing={2}>
+                        {isLoading && (
+                            <Grid item>
+                                <LinearProgress variant='indeterminate' />
+                            </Grid>
+                        )}
+
+                        <Grid item>
+                            <Typography variant='h6'>Filtros</Typography>
+                        </Grid>
+
+                        <Grid container item direction='row' spacing={2}>
+                            <Grid item xs={12} sm={12} md={6} lg={2} xl={2}>
+                                <VSelect
+                                    fullWidth
+                                    label='Status'
+                                    name='status'
+                                    options={[
+                                        { value: 'Ativo', label: 'Ativo' },
+                                        { value: 'Inativo', label: 'Inativo' }
+                                    ]}
+                                    disabled={isLoading} />
+                            </Grid>
+
+                            <Grid item xs={12} sm={12} md={6} lg={2} xl={2}>
+                                <VSelect
+                                    fullWidth
+                                    label='Gênero'
+                                    name='genre'
+                                    options={[
+                                        { value: 'M', label: 'Masculino' },
+                                        { value: 'F', label: 'Feminino' },
+                                        { value: 'L', label: 'LGBTQIAPN+' },
+                                        { value: 'N', label: 'Não informado' },
+                                    ]}
+                                    disabled={isLoading} />
+                            </Grid>
+
+                            <Grid item xs={12} sm={12} md={6} lg={2} xl={2}>
+                                <VDateInput label='Data de nascimento' name='dateOfBirth' disabled={isLoading} />
+                            </Grid>
+
+                            <Grid item xs={12} sm={12} md={6} lg={2} xl={2}>
+                                <Box display='flex' gap={2}>
+                                    <Button variant='contained' type='submit' sx={{ marginTop: 1 }} disabled={isLoading}>
+                                        <Icon>search</Icon>
+                                    </Button>
+
+                                    <Button variant='outlined' type='button' sx={{ marginTop: 1 }} onClick={handleResetFilters}>
+                                        <Icon>refresh</Icon>
+                                    </Button>
+                                </Box>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </Box>
+            </VForm>
 
             <TableContainer component={Paper} sx={{ m: 1, width: 'auto' }} >
                 <Table>
@@ -105,7 +224,7 @@ export const CustomerList: React.FC = () => {
                                         <Icon>edit</Icon>
                                     </IconButton>
                                 </StyledTableCell>
-                                <StyledTableCellStatus size='small' status={row.status}/>
+                                <StyledTableCellStatus size='small' status={row.status} />
                                 <StyledTableCell size='small'>{row.name}</StyledTableCell>
                                 <StyledTableCell size='small'>{row.email}</StyledTableCell>
                                 <StyledTableCell size='small'>{formatPhoneNumber(row.cell_phone)}</StyledTableCell>

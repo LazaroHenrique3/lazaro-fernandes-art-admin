@@ -7,9 +7,10 @@ interface IUseHandleCategoryProps {
     setRows: (categorys: IListCategory[]) => void
     rows:  IListCategory[]
     search: string
+    status: string
 }
 
-export const UseHandleCategory = ({ setRows, rows, search }: IUseHandleCategoryProps) => {
+export const UseHandleCategory = ({ setRows, rows, search, status }: IUseHandleCategoryProps) => {
 
     const handleDelete = async (id: number, name: string) => {
 
@@ -29,7 +30,7 @@ export const UseHandleCategory = ({ setRows, rows, search }: IUseHandleCategoryP
     }
 
     const handlePDF = async () => {
-        const result = await CategoryService.generatePdf(search)
+        const result = await CategoryService.generatePdf(search, status)
 
         if (result instanceof Error) {
             toast.error(result.message)

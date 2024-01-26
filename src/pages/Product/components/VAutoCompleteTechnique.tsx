@@ -42,7 +42,7 @@ export const VAutoCompleteTechnique: React.FC<VAutoCompleteTechniqueProps> = ({i
 
         const fetchData = () => {
             debounce(async () => {
-                const result = await TechniqueService.getAll(1, search, false, selectedId)
+                const result = await TechniqueService.getAll(1, search, '', false, selectedId)
                 setIsLoading(false)
 
                 if (result instanceof Error) {

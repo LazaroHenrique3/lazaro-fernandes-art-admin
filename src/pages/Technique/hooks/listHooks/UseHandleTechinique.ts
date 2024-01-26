@@ -5,11 +5,12 @@ import { TechniqueService, IListTechnique } from '../../../../shared/services/ap
 
 interface IUseHandleTechniqueProps {
     setRows: (techniques: IListTechnique[]) => void
-    rows:  IListTechnique[]
+    rows: IListTechnique[]
     search: string
+    status: string
 }
 
-export const UseHandleTechnique = ({ setRows, rows, search }: IUseHandleTechniqueProps) => {
+export const UseHandleTechnique = ({ setRows, rows, search, status }: IUseHandleTechniqueProps) => {
 
     const handleDelete = async (id: number, name: string) => {
 
@@ -29,7 +30,7 @@ export const UseHandleTechnique = ({ setRows, rows, search }: IUseHandleTechniqu
     }
 
     const handlePDF = async () => {
-        const result = await TechniqueService.generatePdf(search)
+        const result = await TechniqueService.generatePdf(search, status)
 
         if (result instanceof Error) {
             toast.error(result.message)

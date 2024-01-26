@@ -1,4 +1,5 @@
 import dayjs from 'dayjs'
+import { format } from 'date-fns'
 
 export const formatCPF = (cpf: string): string => {
     // Remove todos os caracteres não numéricos do CPF
@@ -48,4 +49,9 @@ export const formattedPrice = (value: number | string) => {
 
 export const formattedDateBR = (date: string | Date): string => {
     return dayjs(date).format('DD/MM/YYYY')
+}
+
+export const formattedDateUS = (date: Date): string => {
+    if (date === null) return ''
+    return format(date, 'yyyy-MM-dd')
 }

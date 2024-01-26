@@ -87,13 +87,25 @@ interface ErrorResponse {
     }
 }
 
-const getAll = async (page = 1, filter = '', id?: number): Promise<IProductTotalCount | Error> => {
+const getAll = async ( 
+    page = 1, 
+    filter = '', 
+    status = '', 
+    type = '', 
+    orientation = '', 
+    category = '', 
+    technique = '', 
+    dimension = '', 
+    productionDate = '', 
+    orderByPrice = '', 
+    id?: number
+): Promise<IProductTotalCount | Error> => {
     let relativeUrl = ''
 
     if (id) {
-        relativeUrl = `/admin/product?id=${id}&page=${page}&limit=${Environment.LINE_LIMIT}&filter=${filter}`
+        relativeUrl = `/admin/product?id=${id}&page=${page}&limit=${Environment.LINE_LIMIT}&filter=${filter}&status=${status}&type=${type}&orientation=${orientation}&category=${category}&technique=${technique}&dimension=${dimension}&productionDate=${productionDate}&orderByPrice=${orderByPrice}`
     } else {
-        relativeUrl = `/admin/product?page=${page}&limit=${Environment.LINE_LIMIT}&filter=${filter}`
+        relativeUrl = `/admin/product?page=${page}&limit=${Environment.LINE_LIMIT}&filter=${filter}&status=${status}&type=${type}&orientation=${orientation}&category=${category}&technique=${technique}&dimension=${dimension}&productionDate=${productionDate}&orderByPrice=${orderByPrice}`
     }
 
     try {
@@ -223,10 +235,20 @@ const deleteProductImage = async(id: number, idProduct: number): Promise<void | 
 
 }
 
-const generatePdf = async (filter = ''): Promise<Uint8Array | Error> => {
+const generatePdf = async (
+    filter = '',
+    status = '', 
+    type = '', 
+    orientation = '', 
+    category = '', 
+    technique = '', 
+    dimension = '', 
+    productionDate = '', 
+    orderByPrice = '', 
+): Promise<Uint8Array | Error> => {
 
     try {
-        const relativeUrl = `/product/report/generate?filter=${filter}`
+        const relativeUrl = `/product/report/generate?filter=${filter}&status=${status}&type=${type}&orientation=${orientation}&category=${category}&technique=${technique}&dimension=${dimension}&productionDate=${productionDate}&orderByPrice=${orderByPrice}`
 
         const response: AxiosResponse<Uint8Array> = await api.get(relativeUrl, {
             responseType: 'arraybuffer', // Configura o tipo de resposta como "arraybuffer"

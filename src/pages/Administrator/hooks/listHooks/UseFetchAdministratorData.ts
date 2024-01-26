@@ -13,9 +13,10 @@ interface IUseFetchAdministratorDataProps {
     setTotalCount: (total: number) => void
     search: string
     page: number
+    status: string
 }
 
-export const UseFetchAdministratorData = ({setIsLoading, setRows, setTotalCount, search, page}: IUseFetchAdministratorDataProps) => {
+export const UseFetchAdministratorData = ({setIsLoading, setRows, setTotalCount, search, page, status}: IUseFetchAdministratorDataProps) => {
     //Para adicionar delay na pesquisa
     const { debounce } = useDebounce()
 
@@ -24,7 +25,7 @@ export const UseFetchAdministratorData = ({setIsLoading, setRows, setTotalCount,
     
         const fetchData = () => {
             debounce(async () => {
-                const result = await AdministratorService.getAll(page, search)
+                const result = await AdministratorService.getAll(page, search, status)
                 setIsLoading(false)
     
                 if (result instanceof Error) {
@@ -39,6 +40,6 @@ export const UseFetchAdministratorData = ({setIsLoading, setRows, setTotalCount,
     
         fetchData()
     
-    }, [search, page])
+    }, [search, page, status])
 }
 

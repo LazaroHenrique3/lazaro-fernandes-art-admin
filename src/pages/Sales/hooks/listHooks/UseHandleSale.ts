@@ -11,9 +11,13 @@ interface IUseHandleSaleProps {
     setRows: (sales: ISaleListAll[]) => void
     rows: ISaleListAll[]
     search: string
+    status: string
+    orderDate: string
+    paymentDueDate: string
+    orderByPrice: string
 }
 
-export const UseHandleSale = ({ setRows, rows, search }: IUseHandleSaleProps) => {
+export const UseHandleSale = ({ setRows, rows, search, status, orderDate, paymentDueDate, orderByPrice }: IUseHandleSaleProps) => {
 
     const handleCancelSale = async (idSale: number, idUser: number) => {
 
@@ -41,7 +45,7 @@ export const UseHandleSale = ({ setRows, rows, search }: IUseHandleSaleProps) =>
     }
 
     const handlePDF = async () => {
-        const result = await SaleService.generatePdf(search)
+        const result = await SaleService.generatePdf(search, status, orderDate, paymentDueDate, orderByPrice)
 
         if (result instanceof Error) {
             toast.error(result.message)

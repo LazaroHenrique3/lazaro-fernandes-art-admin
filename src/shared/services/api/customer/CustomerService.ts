@@ -53,13 +53,13 @@ interface ErrorResponse {
     }
 }
 
-const getAll = async (page = 1, filter = '', id?: number): Promise<ICustomerTotalCount | Error> => {
+const getAll = async (page = 1, filter = '', status = '', genre = '', dateOfBirth = '', id?: number): Promise<ICustomerTotalCount | Error> => {
     let relativeUrl = ''
 
     if (id) {
-        relativeUrl = `/customer?id=${id}&page=${page}&limit=${Environment.LINE_LIMIT}&filter=${filter}`
+        relativeUrl = `/customer?id=${id}&page=${page}&limit=${Environment.LINE_LIMIT}&filter=${filter}&status=${status}&genre=${genre}&dateOfBirth=${dateOfBirth}`
     } else {
-        relativeUrl = `/customer?page=${page}&limit=${Environment.LINE_LIMIT}&filter=${filter}`
+        relativeUrl = `/customer?page=${page}&limit=${Environment.LINE_LIMIT}&filter=${filter}&status=${status}&genre=${genre}&dateOfBirth=${dateOfBirth}`
     }
 
     try {
@@ -176,10 +176,10 @@ const deleteCustomerImage = async(idCustomer: number): Promise<void | Error> => 
 
 }
 
-const generatePdf = async (filter = ''): Promise<Uint8Array | Error> => {
+const generatePdf = async (filter = '', status = '', genre = '', dateOfBirth = ''): Promise<Uint8Array | Error> => {
 
     try {
-        const relativeUrl = `/customer/report/generate?filter=${filter}`
+        const relativeUrl = `/customer/report/generate?filter=${filter}&status=${status}&genre=${genre}&dateOfBirth=${dateOfBirth}`
 
         const response: AxiosResponse<Uint8Array> = await api.get(relativeUrl, {
             responseType: 'arraybuffer', // Configura o tipo de resposta como "arraybuffer"

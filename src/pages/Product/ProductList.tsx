@@ -2,6 +2,9 @@ import { useMemo, useState } from 'react'
 
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import {
+    Box,
+    Button,
+    Grid,
     Icon,
     IconButton,
     LinearProgress,
@@ -12,7 +15,8 @@ import {
     TableContainer,
     TableFooter,
     TableHead,
-    TableRow
+    TableRow,
+    Typography
 } from '@mui/material'
 
 import { IListProduct } from '../../shared/services/api/product/ProductService'
@@ -21,6 +25,7 @@ import { ListTools } from '../../shared/components'
 import { Environment } from '../../shared/environment'
 import {
     formattedDateBR,
+    formattedDateUS,
     formattedPrice
 } from '../../shared/util'
 
@@ -35,9 +40,26 @@ import {
     UseFetchProductData,
     UseHandleProduct
 } from './hooks/listHooks'
+import { VDateInput, VForm, VSelect, useVForm } from '../../shared/forms'
+import { VAutoCompleteCategory } from './components/VAutoCompleteCategory'
+import { VAutoCompleteTechnique } from './components/VAutoCompleteTechnique'
+import { VAutoCompleteDimension } from './components/VAutoCompleteDimension'
+
+interface IFilterData {
+    status: string,
+    type: string,
+    orientation: string,
+    category_id: string,
+    technique_id: string,
+    dimension_id: string,
+    productionDate: Date,
+    orderByPrice: string
+}
 
 export const ProductList: React.FC = () => {
     const [searchParams, setSearchParams] = useSearchParams()
+
+    const { formRef } = useVForm('formRef')
 
     const [rows, setRows] = useState<IListProduct[]>([])
     const [totalCount, setTotalCount] = useState(0)
@@ -60,10 +82,116 @@ export const ProductList: React.FC = () => {
         return Number(searchParams.get('page') || '1')
     }, [searchParams])
 
-    //Hooks personalizados
-    UseFetchProductData({ setIsLoading, setRows, setTotalCount, search, page })
+    const status = useMemo(() => {
+        //Pega o parâmetro na URL
+        return (searchParams.get('status') || '')
+    }, [searchParams])
 
-    const { handleDelete, handlePDF } = UseHandleProduct({ setRows, rows, search })
+    const type = useMemo(() => {
+        //Pega o parâmetro na URL
+        return (searchParams.get('type') || '')
+    }, [searchParams])
+
+    const orientation = useMemo(() => {
+        //Pega o parâmetro na URL
+        return (searchParams.get('orientation') || '')
+    }, [searchParams])
+
+    const category = useMemo(() => {
+        //Pega o parâmetro na URL
+        return (searchParams.get('category') || '')
+    }, [searchParams])
+
+    const technique = useMemo(() => {
+        //Pega o parâmetro na URL
+        return (searchParams.get('technique') || '')
+    }, [searchParams])
+
+    const dimension = useMemo(() => {
+        //Pega o parâmetro na URL
+        return (searchParams.get('dimension') || '')
+    }, [searchParams])
+
+    const productionDate = useMemo(() => {
+        //Pega o parâmetro na URL
+        return (searchParams.get('productionDate') || '')
+    }, [searchParams])
+
+    const orderByPrice = useMemo(() => {
+        //Pega o parâmetro na URL
+        return (searchParams.get('orderByPrice') || '')
+    }, [searchParams])
+
+    //Hooks personalizados
+    UseFetchProductData({
+        setIsLoading,
+        setRows,
+        setTotalCount,
+        search,
+        page,
+        status,
+        type,
+        orientation,
+        category,
+        technique,
+        dimension,
+        productionDate,
+        orderByPrice
+    })
+
+    const { handleDelete, handlePDF } = UseHandleProduct({ 
+        setRows, 
+        rows, 
+        search,
+        status,
+        type,
+        orientation,
+        category,
+        technique,
+        dimension,
+        productionDate,
+        orderByPrice
+    })
+
+    const handleSearchFilters = (data: IFilterData) => {
+        setSearchParams({
+            search: search,
+            page: '1',
+            status: data.status,
+            type: data.type,
+            orientation: data.orientation,
+            category: data.category_id,
+            technique: data.technique_id,
+            dimension: data.dimension_id,
+            productionDate: formattedDateUS(data.productionDate),
+            orderByPrice: data.orderByPrice
+        },
+        { replace: true })
+    }
+
+    const handleResetFilters = () => {
+        setSearchParams({
+            search: search,
+            page: '1',
+            status: '',
+            type: '',
+            orientation: '',
+            category: '',
+            technique: '',
+            dimension: '',
+            productionDate: '',
+            orderByPrice: ''
+        },
+        { replace: true })
+
+        formRef.current?.reset()
+        formRef.current?.setData({
+            status: '',
+            type: '',
+            orientation: '',
+            orderByPrice: ''
+        })
+    }
 
     return (
         <BasePageLayout
@@ -78,6 +206,102 @@ export const ProductList: React.FC = () => {
                     onChangeSearchText={text => setSearchParams({ search: text, page: '1' }, { replace: true })}
                 />
             }>
+
+            <VForm ref={formRef} onSubmit={handleSearchFilters}>
+                <Box margin={1} display='flex' flexDirection='column' component={Paper} variant='outlined'>
+
+                    <Grid container direction='column' padding={2} spacing={2}>
+                        {isLoading && (
+                            <Grid item>
+                                <LinearProgress variant='indeterminate' />
+                            </Grid>
+                        )}
+
+                        <Grid item>
+                            <Typography variant='h6'>Filtros</Typography>
+                        </Grid>
+
+                        <Grid container item direction='row' spacing={2}>
+                            <Grid item xs={12} sm={12} md={6} lg={2} xl={2}>
+                                <VSelect
+                                    fullWidth
+                                    label='Status'
+                                    name='status'
+                                    options={[
+                                        { value: 'Ativo', label: 'Ativo' },
+                                        { value: 'Vendido', label: 'Vendido' },
+                                        { value: 'Inativo', label: 'Inativo' }
+                                    ]}
+                                    disabled={isLoading} />
+                            </Grid>
+
+                            <Grid item xs={12} sm={12} md={6} lg={2} xl={2}>
+                                <VSelect
+                                    fullWidth
+                                    label='Tipo'
+                                    name='type'
+                                    options={[
+                                        { value: 'Original', label: 'Original' },
+                                        { value: 'Print', label: 'Print' },
+                                    ]}
+                                    disabled={isLoading} />
+                            </Grid>
+
+                            <Grid item xs={12} sm={12} md={6} lg={2} xl={2}>
+                                <VSelect
+                                    fullWidth
+                                    label='Orientação'
+                                    name='orientation'
+                                    options={[
+                                        { value: 'Retrato', label: 'Retrato' },
+                                        { value: 'Paisagem', label: 'Paisagem' },
+                                    ]}
+                                    disabled={isLoading} />
+                            </Grid>
+
+                            <Grid item xs={12} sm={12} md={6} lg={2} xl={2}>
+                                <VAutoCompleteCategory isExternalLoading={isLoading} />
+                            </Grid>
+
+                            <Grid item xs={12} sm={12} md={6} lg={2} xl={2}>
+                                <VAutoCompleteTechnique isExternalLoading={isLoading} />
+                            </Grid>
+
+                            <Grid item xs={12} sm={12} md={6} lg={2} xl={2}>
+                                <VAutoCompleteDimension isExternalLoading={isLoading} />
+                            </Grid>
+
+                            <Grid item xs={12} sm={12} md={6} lg={2} xl={2}>
+                                <VDateInput label='Data do produção' name='productionDate' disabled={isLoading} />
+                            </Grid>
+
+                            <Grid item xs={12} sm={12} md={6} lg={2} xl={2}>
+                                <VSelect
+                                    fullWidth
+                                    label='Preço'
+                                    name='orderByPrice'
+                                    options={[
+                                        { value: 'DESC', label: 'Maior Valor' },
+                                        { value: 'ASC', label: 'Menor Valor' },
+                                    ]}
+                                    disabled={isLoading} />
+                            </Grid>
+
+                            <Grid item xs={12} sm={12} md={6} lg={2} xl={2}>
+                                <Box display='flex' gap={2}>
+                                    <Button variant='contained' type='submit' sx={{ marginTop: 1 }} disabled={isLoading}>
+                                        <Icon>search</Icon>
+                                    </Button>
+
+                                    <Button variant='outlined' type='button' sx={{ marginTop: 1 }} onClick={handleResetFilters}>
+                                        <Icon>refresh</Icon>
+                                    </Button>
+                                </Box>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </Box>
+            </VForm>
 
             <TableContainer component={Paper} sx={{ m: 1, width: 'auto' }} >
                 <Table>

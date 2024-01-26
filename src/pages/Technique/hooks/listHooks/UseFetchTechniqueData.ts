@@ -13,9 +13,10 @@ interface IUseFetchTechniqueDataProps {
     setTotalCount: (total: number) => void
     search: string
     page: number
+    status: string
 }
 
-export const UseFetchTechniqueData = ({setIsLoading, setRows, setTotalCount, search, page}: IUseFetchTechniqueDataProps) => {
+export const UseFetchTechniqueData = ({setIsLoading, setRows, setTotalCount, search, page, status}: IUseFetchTechniqueDataProps) => {
     //Para adicionar delay na pesquisa
     const { debounce } = useDebounce()
 
@@ -24,7 +25,7 @@ export const UseFetchTechniqueData = ({setIsLoading, setRows, setTotalCount, sea
     
         const fetchData = () => {
             debounce(async () => {
-                const result = await TechniqueService.getAll(page, search, true)
+                const result = await TechniqueService.getAll(page, search, status, true)
                 setIsLoading(false)
     
                 if (result instanceof Error) {
@@ -39,6 +40,6 @@ export const UseFetchTechniqueData = ({setIsLoading, setRows, setTotalCount, sea
     
         fetchData()
     
-    }, [search, page])
+    }, [search, page, status])
 }
 

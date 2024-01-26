@@ -7,9 +7,29 @@ interface IUseHandleProduct {
     setRows: (products: IListProduct[]) => void
     rows:  IListProduct[]
     search: string
+    status: string
+    type: string
+    orientation: string
+    category: string
+    technique: string
+    dimension: string
+    productionDate: string
+    orderByPrice: string
 }
 
-export const UseHandleProduct = ({ setRows, rows, search }: IUseHandleProduct) => {
+export const UseHandleProduct = ({ 
+    setRows, 
+    rows, 
+    search,
+    status,
+    type,
+    orientation,
+    category,
+    technique,
+    dimension,
+    productionDate,
+    orderByPrice
+}: IUseHandleProduct) => {
 
     const handleDelete = async (id: number, name: string) => {
 
@@ -29,7 +49,7 @@ export const UseHandleProduct = ({ setRows, rows, search }: IUseHandleProduct) =
     }
 
     const handlePDF = async () => {
-        const result = await ProductService.generatePdf(search)
+        const result = await ProductService.generatePdf(search, status, type, orientation, category, technique, dimension, productionDate, orderByPrice)
 
         if (result instanceof Error) {
             toast.error(result.message)

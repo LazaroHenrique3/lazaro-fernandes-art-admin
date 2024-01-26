@@ -127,8 +127,8 @@ const getFinancialInformation = async  (): Promise<IFinancialInformations | Erro
 
 }
 
-const getAllAdmin = async (page = 1, filter = ''): Promise<ISaleTotalCount | Error> => {
-    const relativeUrl = `/admin/sale?page=${page}&limit=${Environment.LINE_LIMIT}&filter=${filter}`
+const getAllAdmin = async (page = 1, filter = '', status = '', orderDate = '', paymentDueDate = '', orderByPrice = ''): Promise<ISaleTotalCount | Error> => {
+    const relativeUrl = `/admin/sale?page=${page}&limit=${Environment.LINE_LIMIT}&filter=${filter}&status=${status}&orderDate=${orderDate}&paymentDueDate=${paymentDueDate}&orderByPrice=${orderByPrice}`
 
     try {
         const { data, headers } = await api.get(relativeUrl)
@@ -223,10 +223,10 @@ const deleteById = async (idCustomer: number, idSale: number): Promise<void | Er
 
 }
 
-const generatePdf = async (filter = ''): Promise<Uint8Array | Error> => {
+const generatePdf = async (filter = '', status = '', orderDate = '', paymentDueDate = '', orderByPrice = ''): Promise<Uint8Array | Error> => {
 
     try {
-        const relativeUrl = `/sales/report/generate?filter=${filter}`
+        const relativeUrl = `/sales/report/generate?filter=${filter}&status=${status}&orderDate=${orderDate}&paymentDueDate=${paymentDueDate}&orderByPrice=${orderByPrice}`
 
         const response: AxiosResponse<Uint8Array> = await api.get(relativeUrl, {
             responseType: 'arraybuffer', // Configura o tipo de resposta como "arraybuffer"

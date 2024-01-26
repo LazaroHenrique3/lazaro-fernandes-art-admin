@@ -7,9 +7,10 @@ interface IUseHandleAdministratorProps {
     setRows: (administrators: IListAdministrator[]) => void
     rows:  IListAdministrator[]
     search: string
+    status: string
 }
 
-export const UseHandleAdministrator = ({ setRows, rows, search }: IUseHandleAdministratorProps) => {
+export const UseHandleAdministrator = ({ setRows, rows, search, status }: IUseHandleAdministratorProps) => {
 
     const handleDelete = async (id: number, name: string) => {
 
@@ -29,7 +30,7 @@ export const UseHandleAdministrator = ({ setRows, rows, search }: IUseHandleAdmi
     }
 
     const handlePDF = async () => {
-        const result = await AdministratorService.generatePdf(search)
+        const result = await AdministratorService.generatePdf(search, status)
 
         if (result instanceof Error) {
             toast.error(result.message)

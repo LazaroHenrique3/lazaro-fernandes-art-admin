@@ -31,13 +31,13 @@ interface ErrorResponse {
     }
 }
 
-const getAll = async (page = 1, filter = '', showInative = false, id?: number): Promise<ITechniqueTotalCount | Error> => {
+const getAll = async (page = 1, filter = '', status = '', showInative = false, id?: number): Promise<ITechniqueTotalCount | Error> => {
     let relativeUrl = ''
 
     if (id) {
-        relativeUrl = `/technique?id=${id}&page=${page}&limit=${Environment.LINE_LIMIT}&showInative=${showInative}&filter=${filter}`
+        relativeUrl = `/technique?id=${id}&page=${page}&limit=${Environment.LINE_LIMIT}&showInative=${showInative}&filter=${filter}&status=${status}`
     } else {
-        relativeUrl = `/technique?page=${page}&limit=${Environment.LINE_LIMIT}&showInative=${showInative}&filter=${filter}`
+        relativeUrl = `/technique?page=${page}&limit=${Environment.LINE_LIMIT}&showInative=${showInative}&filter=${filter}&status=${status}`
     }
 
     try {
@@ -116,10 +116,10 @@ const deleteById = async (id: number): Promise<void | Error> => {
 
 }
 
-const generatePdf = async (filter = ''): Promise<Uint8Array | Error> => {
+const generatePdf = async (filter = '', status = ''): Promise<Uint8Array | Error> => {
 
     try {
-        const relativeUrl = `/technique/report/generate?filter=${filter}`
+        const relativeUrl = `/technique/report/generate?filter=${filter}&status=${status}`
 
         const response: AxiosResponse<Uint8Array> = await api.get(relativeUrl, {
             responseType: 'arraybuffer', // Configura o tipo de resposta como "arraybuffer"

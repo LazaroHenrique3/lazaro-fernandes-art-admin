@@ -17,9 +17,13 @@ interface IUseFetchSaleDataProps {
     setTotalCount: (total: number) => void
     search: string
     page: number
+    status: string,
+    orderDate: string,
+    paymentDueDate: string,
+    orderByPrice: string
 }
 
-export const UseFetchSaleData = ({ setIsLoading, setRows, setTotalCount, search, page }: IUseFetchSaleDataProps) => {
+export const UseFetchSaleData = ({ setIsLoading, setRows, setTotalCount, search, page, status, orderDate, paymentDueDate, orderByPrice }: IUseFetchSaleDataProps) => {
 
     //Para adicionar delay na pesquisa
     const { debounce } = useDebounce()
@@ -29,7 +33,7 @@ export const UseFetchSaleData = ({ setIsLoading, setRows, setTotalCount, search,
 
         const fetchData = () => {
             debounce(async () => {
-                const result = await SaleService.getAllAdmin(page, search)
+                const result = await SaleService.getAllAdmin(page, search, status, orderDate, paymentDueDate, orderByPrice)
                 setIsLoading(false)
 
                 if (result instanceof Error) {
@@ -47,7 +51,7 @@ export const UseFetchSaleData = ({ setIsLoading, setRows, setTotalCount, search,
 
         fetchData()
 
-    }, [search, page])
+    }, [search, page, status, orderDate, paymentDueDate, orderByPrice])
 }
 
 //Função resposável por comparar e ordenar os resultados
