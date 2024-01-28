@@ -55,3 +55,8 @@ export const formattedDateUS = (date: Date): string => {
     if (date === null) return ''
     return format(date, 'yyyy-MM-dd')
 }
+
+export const capitalizeFirstLetter = (str: string) => {
+    const formattedString = (str === '') ? '' : str.charAt(0).toUpperCase() + str.slice(1)
+    return formattedString
+}

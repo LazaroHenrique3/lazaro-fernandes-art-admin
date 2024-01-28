@@ -88,6 +88,12 @@ export type TTopCategories = {
     total_sales: number
 }
 
+export type TMonthsWithFullBilling = {
+    formattedDate: string
+    monthName: string
+    total: number
+}
+
 export interface IFinancialInformations {
     topCategories: TTopCategories[]
     totalRevenue: number
@@ -95,6 +101,7 @@ export interface IFinancialInformations {
     lastMonthBilling: number
     totalSaleAwaitingPayment: number
     totalSaleInPreparation: number
+    monthsWithFullBilling: TMonthsWithFullBilling[]
 }
 
 interface ErrorResponse {
