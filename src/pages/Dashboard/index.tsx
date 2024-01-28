@@ -20,7 +20,7 @@ import {
 } from '../../shared/services/api/sales/SaleService'
 
 import {
-    CategoriesChart,
+    CategoriesChart, BarChart,
 } from '../../shared/components'
 
 //Hooks personalizados
@@ -131,8 +131,20 @@ export const Dashboard = () => {
                                 {(isLoading) ? (
                                     <Skeleton variant="rectangular" width={700} height={400} />
                                 ) : (financialData.topCategories.length > 0) ? (
-                                    <CardContent>
+                                    <CardContent >
                                         <CategoriesChart dataChart={financialData.topCategories} />
+                                    </CardContent>
+                                ) : (<></>)}
+                            </Card>
+                        </Grid>
+
+                        <Grid item xs={12} sm={12} md={12} lg={6}>
+                            <Card sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', width: '100%' }}>
+                                {(isLoading) ? (
+                                    <Skeleton variant="rectangular" width={700} height={400} />
+                                ) : (financialData.monthsWithFullBilling.length > 0) ? (
+                                    <CardContent sx={{ height: '300px', width: '100%' }}>
+                                        <BarChart dataChart={financialData.monthsWithFullBilling} />
                                     </CardContent>
                                 ) : (<></>)}
                             </Card>
