@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-import { format } from 'date-fns'
+import { format, parseISO } from 'date-fns'
 
 export const formatCPF = (cpf: string): string => {
     // Remove todos os caracteres não numéricos do CPF
@@ -60,3 +60,32 @@ export const capitalizeFirstLetter = (str: string) => {
     const formattedString = (str === '') ? '' : str.charAt(0).toUpperCase() + str.slice(1)
     return formattedString
 }
+
+export function formatDateTimeForTrackOrder(dateTimeString: string) {
+    const dateTime = parseISO(dateTimeString)
+
+    // Verifica se a conversão foi bem-sucedida
+    if (isNaN(dateTime.getTime())) {
+        console.error('Invalid date and time format')
+        return 'Data inválida'
+    }
+
+    // Formatar a data e hora conforme desejado (DD/MM/YYYY às HH:mm)
+    const formattedDateTime = format(dateTime, 'dd/MM/yyyy \'às\' HH:mm')
+
+
+    return formattedDateTime
+}
+
+export function showFormattedDataString(date: string, typeFormatation: 'pt' | 'en' = 'pt'): string {
+
+    const parts = date.split('-')
+    if (parts.length !== 3) {
+        return 'Data inválida'
+    }
+
+    const [year, month, day] = parts
+
+    return (typeFormatation === 'pt') ? `${day}/${month}/${year}` : `${year}-${month}-${day}`
+}
+
