@@ -16,21 +16,26 @@ import {
 import {
     TSaleStatus
 } from '../../../../shared/services/api/sales/SaleService'
+import { TrackOrder } from '../../../../shared/components/Modals/TrackOrder/TrackOrder'
 
 interface IOrderSendOrConcludeCardProps {
+    trackingCode?: string
     saleStatus: TSaleStatus
     idSale: number,
     idCustomerSale: number,
     updateSendStatus: (status: TSaleStatus) => void
+    setTrackingCode: (trakingCode: string) => void
     formRef: React.RefObject<FormHandles>
     handleConcludeOrder: () => void
 }
 
 export const OrderSendOrConcludeCard: React.FC<IOrderSendOrConcludeCardProps> = ({
+    trackingCode,
     saleStatus,
     idSale,
     idCustomerSale,
     updateSendStatus,
+    setTrackingCode,
     formRef,
     handleConcludeOrder
 }) => {
@@ -48,16 +53,24 @@ export const OrderSendOrConcludeCard: React.FC<IOrderSendOrConcludeCardProps> = 
                         {(saleStatus === 'Em preparação') ? (
                             <SendSaleModal
                                 updateSendStatus={updateSendStatus}
+                                setTrackingCode={setTrackingCode}
                                 externalFormSaleRef={formRef}
                                 idSale={idSale}
                                 idCustomer={idCustomerSale} />
                         ) : (
-                            <Button
-                                onClick={handleConcludeOrder}
-                                variant='contained'
-                                startIcon={<Icon>check_circle</Icon>}>
-                                Pedido recebido
-                            </Button>
+                            <Box display="flex" flexDirection='column' gap={1}>
+                                {trackingCode && (
+                                    <TrackOrder trackingCode={trackingCode} />
+                                )}
+
+                                <Button
+                                    fullWidth
+                                    onClick={handleConcludeOrder}
+                                    variant='contained'
+                                    startIcon={<Icon>check_circle</Icon>}>
+                                    Pedido recebido
+                                </Button>
+                            </Box>
                         )}
 
                     </Box>

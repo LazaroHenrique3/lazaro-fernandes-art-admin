@@ -22,11 +22,12 @@ interface IUseSendOrder {
     idCustomer: number,
     idSale: number
     updateSendStatus: (status: TSaleStatus) => void
+    setTrackingCode: (trakingCode: string) => void
     externalFormSaleRef: React.RefObject<FormHandles>
     formRef: React.RefObject<FormHandles>
 }
 
-export const UseSendSale = ({ setIsLoading, setOpen, idCustomer, idSale, updateSendStatus, externalFormSaleRef, formRef }: IUseSendOrder) => {
+export const UseSendSale = ({ setIsLoading, setOpen, idCustomer, idSale, updateSendStatus, setTrackingCode, externalFormSaleRef, formRef }: IUseSendOrder) => {
 
     const handleSendSale = async (data: IFormData) => {
         try {
@@ -45,6 +46,7 @@ export const UseSendSale = ({ setIsLoading, setOpen, idCustomer, idSale, updateS
             //Adicionando as informações atualizadas no form principal
             externalFormSaleRef.current?.setFieldValue('status', 'Enviado')
             externalFormSaleRef.current?.setFieldValue('tracking_code', validateData.tracking_code)
+            setTrackingCode(validateData.tracking_code)
 
             toast.success('Status da venda foi atualizado para "Enviado"!')
             updateSendStatus('Enviado')

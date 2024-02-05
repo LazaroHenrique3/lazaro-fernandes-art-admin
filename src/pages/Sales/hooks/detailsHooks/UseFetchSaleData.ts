@@ -33,6 +33,7 @@ interface IUseFetchSaleDataProps {
     setSaleItems: (saleItems: ISaleItemsList[]) => void
     setSaleAddress: (saleAddress: IListAddress) => void
     setSaleCustomer: (saleAddress: IListCustomer) => void
+    setTrackingCode: (trackingCode: undefined | string) => void
     formRef: React.RefObject<FormHandles>
     idSale: string
     idCustomer: string
@@ -45,6 +46,7 @@ export const UseFetchSaleData = ({
     setSaleStatus, 
     setSaleAddress, 
     setSaleCustomer,
+    setTrackingCode,
     formRef, 
     idSale,
     idCustomer }: IUseFetchSaleDataProps) => {
@@ -91,6 +93,8 @@ export const UseFetchSaleData = ({
 
             //Setando a sinformações do cliente da venda
             setSaleCustomer(saleCustomer)
+
+            setTrackingCode(sale.tracking_code)
 
             setName(`${formattedOrder.customer_name} - #${formattedOrder.id}`)
             formRef.current?.setData(formattedOrder)

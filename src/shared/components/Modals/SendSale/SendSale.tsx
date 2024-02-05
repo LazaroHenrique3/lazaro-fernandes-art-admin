@@ -42,11 +42,12 @@ import {
 interface ISendSaleModal {
     idCustomer: number,
     idSale: number
+    setTrackingCode: (trakingCode: string) => void
     updateSendStatus: (status: TSaleStatus) => void
     externalFormSaleRef: React.RefObject<FormHandles>
 }
  
-export const SendSaleModal: React.FC<ISendSaleModal> = ({idSale, idCustomer, updateSendStatus, externalFormSaleRef}) => {
+export const SendSaleModal: React.FC<ISendSaleModal> = ({idSale, idCustomer, updateSendStatus, setTrackingCode, externalFormSaleRef}) => {
     const { formRef } = useVForm('formRef')
 
     const [isLoading, setIsLoading] = useState(false)
@@ -60,7 +61,7 @@ export const SendSaleModal: React.FC<ISendSaleModal> = ({idSale, idCustomer, upd
     }
 
     //Hooks personalizados
-    const { handleSendSale } = UseSendSale({ setIsLoading, setOpen, idSale, idCustomer, updateSendStatus, externalFormSaleRef, formRef })
+    const { handleSendSale } = UseSendSale({ setIsLoading, setOpen, idSale, idCustomer, updateSendStatus, setTrackingCode, externalFormSaleRef, formRef })
 
     return (
         <>

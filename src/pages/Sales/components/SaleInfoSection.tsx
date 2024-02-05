@@ -23,22 +23,28 @@ interface ISaleInfoSection {
     idSale: number,
     idCustomer: number,
     formRef: React.RefObject<FormHandles>
+    trackingCode?: string,
+    setSaleAddress: (address: IListAddress) => void
     setSaleStatus: (newStatus: TSaleStatus) => void,
+    setTrackingCode: (trakingCode: string) => void
     handleConcludeSale: () => void
 }
 
 export const SaleInfoSection: React.FC<ISaleInfoSection> = ({
-    isLoading, 
-    saleStatus, 
-    saleAddress, 
+    isLoading,
+    saleStatus,
+    saleAddress,
     saleCustomer,
     idSale,
     idCustomer,
     formRef,
+    trackingCode,
+    setSaleAddress,
     setSaleStatus,
+    setTrackingCode,
     handleConcludeSale
 }) => {
-
+    
     return (
         <Grid container padding={2} spacing={2}>
             <Grid container item xl={12}>
@@ -69,6 +75,11 @@ export const SaleInfoSection: React.FC<ISaleInfoSection> = ({
                     />
 
                     <DeliveryAddressCard
+                        formRef={formRef}
+                        statusSale={saleStatus}
+                        idSale={idSale}
+                        idUser={idCustomer}
+                        idAddress={saleAddress.id}
                         cep={saleAddress.cep}
                         city={saleAddress.city}
                         state={saleAddress.state}
@@ -76,12 +87,15 @@ export const SaleInfoSection: React.FC<ISaleInfoSection> = ({
                         number={String(saleAddress.number)}
                         street={saleAddress.street}
                         complement={saleAddress.complement}
+                        setSaleAddress={setSaleAddress}
                     />
 
                     {(saleStatus === 'Em preparação' || saleStatus === 'Enviado') &&
                         <OrderSendOrConcludeCard
+                            trackingCode={trackingCode}
                             handleConcludeOrder={() => handleConcludeSale()}
                             updateSendStatus={setSaleStatus}
+                            setTrackingCode={setTrackingCode}
                             formRef={formRef}
                             saleStatus={saleStatus}
                             idSale={Number(idSale)}
