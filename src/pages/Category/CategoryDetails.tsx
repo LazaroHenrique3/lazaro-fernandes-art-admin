@@ -44,7 +44,7 @@ export const CategoryDetails: React.FC = () => {
 
                     onClickSaveButton={() => formRef.current?.submitForm()}
                     onClickDeleteButton={() => handleDelete(Number(id), name)}
-                    onClickBackButton={() => navigate('/admin/category')}
+                    onClickBackButton={() => navigate(-1)}
                     onClickNewButton={() => navigate('/admin/category/details/new')}
                 />
             }>

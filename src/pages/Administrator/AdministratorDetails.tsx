@@ -60,7 +60,7 @@ export const AdministratorDetails: React.FC = () => {
 
                     onClickSaveButton={() => formRef.current?.submitForm()}
                     onClickDeleteButton={() => handleDelete(Number(id), name)}
-                    onClickBackButton={() => navigate('/admin/administrator')}
+                    onClickBackButton={() => navigate(-1)}
                     onClickNewButton={() => navigate('/admin/administrator/details/new')}
                 />
             }>

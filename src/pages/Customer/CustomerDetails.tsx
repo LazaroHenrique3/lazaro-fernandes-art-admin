@@ -70,7 +70,7 @@ export const CustomerDetails: React.FC = () => {
 
                     onClickSaveButton={() => formRef.current?.submitForm()}
                     onClickDeleteButton={() => handleDelete(Number(id), name)}
-                    onClickBackButton={() => navigate('/admin/customer')}
+                    onClickBackButton={() => navigate(-1)}
                     onClickNewButton={() => navigate('/admin/customer/details/new')}
                 />
             }>

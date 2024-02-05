@@ -49,7 +49,7 @@ export const DimensionDetails: React.FC = () => {
 
                     onClickSaveButton={() => formRef.current?.submitForm()}
                     onClickDeleteButton={() => handleDelete(Number(id), dimension)}
-                    onClickBackButton={() => navigate('/admin/dimension')}
+                    onClickBackButton={() => navigate(-1)}
                     onClickNewButton={() => navigate('/admin/dimension/details/new')}
                 />
             }>

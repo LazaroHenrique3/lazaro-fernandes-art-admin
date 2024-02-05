@@ -82,7 +82,7 @@ export const ProductDetails: React.FC = () => {
 
                     onClickSaveButton={() => formRef.current?.submitForm()}
                     onClickDeleteButton={() => handleDelete(Number(id), name)}
-                    onClickBackButton={() => navigate('/admin/product')}
+                    onClickBackButton={() => navigate(-1)}
                     onClickNewButton={() => navigate('/admin/product/details/new')}
                 />
             }>
