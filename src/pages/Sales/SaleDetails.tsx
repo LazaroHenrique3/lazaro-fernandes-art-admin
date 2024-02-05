@@ -47,6 +47,7 @@ export const SaleDetails: React.FC = () => {
     const { accessLevel } = useAuthContext()
 
     const { idSale = '', idCustomer = '' } = useParams<'idSale' | 'idCustomer'>()
+
     const navigate = useNavigate()
 
     const { formRef } = useVForm('formRef')
@@ -60,6 +61,8 @@ export const SaleDetails: React.FC = () => {
     const [saleAddress, setSaleAddress] = useState<IListAddress>({} as IListAddress)
     const [saleCustomer, setSaleCustomer] = useState<IListCustomer>({} as IListCustomer)
 
+    const [trackingCode, setTrackingCode] = useState<undefined | string>(undefined)
+
     //Hooks personalizados
     UseFetchSaleData({
         setIsLoading,
@@ -68,6 +71,7 @@ export const SaleDetails: React.FC = () => {
         setSaleStatus,
         setName,
         setSaleCustomer,
+        setTrackingCode,
         formRef,
         idSale,
         idCustomer
@@ -90,7 +94,7 @@ export const SaleDetails: React.FC = () => {
 
                     onClickSaveButton={() => formRef.current?.submitForm()}
                     onClickDeleteButton={() => handleDeleteSale()}
-                    onClickBackButton={() => navigate('/admin/sale')}
+                    onClickBackButton={() => navigate(-1)}
                 />
             }>
 
@@ -180,8 +184,11 @@ export const SaleDetails: React.FC = () => {
                 saleCustomer={saleCustomer}
                 saleStatus={saleStatus}
                 formRef={formRef}
+                trackingCode={trackingCode}
                 setSaleStatus={setSaleStatus}
                 handleConcludeSale={handleConcludeSale}
+                setSaleAddress={setSaleAddress}
+                setTrackingCode={setTrackingCode}
             />
         </BasePageLayout>
     )
