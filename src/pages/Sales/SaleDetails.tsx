@@ -97,7 +97,7 @@ export const SaleDetails: React.FC = () => {
                     onClickBackButton={() => navigate(-1)}
                 />
             }>
-
+            
             <VForm ref={formRef} onSubmit={handleUpdateTrackingCode}>
                 <Box margin={1} display='flex' flexDirection='column' component={Paper} variant='outlined'>
 

@@ -139,7 +139,7 @@ export const AddressCard: React.FC<IAddressCardProps> = ({
                                         onChange={(e) => handleChangeShippingMethod(e.target.value as TSaleShippingMethods)}
                                     >
                                         <FormControlLabel value="PAC" control={<Radio />} label={`PAC - ${formattedPrice(Number(infoShippingPac.price))} | ${showFormattedDataString(infoShippingPac.deadline, 'pt')}`} />
-                                        <FormControlLabel value="SEDEX" control={<Radio />} label={`SEDEX - ${formattedPrice(Number(infoShippingPac.price))} | ${showFormattedDataString(infoShippingSedex.deadline, 'pt')}`} />
+                                        <FormControlLabel value="SEDEX" control={<Radio />} label={`SEDEX - ${formattedPrice(Number(infoShippingSedex.price))} | ${showFormattedDataString(infoShippingSedex.deadline, 'pt')}`} />
                                     </RadioGroup>
                                 </FormControl>
                             )}
