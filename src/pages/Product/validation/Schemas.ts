@@ -111,6 +111,7 @@ export const formatValidationSchema: yup.Schema<IFormData> = yup.object().shape(
         .required() as yup.Schema<FileList>,
     product_images: yup.mixed()
         .test('isImage', async (value) => {
+            console.log('Tchama')
             const product_images: FileList = value as FileList
 
             //Verificando se foi passado imagem e se é mais que  o permitido

@@ -126,6 +126,7 @@ export const ProductDetails: React.FC = () => {
                                     <ImageHandler
                                         handleUpdateImage={handleUpdateMainImage}
                                         isExternalLoading={isLoading}
+                                        typeImage='main_image'
                                         isInsertImage={false}
                                         urlImage={mainImage}
                                         showDeleteButton={false}
@@ -140,6 +141,7 @@ export const ProductDetails: React.FC = () => {
                                             handleDeleteImage={handleDeleteImage}
                                             handleUpdateImage={handleUpdateProductImage}
                                             isExternalLoading={isLoading}
+                                            typeImage='product_images'
                                             isInsertImage={false}
                                             urlImage={image.url}
                                             showDeleteButton={(productImages.length > 1)}

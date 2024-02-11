@@ -7,11 +7,13 @@ import {
 } from '../../../shared/forms'
 import { 
     formatValidationSchemaUpdateCustomerImage, 
-    formatValidationSchemaUpdateImage 
+    formatValidationSchemaUpdateMainImage,
+    formatValidationSchemaUpdateProductImage
 } from './validation/Schemas'
 
 interface Props {
     imageOf?: 'customer' | 'product' //Para saber se estou lidando com imagens do Cliente ou Produto
+    typeImage?: '' | 'main_image' | 'product_images' //Caso seja produto eu preciso saber se estou lidando com a imagem principal, ou imagem do produto
     idImage: number
     urlImage: string
     showDeleteButton: boolean
@@ -26,6 +28,7 @@ type InputProps = JSX.IntrinsicElements['input'] & Props
 
 export const ImageHandler: React.FC<InputProps> = ({
     imageOf = 'product',
+    typeImage = '',
     urlImage,
     showDeleteButton,
     idImage,
@@ -114,7 +117,13 @@ export const ImageHandler: React.FC<InputProps> = ({
                         try {
                             //Dependendo do tipo de imagem que estou lidando uso Schemas diferentes
                             if(imageOf === 'product'){
-                                await formatValidationSchemaUpdateImage.validate({ image: inputRef.current?.files as FileList }, { abortEarly: false })
+
+                                if (typeImage === 'main_image') {
+                                    await formatValidationSchemaUpdateMainImage.validate({ image: inputRef.current?.files as FileList }, { abortEarly: false })
+                                } else if (typeImage === 'product_images') {
+                                    await formatValidationSchemaUpdateProductImage.validate({ image: inputRef.current?.files as FileList }, { abortEarly: false })
+                                }
+
                             } else if (imageOf === 'customer') {
                                 await formatValidationSchemaUpdateCustomerImage.validate({ image: inputRef.current?.files as FileList }, { abortEarly: false })
                             }
@@ -127,6 +136,7 @@ export const ImageHandler: React.FC<InputProps> = ({
 
                             setError(undefined)
                         } catch (errors) {
+                            console.log('Entrou no catch?')
                             const errorsYup: yup.ValidationError = errors as yup.ValidationError
 
                             const validationErrors: IVFormErrors = {}
@@ -137,6 +147,7 @@ export const ImageHandler: React.FC<InputProps> = ({
                                 validationErrors[error.path] = error.message
                             })
 
+                            console.log(validationErrors)
                             setError(validationErrors['image'])
                         }
 

@@ -47,7 +47,6 @@ export const UseHandleProductImage = ({setIsLoading, setProductImages, setMainIm
     }
 
     const handleUpdateProductImage = async (id: number, newImage: FileList) => {
-
         setIsLoading(true)
 
         const [image] = newImage

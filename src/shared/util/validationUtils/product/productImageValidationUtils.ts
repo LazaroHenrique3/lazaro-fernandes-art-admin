@@ -65,7 +65,7 @@ export const isValidSize = (imageSize: number | FileList, value: any | undefined
                 throw new yup.ValidationError('Tamanho de imagem excede 2MB!', value, 'product_images')
             }
         }
-    } else  {
+    } else {
         if (imageSize as number > maxSize) {
             throw new yup.ValidationError('Tamanho de imagem excede 2MB!', value, 'main_image')
         }
@@ -92,6 +92,39 @@ export const isValidMainImageDimensions = async (image: File, value: any | undef
                 reject(
                     new yup.ValidationError(
                         'Ás dimensões deve ser entre (1070 a 1090 X 705 a 725)pixels.', value, 'main_image'
+                    )
+                )
+            }
+
+            // Liberar o URL temporário após o uso
+            URL.revokeObjectURL(imageUrl)
+        }
+
+        return true
+    })
+}
+
+//Verifica se as dimensões da imagem do produto estão dentro do range aceito, diferentemente de isValidProductImagesDimensions, ele verifica d euma única imagem
+// eslint-disable-next-line 
+export const isValidProductImageDimensions = async (image: File, value: any | undefined): Promise<void | boolean> => {
+    // Criando um URL temporário para a imagem
+    const imageUrl = URL.createObjectURL(image)
+
+    // Criando uma promessa para lidar com a carga da imagem
+    return new Promise((resolve, reject) => {
+        const img = new Image()
+        img.src = imageUrl
+
+        img.onload = () => {
+            // Dimensões estão corretas
+            if (checkProductImagesDimensions(img.height, img.width)) {
+                resolve(true)
+                return true
+            } else {
+                // Dimensões não correspondem às recomendadas
+                reject(
+                    new yup.ValidationError(
+                        'Ás dimensões deve ser entre (690 a 710 X 720 a 740)pixels.', value, 'product_images'
                     )
                 )
             }
