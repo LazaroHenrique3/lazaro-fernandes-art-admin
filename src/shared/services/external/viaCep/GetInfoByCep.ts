@@ -27,11 +27,12 @@ export const getInfoByCep = async (cep: string): Promise<IInfoCep | Error> => {
     try {
         const { data } = await axios.get(`https://viacep.com.br/ws/${cep}/json/`)
 
-        if(data) {
-            return data
+        if ('erro' in data || !data) {
+            // Significa que houve um erro, provavelmente o user passou um cep inexistente
+            return new Error('Erro ao consultar informações.')
         }
 
-        return new Error('Erro ao consultar informações.')
+        return data
 
     } catch (error) {
         console.error(error)

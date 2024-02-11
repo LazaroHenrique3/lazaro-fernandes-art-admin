@@ -39,6 +39,15 @@ export const UseHandleAddress = ({ setIsLoading, setName, formRef, id, idCustome
             setIsLoading(false)
 
             if (result instanceof Error) {
+                formRef.current?.setData({
+                    cep: '',
+                    city: '',
+                    state: '',
+                    complement: '',
+                    neighborhood: '',
+                    street: ''
+                })
+                
                 toast.error(result.message)
                 return
             }
