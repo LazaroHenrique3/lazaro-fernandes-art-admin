@@ -39,6 +39,7 @@ export const UseFetchDimensionData = ({ setIsLoading, setDimension, formRef, id 
                 const dimension = result.dimension.split('x').map(part => part.trim())
 
                 formRef.current?.setData({
+                    status: result.status,
                     width: Number(dimension[0]),
                     height: Number(dimension[1]),
                     thickness: Number(dimension[2])
