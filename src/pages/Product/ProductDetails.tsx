@@ -8,7 +8,8 @@ import {
     LinearProgress,
     Paper,
     Tooltip,
-    Typography
+    Typography,
+    Button
 } from '@mui/material'
 
 import { BasePageLayout } from '../../shared/layouts'
@@ -69,6 +70,32 @@ export const ProductDetails: React.FC = () => {
         handleUpdateMainImage,
         handleDeleteImage }
         = UseHandleProductImage({ setIsLoading, setProductImages, setMainImage, productImages, productId })
+
+    const handleFillOutForm = () => {
+        //Setar automaticamente as informações
+        formRef.current?.setData({
+            category_id: 1,
+            category_name: 'Diversos',
+            main_image: '',
+            product_images: '',
+            description: 'At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident,',
+            dimension_id: 1,
+            dimension_name: '20 x 30 x 3',
+            orientation: 'Retrato',
+            price: 300,
+            production_date: '2021-02-15',
+            quantity: 1,
+            status: 'Ativo',
+            technique_id: 1,
+            technique_name: 'Tinta Acrílica',
+            title: 'Teste Cadastro',
+            type: 'Original',
+            weight: 50
+        })
+
+        // Limpar os erros do formulário
+        formRef.current?.setErrors({})
+    }
 
     return (
         <BasePageLayout
@@ -174,12 +201,20 @@ export const ProductDetails: React.FC = () => {
                         )}
 
                         <Grid item>
-                            <Typography variant='h6'>Geral</Typography>
+                            <Box display="flex" gap={2}>
+                                <Typography variant='h6'>Geral</Typography>
+
+                                {(id === 'new') && (
+                                    <Button variant="outlined" onClick={() => handleFillOutForm()}>
+                                        <Icon>code_icon</Icon>
+                                    </Button>
+                                )}
+                            </Box>
                         </Grid>
 
                         <Grid container item direction='row' spacing={2}>
                             {(id !== 'new') && (
-                            //Só pode ser alterado por usuários Root
+                                //Só pode ser alterado por usuários Root
                                 <Grid item xs={12} sm={12} md={6} lg={3} xl={3}>
                                     <VSelect
                                         fullWidth
