@@ -136,7 +136,6 @@ export const ImageHandler: React.FC<InputProps> = ({
 
                             setError(undefined)
                         } catch (errors) {
-                            console.log('Entrou no catch?')
                             const errorsYup: yup.ValidationError = errors as yup.ValidationError
 
                             const validationErrors: IVFormErrors = {}
