@@ -125,8 +125,7 @@ export const AdministratorDetails: React.FC = () => {
                                         label='Senha'
                                         disabled={isLoading}
                                         showPassword={showPassword}
-                                        handleClickShowPassword={setShowPassword}
-                                        size='small' />
+                                        handleClickShowPassword={setShowPassword}/>
                                 </Grid>
 
                                 <Grid item xs={12} sm={12} md={6} lg={4} xl={2}>
@@ -136,8 +135,7 @@ export const AdministratorDetails: React.FC = () => {
                                         label='Confirmar Senha'
                                         disabled={isLoading}
                                         showPassword={showConfirmPassword}
-                                        handleClickShowPassword={setShowConfirmPassword}
-                                        size='small' />
+                                        handleClickShowPassword={setShowConfirmPassword}/>
                                 </Grid>
 
                             </Grid>

@@ -1,6 +1,7 @@
 import * as yup from 'yup'
 
 import { cpf } from 'cpf-cnpj-validator'
+import { formattedDateBR } from '../../../shared/util'
 
 export interface IFormData {
     status: 'Ativo' | 'Inativo'
@@ -28,7 +29,7 @@ export interface IFormDataUpdate {
 export const formatValidationSchema: yup.Schema<IFormData> = yup.object().shape({
     status: yup.string().oneOf(['Ativo', 'Inativo']).required(),
     name: yup.string().required().min(3).max(100),
-    email: yup.string().required().email().min(5).max(100),
+    email: yup.string().email().min(5).max(100).matches(/^[\w!#$%&'*+/=?`{|}~.-]+@([\w-]+\.)+[\w-]{2,4}$/, 'Ex: exemplo@dominio.com').required(),
     cell_phone: yup.string().length(11).matches(/^\d{11}$/, 'Deve corresponder ao padrão: (44) 99999-9999').required(),
     genre: yup.string().length(1).oneOf(['M', 'F', 'L', 'N']).required(),
     date_of_birth: yup.date()
@@ -54,6 +55,13 @@ export const formatValidationSchema: yup.Schema<IFormData> = yup.object().shape(
                 currentDate.getMonth(),
                 currentDate.getDate()
             )
+            
+            //Idade máxima de 100 anos
+            const oneHundredYearsAgo = new Date(
+                currentDate.getFullYear() - 100,
+                currentDate.getMonth(),
+                currentDate.getDate()
+            )
 
             const customerBirth = new Date(value)
             if (!(customerBirth < eighteenYearsAgo)) {
@@ -63,6 +71,11 @@ export const formatValidationSchema: yup.Schema<IFormData> = yup.object().shape(
             //Verificando se a data é maior que hoje
             if (!(customerBirth <= currentDate)) {
                 throw new yup.ValidationError('A data não pode ser maior que a data atual!', value, 'date_of_birth')
+            }
+
+            //Verificando se o usuário tem até 100 anos
+            if (customerBirth < oneHundredYearsAgo) {
+                throw new yup.ValidationError(`Data de nascimento máxima: ${formattedDateBR(oneHundredYearsAgo)}`, value, 'date_of_birth')
             }
 
             return true
@@ -81,7 +94,7 @@ export const formatValidationSchema: yup.Schema<IFormData> = yup.object().shape(
 export const formatValidationSchemaUpdate: yup.Schema<IFormDataUpdate> = yup.object().shape({
     status: yup.string().oneOf(['Ativo', 'Inativo']).required(),
     name: yup.string().required().min(3).max(100),
-    email: yup.string().required().email().min(5).max(100),
+    email: yup.string().email().min(5).max(100).matches(/^[\w!#$%&'*+/=?`{|}~.-]+@([\w-]+\.)+[\w-]{2,4}$/, 'Ex: exemplo@dominio.com').required(),
     password: yup.string().required().min(6),
     confirmPassword: yup.string().oneOf([yup.ref('password')], 'As senhas devem ser iguais').required(),
     cell_phone: yup.string().length(11).matches(/^\d{11}$/, 'Deve corresponder ao padrão: (44) 99999-9999').required(),

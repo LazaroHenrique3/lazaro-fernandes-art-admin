@@ -11,7 +11,7 @@ import {
 } from '@mui/material'
 import { CircularProgress } from '@mui/material'
 
-import { VForm, VTextField, useVForm } from '../../shared/forms'
+import { VForm, VTextField, VTextFieldPassword, useVForm } from '../../shared/forms'
 
 //Hooks personalizados
 import {
@@ -22,6 +22,9 @@ export const RedefinePassword = () => {
     const { email = '' } = useParams<'email'>()
 
     const [isLoading, setIsLoading] = useState(false)
+    const [showPassword, setShowPassword] = useState(false)
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+
     const { formRef } = useVForm('formRef')
 
     useEffect(() => {
@@ -34,7 +37,7 @@ export const RedefinePassword = () => {
     }, [email, formRef])
 
     //Hooks personalizados
-    const { handleRedefinePassword } = UseRedefinePassword({setIsLoading, formRef})
+    const { handleRedefinePassword } = UseRedefinePassword({ setIsLoading, formRef })
 
     return (
         <Box width='100%' height='100vh' display='flex' alignItems='center' justifyContent='center'>
@@ -53,9 +56,23 @@ export const RedefinePassword = () => {
 
                             <VTextField fullWidth type='text' label='Token de verificação' name='verification_token' disabled={isLoading} size='small' />
 
-                            <VTextField fullWidth type='password' label='Nova Senha' name='password' disabled={isLoading} size='small' />
+                            <VTextFieldPassword
+                                fullWidth
+                                name='password'
+                                label='Nova Senha'
+                                disabled={isLoading}
+                                showPassword={showPassword}
+                                handleClickShowPassword={setShowPassword}
+                                size='small' />
 
-                            <VTextField fullWidth type='password' label='Confirmar Senha' name='confirmPassword' disabled={isLoading} size='small'/>
+                            <VTextFieldPassword
+                                fullWidth
+                                name='confirmPassword'
+                                label='Confirmar Senha'
+                                disabled={isLoading}
+                                showPassword={showConfirmPassword}
+                                handleClickShowPassword={setShowConfirmPassword}
+                                size='small' />
 
                         </Box>
                     </CardContent>
