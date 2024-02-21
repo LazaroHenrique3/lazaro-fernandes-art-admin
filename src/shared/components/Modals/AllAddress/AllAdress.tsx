@@ -64,7 +64,7 @@ export const AllAddresses: React.FC<IAllAddressesProps> = ({ formRef, idUser, se
     //Hooks personalizados
     const { handleUpdateSaleAddress, calculateShipping } = UseHandleSaleAddress({ formRef, idUser, setSaleAddress, handleClose, setCardLoading })
     UseFetchAddressData({ setIsLoading, setRows, setTotalCount, idUser, rows, search, page })
-    
+
     return (
         <>
             <Button
@@ -81,12 +81,18 @@ export const AllAddresses: React.FC<IAllAddressesProps> = ({ formRef, idUser, se
                 aria-describedby="child-modal-description"
             >
                 <Box sx={{ ...style, maxWidth: '600px' }}>
-                    <Typography variant='h6' align='center'>
-                        Endereços
-                    </Typography>
+                    <Box padding='5px' gap={2} display='flex' justifyContent='center' alignItems='center' width='100%'>
+                        <Typography variant='h6' align='center'>
+                            Endereços
+                        </Typography>
+
+                        {(cardLoading) && (
+                            <CircularProgress size='20px' variant='indeterminate' />
+                        )}
+                    </Box>
 
                     {(isLoading) ? (
-                        <Box padding='5px' display='flex' justifyContent='center' width='100%'>
+                        <Box padding='5px' display='flex' justifyContent='center' alignItems='center' width='100%'>
                             <CircularProgress variant='indeterminate' />
                         </Box>
                     ) : (

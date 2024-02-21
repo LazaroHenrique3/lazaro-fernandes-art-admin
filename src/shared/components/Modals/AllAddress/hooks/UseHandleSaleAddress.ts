@@ -27,7 +27,11 @@ export const UseHandleSaleAddress = ({ formRef, idUser, setSaleAddress, handleCl
     const handleUpdateSaleAddress = async (idSale: number, idNewAddress: number, shippingMethod: TSaleShippingMethods) => {
 
         if (confirm('Confirma a alteração de endereço de entrega?')) {
+            setCardLoading(true)
+
             const result = await SaleService.updateSaleAddress(idUser, idSale, idNewAddress, shippingMethod)
+
+            setCardLoading(false)
 
             if (result instanceof Error) {
                 toast.error(result.message)

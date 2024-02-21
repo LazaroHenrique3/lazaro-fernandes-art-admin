@@ -25,8 +25,6 @@ export const UseFetchAddressData = ({ setIsLoading, setName, formRef, id, idCust
                 setIsLoading(true)
                 const result = await AddressService.getById(Number(idCustomer), Number(id))
 
-                setIsLoading(false)
-
                 if (result instanceof Error) {
                     toast.error(result.message)
                     navigate('/customer/address')
@@ -35,6 +33,8 @@ export const UseFetchAddressData = ({ setIsLoading, setName, formRef, id, idCust
 
                 setName(result.street)
                 formRef.current?.setData(result)
+
+                setIsLoading(false)
             } else {
                 formRef.current?.setData({
                     name: '',
