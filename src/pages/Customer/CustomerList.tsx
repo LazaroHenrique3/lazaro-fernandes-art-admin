@@ -96,13 +96,34 @@ export const CustomerList: React.FC = () => {
     const { handleDelete, handlePDF } = UseHandleCustomer({ setRows, rows, search, status, genre, dateOfBirth })
 
     const handleSearchFilters = (data: IFilterData) => {
-        console.log(data)
         setSearchParams({
             search: search,
             page: '1',
             status: data.status,
             genre: data.genre,
             dateOfBirth: formattedDateUS(data.dateOfBirth),
+        },
+        { replace: true })
+    }
+
+    const handlePagination = (page: string) => {
+        setSearchParams({
+            search: search,
+            page: page,
+            status: status,
+            genre: genre,
+            dateOfBirth: dateOfBirth,
+        },
+        { replace: true })
+    }
+
+    const handleSearch = (newSearch: string) => {
+        setSearchParams({
+            search: newSearch,
+            page: '1',
+            status: status,
+            genre: genre,
+            dateOfBirth: dateOfBirth,
         },
         { replace: true })
     }
@@ -133,7 +154,7 @@ export const CustomerList: React.FC = () => {
                     showNewButton={false}
                     searchText={search}
                     onClickPDFButton={() => handlePDF()}
-                    onChangeSearchText={text => setSearchParams({ search: text, page: '1' }, { replace: true })}
+                    onChangeSearchText={text => handleSearch(text)}
                 />
             }>
 
@@ -252,7 +273,7 @@ export const CustomerList: React.FC = () => {
                                     <Pagination
                                         page={page}
                                         count={Math.ceil(totalCount / Environment.LINE_LIMIT)}
-                                        onChange={(e, newPage) => setSearchParams({ search, page: newPage.toString() }, { replace: true })}
+                                        onChange={(e, newPage) => handlePagination(newPage.toString())}
                                     />
                                 </StyledTableCell>
                             </TableRow>

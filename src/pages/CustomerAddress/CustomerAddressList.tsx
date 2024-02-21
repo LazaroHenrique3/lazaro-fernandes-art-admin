@@ -68,6 +68,22 @@ export const CustomerAddressList = () => {
 
     const { handleDelete } = UseHandleAddress({ setRows, rows, search, idCustomer })
 
+    const handlePagination = (page: string) => {
+        setSearchParams({
+            search: search,
+            page: page,
+        },
+        { replace: true })
+    }
+
+    const handleSearch = (newSearch: string) => {
+        setSearchParams({
+            search: newSearch,
+            page: '1',
+        },
+        { replace: true })
+    }
+
     return (
         <BasePageLayout
             title={`Endereços - (${nameCustomer})`}
@@ -79,7 +95,7 @@ export const CustomerAddressList = () => {
                     showBackButton={true}
                     searchText={search}
                     onClickNewButton={() => navigate(`/admin/customer/customer-address/details/${idCustomer}/new/${nameCustomer}`)}
-                    onChangeSearchText={text => setSearchParams({ search: text, page: '1' }, { replace: true })}
+                    onChangeSearchText={text => handleSearch(text)}
                     onClickBackButton={() => navigate(`/admin/customer/details/${idCustomer}`)}
                 />
             }>
@@ -140,7 +156,7 @@ export const CustomerAddressList = () => {
                                     <Pagination
                                         page={page}
                                         count={Math.ceil(totalCount / Environment.LINE_LIMIT)}
-                                        onChange={(e, newPage) => setSearchParams({ search, page: newPage.toString() }, { replace: true })}
+                                        onChange={(e, newPage) => handlePagination(newPage.toString())}
                                     />
                                 </StyledTableCell>
                             </TableRow>

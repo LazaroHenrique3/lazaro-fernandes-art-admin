@@ -82,6 +82,24 @@ export const TechniqueList: React.FC = () => {
         { replace: true })
     }
 
+    const handlePagination = (page: string) => {
+        setSearchParams({
+            search: search,
+            page: page,
+            status: status,
+        },
+        { replace: true })
+    }
+
+    const handleSearch = (newSearch: string) => {
+        setSearchParams({
+            search: newSearch,
+            page: '1',
+            status: status,
+        },
+        { replace: true })
+    }
+
     const handleResetFilters = () => {
         setSearchParams({
             search: search,
@@ -106,7 +124,7 @@ export const TechniqueList: React.FC = () => {
                     searchText={search}
                     onClickNewButton={() => navigate('/admin/technique/details/new')}
                     onClickPDFButton={() => handlePDF()}
-                    onChangeSearchText={text => setSearchParams({ search: text, page: '1' }, { replace: true })}
+                    onChangeSearchText={text => handleSearch(text)}
                 />
             }>
 
@@ -197,7 +215,7 @@ export const TechniqueList: React.FC = () => {
                                     <Pagination
                                         page={page}
                                         count={Math.ceil(totalCount / Environment.LINE_LIMIT)}
-                                        onChange={(e, newPage) => setSearchParams({ search, page: newPage.toString() }, { replace: true })}
+                                        onChange={(e, newPage) => handlePagination(newPage.toString())}
                                     />
                                 </StyledTableCell>
                             </TableRow>

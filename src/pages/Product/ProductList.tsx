@@ -169,6 +169,38 @@ export const ProductList: React.FC = () => {
         { replace: true })
     }
 
+    const handlePagination = (page: string) => {
+        setSearchParams({
+            search: search,
+            page: page,
+            status: status,
+            type: type,
+            orientation: orientation,
+            category: category,
+            technique: technique,
+            dimension: dimension,
+            productionDate: productionDate,
+            orderByPrice: orderByPrice
+        },
+        { replace: true })
+    }
+
+    const handleSearch = (newSearch: string) => {
+        setSearchParams({
+            search: newSearch,
+            page: '1',
+            status: status,
+            type: type,
+            orientation: orientation,
+            category: category,
+            technique: technique,
+            dimension: dimension,
+            productionDate: productionDate,
+            orderByPrice: orderByPrice
+        },
+        { replace: true })
+    }
+
     const handleResetFilters = () => {
         setSearchParams({
             search: search,
@@ -203,7 +235,7 @@ export const ProductList: React.FC = () => {
                     searchText={search}
                     onClickNewButton={() => navigate('/admin/product/details/new')}
                     onClickPDFButton={() => handlePDF()}
-                    onChangeSearchText={text => setSearchParams({ search: text, page: '1' }, { replace: true })}
+                    onChangeSearchText={text => handleSearch(text)}
                 />
             }>
 
@@ -368,7 +400,7 @@ export const ProductList: React.FC = () => {
                                     <Pagination
                                         page={page}
                                         count={Math.ceil(totalCount / Environment.LINE_LIMIT)}
-                                        onChange={(e, newPage) => setSearchParams({ search, page: newPage.toString() }, { replace: true })}
+                                        onChange={(e, newPage) => handlePagination(newPage.toString())}
                                     />
                                 </StyledTableCell>
                             </TableRow>
