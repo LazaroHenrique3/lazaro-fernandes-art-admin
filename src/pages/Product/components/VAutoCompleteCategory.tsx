@@ -42,7 +42,7 @@ export const VAutoCompleteCategory: React.FC<VAutoCompleteCategoryProps> = ({ is
 
         const fetchData = () => {
             debounce(async () => {
-                const result = await CategoryService.getAll(1, search, '', false, selectedId)
+                const result = await CategoryService.getAll(1, search, '', true, selectedId)
                 setIsLoading(false)
 
                 if (result instanceof Error) {
